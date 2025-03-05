@@ -1,6 +1,12 @@
 import { TokenizerError } from '../common/errors';
+import {
+    isDigit,
+    isOperator,
+    isParen,
+    isWhiteSpace,
+    isLeftParen,
+} from '../common/char-util';
 import { Token } from './token';
-import { CharUtil } from './char-util';
 
 export class Tokenizer {
     private expression: string;
@@ -41,13 +47,13 @@ export class Tokenizer {
         if (this.currentIndex >= this.expression.length) {
             // 空白文字のまま末尾まで行ったらトークンは何もなかったとみなす。
             return undefined;
-        } else if (CharUtil.isDigit(this.expression, this.currentIndex)) {
+        } else if (isDigit(this.expression, this.currentIndex)) {
             // 数字を切り出す
             return this._readNumberToken();
-        } else if (CharUtil.isOperator(this.expression, this.currentIndex)) {
+        } else if (isOperator(this.expression, this.currentIndex)) {
             // 演算子を切り出す
             return this._readOperatorToken();
-        } else if (CharUtil.isParen(this.expression, this.currentIndex)) {
+        } else if (isParen(this.expression, this.currentIndex)) {
             // 括弧を切り出す
             return this._readParenToken();
         } else {
@@ -66,7 +72,7 @@ export class Tokenizer {
     private _skipSpaces(): void {
         while (
             this.currentIndex < this.expression.length &&
-            CharUtil.isWhiteSpace(this.expression, this.currentIndex)
+            isWhiteSpace(this.expression, this.currentIndex)
         ) {
             this.currentIndex++;
         }
@@ -81,7 +87,7 @@ export class Tokenizer {
         const startIndex = this.currentIndex;
         while (
             this.currentIndex < this.expression.length &&
-            CharUtil.isDigit(this.expression, this.currentIndex)
+            isDigit(this.expression, this.currentIndex)
         ) {
             value += this.expression.charAt(this.currentIndex);
             this.currentIndex++;
@@ -112,7 +118,7 @@ export class Tokenizer {
         const parenCharacter = this.expression.charAt(startIndex);
         this.currentIndex++;
         return new Token(
-            CharUtil.isLeftParen(this.expression, startIndex)
+            isLeftParen(this.expression, startIndex)
                 ? 'leftParen'
                 : 'rightParen',
             parenCharacter,
