@@ -20,28 +20,35 @@ export class Tokenizer {
      * @returns 切り出した字句
      */
     public tokenize(): Token[] {
-        this.currentIndex = 0;
+        this.reset();
         const tokens: Token[] = [];
-        while (this.currentIndex < this.expression.length) {
-            // 字句を切り出す
-            const token = this._readNextToken();
-            if (token === undefined) {
-                // 切り出せなかった場合そのまま終了
-                // (末尾がスペースだった場合)
-                break;
-            }
-            // 切り出した結果を配列に追加
+        const tokenIterator = this.tokens();
+        for (const token of tokenIterator) {
             tokens.push(token);
         }
         return tokens;
     }
+
+    public *tokens(): Generator<Token> {
+        this.reset();
+        while (this.currentIndex < this.expression.length) {
+            const token = this.readNextToken();
+            if (token) {
+                yield token;
+            }
+        }
+    }
+    public reset(): void {
+        this.currentIndex = 0;
+    }
+
     /**
      * inputのstartIndexから始まる字句を切り出す。
      * @param input 入力文字列
      * @param startIndex 開始位置
      * @returns 切り切り出した字句と次の開始位置
      */
-    private _readNextToken(): Token | undefined {
+    public readNextToken(): Token | undefined {
         this._skipSpaces();
 
         if (this.currentIndex >= this.expression.length) {
