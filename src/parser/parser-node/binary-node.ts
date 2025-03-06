@@ -32,12 +32,19 @@ export class BinaryNode extends ParserNode {
      *  operatorToken が二項演算子の場合は this と nodeToBeConnected を operatorToken でつなげて、新しい BinaryNode を生成する
      *  しかし、 operatorToken が掛け算や割り算の場合は this の右の子に nodeToBeConnected を operatorToken でつなげて、新しい BinaryNode を生成する
      */
-    public connectToTail(operatorToken: Token, nodeToBeConnected: ParserNode): BinaryNode {
+    public connectToTail(
+        operatorToken: Token,
+        nodeToBeConnected: ParserNode,
+    ): BinaryNode {
         if (operatorToken.isSecondaryOperator) {
             return new BinaryNode(operatorToken, this, nodeToBeConnected);
         } else {
             // 掛け算や割り算の場合は右の子に接続する
-            const newNode = new BinaryNode(operatorToken, this.right, nodeToBeConnected);
+            const newNode = new BinaryNode(
+                operatorToken,
+                this.right,
+                nodeToBeConnected,
+            );
             this.right = newNode;
             return this;
         }
@@ -55,7 +62,9 @@ export class BinaryNode extends ParserNode {
             case 'thisNode':
                 return this.operator;
             case 'executing':
-                return `${this.left.toString('resolved')} ${this.operator} ${this.right.toString('resolved')}`;
+                return `${this.left.toString('resolved')} ${
+                    this.operator
+                } ${this.right.toString('resolved')}`;
             case 'resolved':
                 return resolveNode(this).toString();
         }
