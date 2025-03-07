@@ -1,12 +1,12 @@
 import {
-    PaseTreeNode,
+    ParseTreeNode,
     type StringifyType,
     type IParseTreeNode,
 } from './parse-tree-node';
 import { type Token } from '../../tokenizer';
 
-export class ParenNode extends PaseTreeNode {
-    private _childrenRoot?: PaseTreeNode;
+export class ParenNode extends ParseTreeNode {
+    private _childrenRoot?: ParseTreeNode;
 
     public constructor(tokens: Token[]) {
         super('paren', tokens);
@@ -16,11 +16,14 @@ export class ParenNode extends PaseTreeNode {
         this.value.push(token);
     }
 
-    public get childrenRoot(): PaseTreeNode | undefined {
+    public get childrenRoot(): ParseTreeNode | undefined {
         return this._childrenRoot;
     }
 
-    public set childrenRoot(value: PaseTreeNode) {
+    public get isClosed(): boolean {
+        return this.value[this.value.length - 1].isRightParen;
+    }
+    public set childrenRoot(value: ParseTreeNode) {
         this._childrenRoot = value;
         this._childrenRoot.parent = this;
     }

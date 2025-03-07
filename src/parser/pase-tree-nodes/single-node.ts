@@ -1,11 +1,11 @@
 import {
-    PaseTreeNode,
+    ParseTreeNode,
     type StringifyType,
     type IParseTreeNode,
 } from './parse-tree-node';
 import { type Token } from '../../tokenizer';
 
-export class SingleNode extends PaseTreeNode {
+export class SingleNode extends ParseTreeNode {
     public constructor(tokens: Token[]) {
         super('single', tokens);
     }

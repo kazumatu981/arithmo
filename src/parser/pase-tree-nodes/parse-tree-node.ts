@@ -11,10 +11,10 @@ export interface IParseTreeNode {
     childrenRoot?: IParseTreeNode;
 }
 
-export abstract class PaseTreeNode {
+export abstract class ParseTreeNode {
     private readonly _type: NodeType;
     private readonly _value: Token[];
-    private _parent?: PaseTreeNode;
+    private _parent?: ParseTreeNode;
 
     /**
      * @param type ノードの型
@@ -45,14 +45,14 @@ export abstract class PaseTreeNode {
      * この ParseTreeNodes の親 ParseTreeNodes を取得します
      * @returns 親 ParseTreeNodes
      */
-    public get parent(): PaseTreeNode | undefined {
+    public get parent(): ParseTreeNode | undefined {
         return this._parent;
     }
     /**
      * この ParseTreeNodes の親 ParseTreeNodes を設定します
      * @param value 設定する親 ParseTreeNodes
      */
-    public set parent(value: PaseTreeNode | undefined) {
+    public set parent(value: ParseTreeNode | undefined) {
         this._parent = value;
     }
 

@@ -1,32 +1,32 @@
 import { type Token } from '../../tokenizer';
 import {
-    PaseTreeNode,
+    ParseTreeNode,
     type StringifyType,
     type IParseTreeNode,
 } from './parse-tree-node';
 
-export class BinaryNode extends PaseTreeNode {
-    private _left?: PaseTreeNode;
-    private _right?: PaseTreeNode;
+export class BinaryNode extends ParseTreeNode {
+    private _left?: ParseTreeNode;
+    private _right?: ParseTreeNode;
 
     public constructor(tokens: Token[]) {
         super('binary', tokens);
     }
 
-    public get left(): PaseTreeNode | undefined {
+    public get left(): ParseTreeNode | undefined {
         return this._left;
     }
 
-    public set left(value: PaseTreeNode) {
+    public set left(value: ParseTreeNode) {
         this._left = value;
         this._left.parent = this;
     }
 
-    public get right(): PaseTreeNode | undefined {
+    public get right(): ParseTreeNode | undefined {
         return this._right;
     }
 
-    public set right(value: PaseTreeNode) {
+    public set right(value: ParseTreeNode) {
         this._right = value;
         this._right.parent = this;
     }
