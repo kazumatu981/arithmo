@@ -3,6 +3,14 @@ import { type Token } from '../../tokenizer';
 export type NodeType = 'single' | 'binary' | 'paren';
 export type StringifyType = 'thisNode' | 'resolving' | 'resolved';
 
+export interface IParseTreeNode {
+    value: string;
+    type: NodeType;
+    right?: IParseTreeNode;
+    left?: IParseTreeNode;
+    childrenRoot?: IParseTreeNode;
+}
+
 export abstract class PaseTreeNode {
     private readonly _type: NodeType;
     private readonly _value: Token[];
@@ -44,7 +52,7 @@ export abstract class PaseTreeNode {
      * この ParseTreeNodes の親 ParseTreeNodes を設定します
      * @param value 設定する親 ParseTreeNodes
      */
-    protected set parent(value: PaseTreeNode | undefined) {
+    public set parent(value: PaseTreeNode | undefined) {
         this._parent = value;
     }
 
