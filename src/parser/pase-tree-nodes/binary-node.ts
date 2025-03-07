@@ -1,5 +1,9 @@
 import { type Token } from '../../tokenizer';
-import { PaseTreeNode, type StringifyType } from './parse-tree-node';
+import {
+    PaseTreeNode,
+    type StringifyType,
+    type IParseTreeNode,
+} from './parse-tree-node';
 
 export class BinaryNode extends PaseTreeNode {
     private _left?: PaseTreeNode;
@@ -28,6 +32,15 @@ export class BinaryNode extends PaseTreeNode {
     }
 
     public toString(_: StringifyType): string {
-        throw new Error('Method not implemented.');
+        return this.value.map((token) => token.value).join('');
+    }
+
+    public toNodeInfo(): IParseTreeNode {
+        return {
+            type: this.nodeType,
+            value: this.toString('thisNode'),
+            left: this.left?.toNodeInfo(),
+            right: this.right?.toNodeInfo(),
+        };
     }
 }

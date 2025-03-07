@@ -57,4 +57,5 @@ export abstract class PaseTreeNode {
     }
 
     public abstract toString(type: StringifyType): string;
+    public abstract toNodeInfo(): IParseTreeNode;
 }
