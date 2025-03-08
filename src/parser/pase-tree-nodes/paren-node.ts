@@ -38,4 +38,17 @@ export class ParenNode extends ParseTreeNode {
             childrenRoot: this.childrenRoot?.toNodeInfo(),
         };
     }
+
+    public static findParenNode(
+        node: ParseTreeNode | undefined,
+    ): ParenNode | undefined {
+        let currentNode: ParseTreeNode | undefined = node;
+        while (currentNode !== undefined) {
+            if (currentNode.nodeType === 'paren') {
+                return currentNode as ParenNode;
+            }
+            currentNode = currentNode.parent;
+        }
+        return undefined;
+    }
 }

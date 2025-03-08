@@ -108,17 +108,11 @@ export class ParseTreeBuilder {
         this._currentNode = parenNode;
     }
     private appendParenEnd(token: Token): void {
-        let current = this._currentNode;
-        while (current) {
-            if (current?.nodeType === 'paren') {
-                (current as ParenNode).parenEnd = token;
-                break;
-            }
-            current = current.parent;
+        const parenNode = ParenNode.findParenNode(this._currentNode);
+        if (!parenNode) {
+            throw new Error('予期せぬ閉じ括弧が検出されました');
         }
-        if (!current) {
-            // TODO error
-        }
-        this._currentNode = current;
+        parenNode.parenEnd = token;
+        this._currentNode = parenNode;
     }
 }
