@@ -7,19 +7,22 @@ import {
 } from './pase-tree-nodes';
 
 type ParseState = 'Initial' | 'WaitForNumber' | 'WaitForOperator';
-type StateAction = (token: Token) => void;
 export class ParseTreeBuilder {
     private _currentNode?: ParseTreeNode;
     private state: ParseState = 'Initial';
     private sign: Token | null = null;
-    private stateActions: Record<ParseState, StateAction> = {
-        Initial: this.onInitial.bind(this),
-        WaitForNumber: this.onWaitForNumber.bind(this),
-        WaitForOperator: this.onWaitForOperator.bind(this),
-    };
     public addToken(token: Token): this {
-        const action = this.stateActions[this.state];
-        action(token);
+        switch (this.state) {
+            case 'Initial':
+                this.onInitial(token);
+                break;
+            case 'WaitForNumber':
+                this.onWaitForNumber(token);
+                break;
+            case 'WaitForOperator':
+                this.onWaitForOperator(token);
+                break;
+        }
         return this;
     }
     public build(): ParseTreeNode | undefined {
@@ -33,8 +36,10 @@ export class ParseTreeBuilder {
         if (token.isNumber) {
             this.state = 'WaitForOperator';
             this.appendNumberNode(token);
-        }
-        if (token.isNegativeSign) {
+        } else if (token.isLeftParen) {
+            this.state = 'Initial';
+            this.appendParenStart(token);
+        } else if (token.isNegativeSign) {
             this.state = 'WaitForNumber';
         } else {
             // TODO error
@@ -44,8 +49,7 @@ export class ParseTreeBuilder {
         if (token.isNumber) {
             this.state = 'WaitForOperator';
             this.appendNumberNode(token);
-        }
-        if (token.isLeftParen) {
+        } else if (token.isLeftParen) {
             this.state = 'Initial';
             this.appendParenStart(token);
         } else {
@@ -57,8 +61,8 @@ export class ParseTreeBuilder {
             this.state = 'WaitForNumber';
             this.appendOperatorNode(token);
         } else if (token.isRightParen) {
-            this.appendParenEnd(token);
             this.state = 'WaitForOperator';
+            this.appendParenEnd(token);
         } else {
             // TODO error
         }
@@ -85,35 +89,7 @@ export class ParseTreeBuilder {
             // TODO error
             return;
         }
-        const operatorNode = new BinaryNode([token]);
-        if (!this._currentNode.parent) {
-            operatorNode.left = this._currentNode;
-            this._currentNode = operatorNode;
-            return;
-        }
-        let current: ParseTreeNode | undefined = this._currentNode;
-        while (current) {
-            if (!current.parent) {
-                operatorNode.left = current;
-                break;
-            } else if (current.parent.nodeType === 'paren') {
-                const parenNode = current.parent as ParenNode;
-                operatorNode.left = parenNode.childrenRoot as ParseTreeNode;
-                parenNode.childrenRoot = operatorNode;
-                break;
-            } else if (current.parent.nodeType === 'binary') {
-                const binaryNode = current.parent as BinaryNode;
-                if (token.isPrimaryOperator) {
-                    if (binaryNode.value[0].isSecondaryOperator) {
-                        operatorNode.left = binaryNode.right as ParseTreeNode;
-                        binaryNode.right = operatorNode;
-                        break;
-                    }
-                }
-            }
-            current = current.parent;
-        }
-        this._currentNode = operatorNode;
+        this._currentNode = new BinaryNode([token]).attachTo(this._currentNode);
     }
     private appendParenStart(token: Token): void {
         const parenNode = this.sign

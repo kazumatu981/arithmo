@@ -1,5 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`unittest-parse-tree-builder (1+1)*2 1`] = `
+{
+  "left": {
+    "childrenRoot": {
+      "left": {
+        "type": "single",
+        "value": "1",
+      },
+      "right": {
+        "type": "single",
+        "value": "1",
+      },
+      "type": "binary",
+      "value": "+",
+    },
+    "type": "paren",
+    "value": "()",
+  },
+  "right": {
+    "type": "single",
+    "value": "2",
+  },
+  "type": "binary",
+  "value": "*",
+}
+`;
+
 exports[`unittest-parse-tree-builder 1*12+1 1`] = `
 {
   "left": {
