@@ -1,6 +1,6 @@
-import { Token } from '../tokenizer';
+import type { Token } from '../tokenizer';
 import {
-    ParseTreeNode,
+    type ParseTreeNode,
     SingleNode,
     BinaryNode,
     ParenNode,
@@ -42,7 +42,7 @@ export class ParseTreeBuilder {
         } else if (token.isNegativeSign) {
             this.state = 'WaitForNumber';
         } else {
-            // TODO error
+            throw new Error('予期せぬトークン');
         }
     }
     private onWaitForNumber(token: Token): void {
@@ -53,7 +53,7 @@ export class ParseTreeBuilder {
             this.state = 'Initial';
             this.appendParenStart(token);
         } else {
-            // TODO error
+            throw new Error('予期せぬトークン');
         }
     }
     private onWaitForOperator(token: Token): void {
@@ -64,7 +64,7 @@ export class ParseTreeBuilder {
             this.state = 'WaitForOperator';
             this.appendParenEnd(token);
         } else {
-            // TODO error
+            throw new Error('予期せぬトークン');
         }
     }
 
@@ -79,15 +79,14 @@ export class ParseTreeBuilder {
             } else if (this._currentNode.nodeType === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = numberNode;
             } else {
-                // TODO error
+                throw new Error('予期せぬトークン: 連続的な数値');
             }
         }
         this._currentNode = numberNode;
     }
     private appendOperatorNode(token: Token): void {
         if (!this._currentNode) {
-            // TODO error
-            return;
+            throw new Error('予期せぬ演算子');
         }
         this._currentNode = new BinaryNode([token]).attachTo(this._currentNode);
     }
@@ -102,7 +101,7 @@ export class ParseTreeBuilder {
             } else if (this._currentNode.nodeType === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = parenNode;
             } else {
-                // TODO error
+                throw new Error('予期せぬトークン: 数値の後の括弧');
             }
         }
         this._currentNode = parenNode;
