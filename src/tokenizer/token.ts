@@ -72,7 +72,10 @@ export class Token {
      * @returns 優先度が高い演算子かどうかを表す真偽値
      */
     public get isPrimaryOperator(): boolean {
-        return this.type === 'operator' && (this.value === '*' || this.value === '/');
+        return (
+            this.type === 'operator' &&
+            (this.value === '*' || this.value === '/')
+        );
     }
 
     /**
@@ -80,6 +83,13 @@ export class Token {
      * @returns 優先度が低い演算子かどうかを表す真偽値
      */
     public get isSecondaryOperator(): boolean {
-        return this.type === 'operator' && (this.value === '+' || this.value === '-');
+        return (
+            this.type === 'operator' &&
+            (this.value === '+' || this.value === '-')
+        );
+    }
+
+    public toString(): string {
+        return this.value;
     }
 }
