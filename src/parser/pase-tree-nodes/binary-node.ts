@@ -1,8 +1,10 @@
 import { type Token } from '../../tokenizer';
 import {
     ParseTreeNode,
+    type ValidationResult,
     type StringifyType,
     type IParseTreeNode,
+    type ValidationRule,
 } from './parse-tree-node';
 import { type ParenNode } from './paren-node';
 
@@ -10,6 +12,37 @@ export class BinaryNode extends ParseTreeNode {
     private _left?: ParseTreeNode;
     private _right?: ParseTreeNode;
 
+    validations: ValidationRule[] = [
+        (node: ParseTreeNode): ValidationResult | undefined => {
+            if (node.value.length === 1) return undefined;
+            return {
+                node,
+                message: '二項演算子ノードの字句は1つである必要があります',
+            };
+        },
+        (node: ParseTreeNode): ValidationResult | undefined => {
+            const binaryNode = node as BinaryNode;
+            if (binaryNode.left) return undefined;
+            return {
+                node,
+                message: '二項演算子ノードに左の子ノードがありません',
+            };
+        },
+        (node: ParseTreeNode): ValidationResult | undefined => {
+            const binaryNode = node as BinaryNode;
+            if (binaryNode.right) return undefined;
+            return {
+                node,
+                message: '二項演算子ノードに右の子ノードがありません',
+            };
+        },
+        (node: ParseTreeNode): ValidationResult | undefined => {
+            const binaryNode = node as BinaryNode;
+            binaryNode.left?.validate();
+            binaryNode.right?.validate();
+            return undefined;
+        },
+    ];
     public constructor(tokens: Token[]) {
         super('binary', tokens);
     }

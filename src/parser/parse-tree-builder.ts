@@ -1,6 +1,6 @@
 import type { Token } from '../tokenizer';
 import {
-    type ParseTreeNode,
+    ParseTreeNode,
     SingleNode,
     BinaryNode,
     ParenNode,
@@ -25,12 +25,11 @@ export class ParseTreeBuilder {
         }
         return this;
     }
+    public findRootNode(): ParseTreeNode | undefined {
+        return ParseTreeNode.findRootNode(this._currentNode);
+    }
     public build(): ParseTreeNode | undefined {
-        let current = this._currentNode;
-        while (current?.parent) {
-            current = current.parent;
-        }
-        return current;
+        return this.findRootNode()?.validate();
     }
     private onInitial(token: Token): void {
         if (token.isNumber) {

@@ -11,10 +11,19 @@ export interface IParseTreeNode {
     childrenRoot?: IParseTreeNode;
 }
 
+export interface ValidationResult {
+    node: ParseTreeNode;
+    message: string;
+}
+export type ValidationRule = (
+    node: ParseTreeNode,
+) => ValidationResult | undefined;
+
 export abstract class ParseTreeNode {
     private readonly _type: NodeType;
     private readonly _value: Token[];
     private _parent?: ParseTreeNode;
+    abstract validations: ValidationRule[];
 
     /**
      * @param type ノードの型
@@ -54,6 +63,24 @@ export abstract class ParseTreeNode {
      */
     public set parent(value: ParseTreeNode | undefined) {
         this._parent = value;
+    }
+
+    public static findRootNode(
+        node: ParseTreeNode | undefined,
+    ): ParseTreeNode | undefined {
+        if (node === undefined) return undefined;
+        while (node.parent !== undefined) node = node.parent;
+        return node;
+    }
+
+    public validate(): this {
+        const validationResults = this.validations
+            .map((v) => v(this))
+            .filter((v) => v !== undefined) as ValidationResult[];
+        if (validationResults.length > 0) {
+            throw new Error(validationResults[0].message);
+        }
+        return this;
     }
 
     public abstract toString(type: StringifyType): string;
