@@ -1,4 +1,4 @@
-import type { Token } from '../tokenizer';
+import type { Token, TokenType } from '../tokenizer';
 import {
     ParseTreeNode,
     SingleNode,
@@ -7,22 +7,67 @@ import {
 } from './pase-tree-nodes';
 
 type ParseState = 'Initial' | 'WaitForNumber' | 'WaitForOperator';
+
+type ParseTreeStateTableRecord<T> = Record<TokenType, T>;
+type ParseTreeStateTable<T> = Record<ParseState, ParseTreeStateTableRecord<T>>;
+
+type StateAction = (token: Token) => void;
+
 export class ParseTreeBuilder {
     private _currentNode?: ParseTreeNode;
     private state: ParseState = 'Initial';
     private sign: Token | null = null;
+
+    private nextStateTable: ParseTreeStateTable<ParseState | undefined> = {
+        Initial: {
+            number: 'WaitForOperator',
+            leftParen: 'Initial',
+            rightParen: undefined,
+            operator: 'WaitForNumber',
+        },
+        WaitForNumber: {
+            number: 'WaitForOperator',
+            leftParen: 'Initial',
+            rightParen: undefined,
+            operator: undefined,
+        },
+        WaitForOperator: {
+            number: undefined,
+            leftParen: undefined,
+            rightParen: 'WaitForOperator',
+            operator: 'WaitForNumber',
+        },
+    };
+
+    private stateActionTable: ParseTreeStateTable<StateAction | undefined> = {
+        Initial: {
+            number: this.appendNumberNode.bind(this),
+            leftParen: this.appendParenStart.bind(this),
+            rightParen: undefined,
+            operator: this.appendSign.bind(this),
+        },
+        WaitForNumber: {
+            number: this.appendNumberNode.bind(this),
+            leftParen: this.appendParenStart.bind(this),
+            rightParen: undefined,
+            operator: undefined,
+        },
+        WaitForOperator: {
+            number: undefined,
+            leftParen: undefined,
+            rightParen: this.appendParenEnd.bind(this),
+            operator: this.appendOperatorNode.bind(this),
+        },
+    };
+
     public addToken(token: Token): this {
-        switch (this.state) {
-            case 'Initial':
-                this.onInitial(token);
-                break;
-            case 'WaitForNumber':
-                this.onWaitForNumber(token);
-                break;
-            case 'WaitForOperator':
-                this.onWaitForOperator(token);
-                break;
+        const nextState = this.nextStateTable[this.state][token.type];
+        const action = this.stateActionTable[this.state][token.type];
+        if (nextState === undefined || action === undefined) {
+            throw new Error('予期せぬトークン');
         }
+        this.state = nextState;
+        action(token);
         return this;
     }
     public findRootNode(): ParseTreeNode | undefined {
@@ -31,39 +76,12 @@ export class ParseTreeBuilder {
     public build(): ParseTreeNode | undefined {
         return this.findRootNode()?.validate();
     }
-    private onInitial(token: Token): void {
-        if (token.isNumber) {
-            this.state = 'WaitForOperator';
-            this.appendNumberNode(token);
-        } else if (token.isLeftParen) {
-            this.state = 'Initial';
-            this.appendParenStart(token);
-        } else if (token.isNegativeSign) {
-            this.state = 'WaitForNumber';
+
+    private appendSign(token: Token): void {
+        if (token.isNegativeSign) {
+            this.sign = token;
         } else {
-            throw new Error('予期せぬトークン');
-        }
-    }
-    private onWaitForNumber(token: Token): void {
-        if (token.isNumber) {
-            this.state = 'WaitForOperator';
-            this.appendNumberNode(token);
-        } else if (token.isLeftParen) {
-            this.state = 'Initial';
-            this.appendParenStart(token);
-        } else {
-            throw new Error('予期せぬトークン');
-        }
-    }
-    private onWaitForOperator(token: Token): void {
-        if (token.isOperator) {
-            this.state = 'WaitForNumber';
-            this.appendOperatorNode(token);
-        } else if (token.isRightParen) {
-            this.state = 'WaitForOperator';
-            this.appendParenEnd(token);
-        } else {
-            throw new Error('予期せぬトークン');
+            throw new Error('予期せぬマイナス記号');
         }
     }
 

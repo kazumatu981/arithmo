@@ -1,116 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`unittest-parse-tree-builder (1+1)*2 1`] = `
-{
-  "left": {
-    "childrenRoot": {
-      "left": {
-        "type": "single",
-        "value": "1",
-      },
-      "right": {
-        "type": "single",
-        "value": "1",
-      },
-      "type": "binary",
-      "value": "+",
-    },
-    "type": "paren",
-    "value": "()",
-  },
-  "right": {
-    "type": "single",
-    "value": "2",
-  },
-  "type": "binary",
-  "value": "*",
-}
-`;
-
-exports[`unittest-parse-tree-builder 1*12+1 1`] = `
-{
-  "left": {
-    "left": {
-      "type": "single",
-      "value": "1",
-    },
-    "right": {
-      "type": "single",
-      "value": "12",
-    },
-    "type": "binary",
-    "value": "*",
-  },
-  "right": {
-    "type": "single",
-    "value": "1",
-  },
-  "type": "binary",
-  "value": "+",
-}
-`;
-
-exports[`unittest-parse-tree-builder 1*12+3*4 1`] = `
-{
-  "left": {
-    "left": {
-      "type": "single",
-      "value": "1",
-    },
-    "right": {
-      "type": "single",
-      "value": "12",
-    },
-    "type": "binary",
-    "value": "*",
-  },
-  "right": {
-    "left": {
-      "type": "single",
-      "value": "3",
-    },
-    "right": {
-      "type": "single",
-      "value": "4",
-    },
-    "type": "binary",
-    "value": "*",
-  },
-  "type": "binary",
-  "value": "+",
-}
-`;
-
-exports[`unittest-parse-tree-builder 1+1 1`] = `
-{
-  "left": {
-    "type": "single",
-    "value": "1",
-  },
-  "right": {
-    "type": "single",
-    "value": "1",
-  },
-  "type": "binary",
-  "value": "+",
-}
-`;
-
-exports[`unittest-parse-tree-builder 1-1 1`] = `
-{
-  "left": {
-    "type": "single",
-    "value": "1",
-  },
-  "right": {
-    "type": "single",
-    "value": "1",
-  },
-  "type": "binary",
-  "value": "-",
-}
-`;
-
 exports[`unittest-parse-tree-builder Can build tree from (1+1)*2 1`] = `
 {
   "left": {
@@ -149,7 +38,7 @@ exports[`unittest-parse-tree-builder Can build tree from -(1-(-1+5)) 1`] = `
       "childrenRoot": {
         "left": {
           "type": "single",
-          "value": "1",
+          "value": "-1",
         },
         "right": {
           "type": "single",
@@ -165,7 +54,7 @@ exports[`unittest-parse-tree-builder Can build tree from -(1-(-1+5)) 1`] = `
     "value": "-",
   },
   "type": "paren",
-  "value": "()",
+  "value": "-()",
 }
 `;
 
@@ -173,7 +62,7 @@ exports[`unittest-parse-tree-builder Can build tree from -1+1 1`] = `
 {
   "left": {
     "type": "single",
-    "value": "1",
+    "value": "-1",
   },
   "right": {
     "type": "single",
@@ -247,7 +136,7 @@ exports[`unittest-parse-tree-builder Can build tree from 1+(-1) 1`] = `
   "right": {
     "childrenRoot": {
       "type": "single",
-      "value": "1",
+      "value": "-1",
     },
     "type": "paren",
     "value": "()",
@@ -317,7 +206,7 @@ exports[`unittest-parse-tree-builder Can build tree from 1-(-1+5) 1`] = `
     "childrenRoot": {
       "left": {
         "type": "single",
-        "value": "1",
+        "value": "-1",
       },
       "right": {
         "type": "single",
