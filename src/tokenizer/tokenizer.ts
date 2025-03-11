@@ -1,4 +1,4 @@
-import { TokenizerError } from '../common/errors';
+import { TokenizerError } from './tokenizer-error';
 import {
     isDigit,
     isOperator,
@@ -7,6 +7,7 @@ import {
     isLeftParen,
 } from '../common/char-util';
 import { Token } from './token';
+export type ModuleName = 'tokenizer' | 'parser' | 'common';
 
 export class Tokenizer {
     private expression: string;
@@ -65,11 +66,12 @@ export class Tokenizer {
             return this._readParenToken();
         } else {
             // 予期せぬ文字を検出した
-            throw new TokenizerError(
-                'unknown-character',
-                '',
-                this.currentIndex,
-            );
+            throw new TokenizerError('unknown-character', {
+                position: this.currentIndex,
+                appendixMessage: `検出した文字: ${this.expression.charAt(
+                    this.currentIndex,
+                )}`,
+            });
         }
     }
 
