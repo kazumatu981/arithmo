@@ -4,16 +4,13 @@ import globals from 'globals';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import tsdoceslint from 'eslint-plugin-tsdoc';
-
-// export default tseslint.config(
-//     eslint.configs.recommended,
-//     tseslint.configs.strict,
-// );
+import jsdoc from 'eslint-plugin-jsdoc';
 
 const srcConfig = tseslint.config({
     files: ['src/**/*.{ts,tsx}'],
     extends: [eslint.configs.recommended, tseslint.configs.strict],
     plugins: {
+        jsdoc,
         tsdoc: tsdoceslint,
     },
     languageOptions: {
@@ -58,6 +55,21 @@ const srcConfig = tseslint.config({
         // no debugging code
         'no-console': 'warn',
         'tsdoc/syntax': 'warn',
+        'jsdoc/require-jsdoc': [
+            'warn',
+            {
+                publicOnly: true,
+                contexts: [
+                    'VariableDeclaration',
+                    'TSInterfaceDeclaration',
+                    'TSTypeAliasDeclaration',
+                    'TSPropertySignature',
+                    'TSMethodSignature',
+                ],
+            },
+        ],
+        'jsdoc/require-param-type': 'off',
+        'jsdoc/require-returns-type': 'off',
     },
 });
 
@@ -65,5 +77,6 @@ export default [
     {
         ignores: ['node_modules/**', 'dist/**', 'coverage/**'],
     },
+    jsdoc.configs['flat/recommended'],
     ...srcConfig,
 ];
