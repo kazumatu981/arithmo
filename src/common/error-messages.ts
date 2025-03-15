@@ -1,3 +1,6 @@
+/**
+ * エラーコード
+ */
 export type ErrorCode =
     // tokenizer
     | 'unknown-character'
@@ -20,6 +23,9 @@ export type ErrorCode =
 
 export const unexpected = '予期せぬエラーが発生しました。';
 
+/**
+ * エラーメッセージ
+ */
 export const ErrorMessageDictionary: Record<ErrorCode, string> = {
     // tokenizer
     'unknown-character': '予期せぬ文字を検出しました。',
