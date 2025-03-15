@@ -3,6 +3,7 @@
 import globals from 'globals';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import tsdoceslint from 'eslint-plugin-tsdoc';
 
 // export default tseslint.config(
 //     eslint.configs.recommended,
@@ -12,6 +13,9 @@ import tseslint from 'typescript-eslint';
 const srcConfig = tseslint.config({
     files: ['src/**/*.{ts,tsx}'],
     extends: [eslint.configs.recommended, tseslint.configs.strict],
+    plugins: {
+        tsdoc: tsdoceslint,
+    },
     languageOptions: {
         globals: {
             ...globals.node,
@@ -53,6 +57,7 @@ const srcConfig = tseslint.config({
         '@typescript-eslint/consistent-type-exports': 'warn',
         // no debugging code
         'no-console': 'warn',
+        'tsdoc/syntax': 'warn',
     },
 });
 
