@@ -1,28 +1,83 @@
-import type { Token } from '../tokenizer';
+import type { Token, TokenType } from '../tokenizer';
 import {
     ParseTreeNode,
     SingleNode,
     BinaryNode,
     ParenNode,
 } from './pase-tree-nodes';
+import type { ErrorCode } from '../common/error-messages';
+import { ParserError } from './parser-error';
 
 type ParseState = 'Initial' | 'WaitForNumber' | 'WaitForOperator';
+
+type ParseTreeStateTableRecord<T> = Record<TokenType, T>;
+type ParseTreeStateTable<T> = Record<ParseState, ParseTreeStateTableRecord<T>>;
+
+type StateAction = (token: Token) => void;
+
 export class ParseTreeBuilder {
     private _currentNode?: ParseTreeNode;
     private state: ParseState = 'Initial';
     private sign: Token | null = null;
+
+    private nextStateTable: ParseTreeStateTable<ParseState | undefined> = {
+        Initial: {
+            number: 'WaitForOperator',
+            leftParen: 'Initial',
+            rightParen: undefined,
+            operator: 'WaitForNumber',
+        },
+        WaitForNumber: {
+            number: 'WaitForOperator',
+            leftParen: 'Initial',
+            rightParen: undefined,
+            operator: undefined,
+        },
+        WaitForOperator: {
+            number: undefined,
+            leftParen: undefined,
+            rightParen: 'WaitForOperator',
+            operator: 'WaitForNumber',
+        },
+    };
+
+    private stateActionTable: ParseTreeStateTable<StateAction | undefined> = {
+        Initial: {
+            number: this.appendNumberNode.bind(this),
+            leftParen: this.appendParenStart.bind(this),
+            rightParen: ((token: Token): void => {
+                this.throwParseError('unexpected-right-paren', token);
+            }).bind(this),
+            operator: this.appendSign.bind(this),
+        },
+        WaitForNumber: {
+            number: this.appendNumberNode.bind(this),
+            leftParen: this.appendParenStart.bind(this),
+            rightParen: ((token: Token): void => {
+                this.throwParseError('unexpected-right-paren', token);
+            }).bind(this),
+            operator: ((token: Token): void => {
+                this.throwParseError('unexpected-operator', token);
+            }).bind(this),
+        },
+        WaitForOperator: {
+            number: ((token: Token): void => {
+                this.throwParseError('unexpected-number', token);
+            }).bind(this),
+            leftParen: ((token: Token): void => {
+                this.throwParseError('unexpected-left-paren', token);
+            }).bind(this),
+            rightParen: this.appendParenEnd.bind(this),
+            operator: this.appendOperatorNode.bind(this),
+        },
+    };
     public addToken(token: Token): this {
-        switch (this.state) {
-            case 'Initial':
-                this.onInitial(token);
-                break;
-            case 'WaitForNumber':
-                this.onWaitForNumber(token);
-                break;
-            case 'WaitForOperator':
-                this.onWaitForOperator(token);
-                break;
-        }
+        const action = this.stateActionTable[this.state][token.type];
+        const nextState = this.nextStateTable[this.state][token.type];
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        action!(token);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.state = nextState!;
         return this;
     }
     public findRootNode(): ParseTreeNode | undefined {
@@ -31,39 +86,15 @@ export class ParseTreeBuilder {
     public build(): ParseTreeNode | undefined {
         return this.findRootNode()?.validate();
     }
-    private onInitial(token: Token): void {
-        if (token.isNumber) {
-            this.state = 'WaitForOperator';
-            this.appendNumberNode(token);
-        } else if (token.isLeftParen) {
-            this.state = 'Initial';
-            this.appendParenStart(token);
-        } else if (token.isNegativeSign) {
-            this.state = 'WaitForNumber';
-        } else {
-            throw new Error('予期せぬトークン');
-        }
+
+    private throwParseError(code: ErrorCode, token: Token): void {
+        throw new ParserError(code, { token });
     }
-    private onWaitForNumber(token: Token): void {
-        if (token.isNumber) {
-            this.state = 'WaitForOperator';
-            this.appendNumberNode(token);
-        } else if (token.isLeftParen) {
-            this.state = 'Initial';
-            this.appendParenStart(token);
+    private appendSign(token: Token): void {
+        if (token.isNegativeSign) {
+            this.sign = token;
         } else {
-            throw new Error('予期せぬトークン');
-        }
-    }
-    private onWaitForOperator(token: Token): void {
-        if (token.isOperator) {
-            this.state = 'WaitForNumber';
-            this.appendOperatorNode(token);
-        } else if (token.isRightParen) {
-            this.state = 'WaitForOperator';
-            this.appendParenEnd(token);
-        } else {
-            throw new Error('予期せぬトークン');
+            throw new ParserError('unexpected-sign', { token });
         }
     }
 
@@ -78,15 +109,16 @@ export class ParseTreeBuilder {
             } else if (this._currentNode.nodeType === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = numberNode;
             } else {
-                throw new Error('予期せぬトークン: 連続的な数値');
+                throw new ParserError('unexpected', {
+                    token,
+                    appendixMessage:
+                        '現在のノードに数字ノードを追加しようとたが、子ノードを持てないノードである(バグの可能性がある)',
+                });
             }
         }
         this._currentNode = numberNode;
     }
     private appendOperatorNode(token: Token): void {
-        if (!this._currentNode) {
-            throw new Error('予期せぬ演算子');
-        }
         this._currentNode = new BinaryNode([token]).attachTo(this._currentNode);
     }
     private appendParenStart(token: Token): void {
@@ -100,7 +132,11 @@ export class ParseTreeBuilder {
             } else if (this._currentNode.nodeType === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = parenNode;
             } else {
-                throw new Error('予期せぬトークン: 数値の後の括弧');
+                throw new ParserError('unexpected', {
+                    token,
+                    appendixMessage:
+                        '現在のノードに括弧ノードを追加しようとたが、子ノードを持てないノードである(バグの可能性がある)',
+                });
             }
         }
         this._currentNode = parenNode;
@@ -108,7 +144,7 @@ export class ParseTreeBuilder {
     private appendParenEnd(token: Token): void {
         const parenNode = ParenNode.findParenNode(this._currentNode);
         if (!parenNode) {
-            throw new Error('予期せぬ閉じ括弧が検出されました');
+            throw new ParserError('unexpected-right-paren', { token });
         }
         parenNode.parenEnd = token;
         this._currentNode = parenNode;

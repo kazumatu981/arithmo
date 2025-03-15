@@ -1,10 +1,11 @@
 import { type Token } from '../../tokenizer';
 import {
     ParseTreeNode,
-    type ValidationResult,
+    type ValidationError,
     type StringifyType,
     type IParseTreeNode,
     type ValidationRule,
+    simpleValidationRule,
 } from './parse-tree-node';
 import { type ParenNode } from './paren-node';
 
@@ -13,30 +14,19 @@ export class BinaryNode extends ParseTreeNode {
     private _right?: ParseTreeNode;
 
     validations: ValidationRule[] = [
-        (node: ParseTreeNode): ValidationResult | undefined => {
-            if (node.value.length === 1) return undefined;
-            return {
-                node,
-                message: '二項演算子ノードの字句は1つである必要があります',
-            };
-        },
-        (node: ParseTreeNode): ValidationResult | undefined => {
-            const binaryNode = node as BinaryNode;
-            if (binaryNode.left) return undefined;
-            return {
-                node,
-                message: '二項演算子ノードに左の子ノードがありません',
-            };
-        },
-        (node: ParseTreeNode): ValidationResult | undefined => {
-            const binaryNode = node as BinaryNode;
-            if (binaryNode.right) return undefined;
-            return {
-                node,
-                message: '二項演算子ノードに右の子ノードがありません',
-            };
-        },
-        (node: ParseTreeNode): ValidationResult | undefined => {
+        simpleValidationRule(
+            (node) => node.value.length === 1,
+            'binary-node-must-have-1-token',
+        ),
+        simpleValidationRule(
+            (node) => (node as BinaryNode).left !== undefined,
+            'binary-node-must-have-left',
+        ),
+        simpleValidationRule(
+            (node) => (node as BinaryNode).right !== undefined,
+            'binary-node-must-have-right',
+        ),
+        (node: ParseTreeNode): ValidationError | undefined => {
             const binaryNode = node as BinaryNode;
             binaryNode.left?.validate();
             binaryNode.right?.validate();

@@ -1,7 +1,7 @@
 import {
     ParseTreeNode,
     type ValidationRule,
-    type ValidationResult,
+    simpleValidationRule,
     type StringifyType,
     type IParseTreeNode,
 } from './parse-tree-node';
@@ -9,16 +9,10 @@ import { type Token } from '../../tokenizer';
 
 export class SingleNode extends ParseTreeNode {
     validations: ValidationRule[] = [
-        (node): ValidationResult | undefined => {
-            if (node.value.length === 1 || node.value.length === 2) {
-                return undefined;
-            } else {
-                return {
-                    node,
-                    message: '数値ノードは1または2個の字句を持つ必要があります',
-                };
-            }
-        },
+        simpleValidationRule(
+            (node) => node.value.length === 1 || node.value.length === 2,
+            'single-node-must-have-1-or-2-tokens',
+        ),
     ];
     public constructor(tokens: Token[]) {
         super('single', tokens);

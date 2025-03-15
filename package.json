@@ -9,6 +9,7 @@
     },
     "scripts": {
         "test": "jest",
+        "test:update-snapshot": "jest --updateSnapshot",
         "build:typescript": "tsc --project tsconfig.json",
         "build:watch": "tsc --project tsconfig.json --watch"
     },
