@@ -238,16 +238,16 @@ exports[`unittest-parse-tree-builder Can build tree from 1-1 1`] = `
 }
 `;
 
-exports[`unittest-parse-tree-builder Cannot build tree from 1 1 1`] = `"予期せぬトークン"`;
+exports[`unittest-parse-tree-builder Cannot build tree from 1 1 1`] = `"予期せぬ数字を検出しました。"`;
 
-exports[`unittest-parse-tree-builder Cannot build tree from 1(1+3) 1`] = `"予期せぬトークン"`;
+exports[`unittest-parse-tree-builder Cannot build tree from 1(1+3) 1`] = `"予期せぬ左括弧を検出しました。"`;
 
-exports[`unittest-parse-tree-builder Cannot build tree from 1*(3*4 1`] = `"括弧ノードは閉じられていません"`;
+exports[`unittest-parse-tree-builder Cannot build tree from 1*(3*4 1`] = `"括弧ノードは2または3の字句を持つ必要があります。"`;
 
-exports[`unittest-parse-tree-builder Cannot build tree from 1+ 1`] = `"二項演算子ノードに右の子ノードがありません"`;
+exports[`unittest-parse-tree-builder Cannot build tree from 1+ 1`] = `"演算子ノードに右の子ノードがありません。"`;
 
-exports[`unittest-parse-tree-builder Cannot build tree from 1+() 1`] = `"予期せぬトークン"`;
+exports[`unittest-parse-tree-builder Cannot build tree from 1+() 1`] = `"予期せぬ右括弧を検出しました。"`;
 
-exports[`unittest-parse-tree-builder Cannot build tree from 1+(3)) 1`] = `"予期せぬ閉じ括弧が検出されました"`;
+exports[`unittest-parse-tree-builder Cannot build tree from 1+(3)) 1`] = `"予期せぬ右括弧を検出しました。"`;
 
-exports[`unittest-parse-tree-builder Cannot build tree from 1--1-1 1`] = `"予期せぬトークン"`;
+exports[`unittest-parse-tree-builder Cannot build tree from 1--1-1 1`] = `"予期せぬ演算子を検出しました。"`;

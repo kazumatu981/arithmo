@@ -1,4 +1,6 @@
 import { type Token } from '../../tokenizer';
+import { type ErrorCode } from '../../common/error-messages';
+import { ParserError } from '../parser-error';
 
 export type NodeType = 'single' | 'binary' | 'paren';
 export type StringifyType = 'thisNode' | 'resolving' | 'resolved';
@@ -11,13 +13,26 @@ export interface IParseTreeNode {
     childrenRoot?: IParseTreeNode;
 }
 
-export interface ValidationResult {
+export interface ValidationError {
+    code: ErrorCode;
     node: ParseTreeNode;
-    message: string;
+    appendixMessage?: string;
 }
+
 export type ValidationRule = (
     node: ParseTreeNode,
-) => ValidationResult | undefined;
+) => ValidationError | undefined;
+
+export function simpleValidationRule(
+    isValid: (node: ParseTreeNode) => boolean,
+    code: ErrorCode,
+    appendixMessage?: string,
+): ValidationRule {
+    return (node: ParseTreeNode): ValidationError | undefined => {
+        if (isValid(node)) return undefined;
+        return { code, node, appendixMessage };
+    };
+}
 
 export abstract class ParseTreeNode {
     private readonly _type: NodeType;
@@ -74,11 +89,14 @@ export abstract class ParseTreeNode {
     }
 
     public validate(): this {
-        const validationResults = this.validations
+        const validationErrors = this.validations
             .map((v) => v(this))
-            .filter((v) => v !== undefined) as ValidationResult[];
-        if (validationResults.length > 0) {
-            throw new Error(validationResults[0].message);
+            .filter((v) => v !== undefined) as ValidationError[];
+        if (validationErrors.length > 0) {
+            throw new ParserError(validationErrors[0].code, {
+                token: validationErrors[0].node.value[0],
+                appendixMessage: validationErrors[0].appendixMessage,
+            });
         }
         return this;
     }
