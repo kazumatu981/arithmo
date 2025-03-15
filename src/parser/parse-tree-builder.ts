@@ -4,15 +4,13 @@ import {
     SingleNode,
     BinaryNode,
     ParenNode,
-} from './pase-tree-nodes';
+} from './parse-tree-nodes';
 import type { ErrorCode } from '../common/error-messages';
 import { ParserError } from './parser-error';
 
 type ParseState = 'Initial' | 'WaitForNumber' | 'WaitForOperator';
-
 type ParseTreeStateTableRecord<T> = Record<TokenType, T>;
 type ParseTreeStateTable<T> = Record<ParseState, ParseTreeStateTableRecord<T>>;
-
 type StateAction = (token: Token) => void;
 
 export class ParseTreeBuilder {
