@@ -25,7 +25,8 @@ export class ParenNode extends ParseTreeNode {
         ),
         (node: ParseTreeNode): ValidationError | undefined => {
             const parenNode = node as ParenNode;
-            parenNode.childrenRoot?.validate();
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            parenNode.childrenRoot!.validate();
             return undefined;
         },
     ];

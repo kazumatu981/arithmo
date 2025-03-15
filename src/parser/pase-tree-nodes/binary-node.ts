@@ -73,6 +73,7 @@ export class BinaryNode extends ParseTreeNode {
                     connected = this.parenConnectHandler(currentNode);
                     break;
                 case 'single':
+                    // TODO : 例外処理は共通のものを使うべし！！！ただしここは基本通らないはず！！！
                     throw new Error(
                         'single node cannot connect to binary node',
                     );
