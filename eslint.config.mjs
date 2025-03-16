@@ -104,7 +104,6 @@ const srcConfig = tseslint.config({
                     MethodDefinition: true,
                 },
                 contexts: [
-                    'VariableDeclaration',
                     'TSInterfaceDeclaration',
                     'TSTypeAliasDeclaration',
                     'TSPropertySignature',
