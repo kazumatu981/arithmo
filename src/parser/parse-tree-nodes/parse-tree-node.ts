@@ -1,17 +1,9 @@
 import { type Token } from '../../tokenizer';
 import { type ErrorCode } from '../../common/error-messages';
 import { ParserError } from '../parser-error';
+import type { NodeType, ParseNodeInfo } from './parse-node-info';
 
-export type NodeType = 'single' | 'binary' | 'paren';
-export type StringifyType = 'thisNode' | 'resolving' | 'resolved';
-
-export interface IParseTreeNode {
-    value: string;
-    type: NodeType;
-    right?: IParseTreeNode;
-    left?: IParseTreeNode;
-    childrenRoot?: IParseTreeNode;
-}
+export type StringifyType = 'thisNode' | 'includeChildren';
 
 export interface ValidationError {
     code: ErrorCode;
@@ -102,5 +94,7 @@ export abstract class ParseTreeNode {
     }
 
     public abstract toString(type: StringifyType): string;
-    public abstract toNodeInfo(): IParseTreeNode;
+    public abstract toNodeInfo(): ParseNodeInfo;
 }
+
+export type * from './parse-node-info';

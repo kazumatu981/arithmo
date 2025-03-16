@@ -3,7 +3,7 @@ import {
     type ValidationRule,
     simpleValidationRule,
     type StringifyType,
-    type IParseTreeNode,
+    type ParseNodeInfo,
 } from './parse-tree-node';
 import { type Token } from '../../tokenizer';
 
@@ -21,7 +21,7 @@ export class SingleNode extends ParseTreeNode {
     public toString(_: StringifyType): string {
         return this.value.map((token) => token.value).join('');
     }
-    public toNodeInfo(): IParseTreeNode {
+    public toNodeInfo(): ParseNodeInfo {
         return {
             type: this.nodeType,
             value: this.toString('thisNode'),

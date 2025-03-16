@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/**
+ * エラーコード
+ */
 export type ErrorCode =
     // tokenizer
     | 'unknown-character'
@@ -18,9 +22,10 @@ export type ErrorCode =
     // 共通
     | 'unexpected';
 
-export const unexpected = '予期せぬエラーが発生しました。';
-
-export const ErrorMessageDictionary: Record<ErrorCode, string> = {
+/**
+ * エラーメッセージ
+ */
+export const ERROR_MESSAGES: Record<ErrorCode, string> = {
     // tokenizer
     'unknown-character': '予期せぬ文字を検出しました。',
     // parser
@@ -42,5 +47,5 @@ export const ErrorMessageDictionary: Record<ErrorCode, string> = {
     'binary-node-must-have-left': '演算子ノードに左の子ノードがありません。',
     'binary-node-must-have-right': '演算子ノードに右の子ノードがありません。',
     // 共通エラー
-    unexpected: unexpected,
+    unexpected: '予期せぬエラーが発生しました。',
 };
