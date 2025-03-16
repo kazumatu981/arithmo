@@ -3,7 +3,7 @@ import {
     ParseTreeNode,
     type ValidationError,
     type StringifyType,
-    type IParseTreeNode,
+    type ParseNodeInfo,
     type ValidationRule,
     simpleValidationRule,
 } from './parse-tree-node';
@@ -116,7 +116,7 @@ export class BinaryNode extends ParseTreeNode {
         return this.value.map((token) => token.value).join('');
     }
 
-    public toNodeInfo(): IParseTreeNode {
+    public toNodeInfo(): ParseNodeInfo {
         return {
             type: this.nodeType,
             value: this.toString('thisNode'),

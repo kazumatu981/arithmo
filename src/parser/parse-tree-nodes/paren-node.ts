@@ -1,7 +1,7 @@
 import {
     ParseTreeNode,
     type StringifyType,
-    type IParseTreeNode,
+    type ParseNodeInfo,
     type ValidationRule,
     type ValidationError,
     simpleValidationRule,
@@ -54,7 +54,7 @@ export class ParenNode extends ParseTreeNode {
         return this.value.map((token) => token.value).join('');
     }
 
-    public toNodeInfo(): IParseTreeNode {
+    public toNodeInfo(): ParseNodeInfo {
         return {
             type: this.nodeType,
             value: this.toString('thisNode'),
