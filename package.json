@@ -8,6 +8,7 @@
         "url": "git+https://github.com/kazumatu981/arithmo.git"
     },
     "scripts": {
+        "lint": "eslint .",
         "test": "jest",
         "test:update-snapshot": "jest --updateSnapshot",
         "build:typescript": "tsc --project tsconfig.json",
