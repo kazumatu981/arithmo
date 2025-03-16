@@ -22,6 +22,7 @@ const abnormalTestCases: string[] = [
     '1(1+3)',
     '1 1',
     '1+(3))',
+    '-(1',
 ];
 describe('unittest-parse-tree-builder', () => {
     normalTestCases.forEach((testCase) => {

@@ -2,32 +2,42 @@ import {
     ParseTreeNode,
     type StringifyType,
     type ParseNodeInfo,
-    type ValidationRule,
-    type ValidationError,
-    simpleValidationRule,
 } from './parse-tree-node';
 import { type Token } from '../../tokenizer';
+import { type Rule } from '../../common/testable';
+import { ParserError } from '../parser-error';
 
 export class ParenNode extends ParseTreeNode {
     private _childrenRoot?: ParseTreeNode;
-    validations: ValidationRule[] = [
-        simpleValidationRule(
-            (node) => node.value.length === 2 || node.value.length === 3,
-            'paren-node-must-have-2-or-3-tokens',
-        ),
-        simpleValidationRule(
-            (node) => (node as ParenNode).isClosed,
-            'paren-node-must-be-closed',
-        ),
-        simpleValidationRule(
-            (node) => (node as ParenNode).childrenRoot !== undefined,
-            'paren-node-must-have-children',
-        ),
-        (node: ParseTreeNode): ValidationError | undefined => {
+    rules: Rule<ParseTreeNode>[] = [
+        (node): void => {
+            const parenNode = node as ParenNode;
+            if (parenNode.value.length !== 2 && parenNode.value.length !== 3) {
+                throw new ParserError('paren-node-must-have-2-or-3-tokens', {
+                    token: parenNode.value[0],
+                });
+            }
+        },
+        (node): void => {
+            const parenNode = node as ParenNode;
+            if (!parenNode.isClosed) {
+                throw new ParserError('paren-node-must-be-closed', {
+                    token: parenNode.value[parenNode.value.length - 1],
+                });
+            }
+        },
+        (node): void => {
+            const parenNode = node as ParenNode;
+            if (parenNode.childrenRoot === undefined) {
+                throw new ParserError('paren-node-must-have-children', {
+                    token: parenNode.value[0],
+                });
+            }
+        },
+        (node): void => {
             const parenNode = node as ParenNode;
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            parenNode.childrenRoot!.validate();
-            return undefined;
+            parenNode.childrenRoot!.test();
         },
     ];
 

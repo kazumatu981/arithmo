@@ -82,7 +82,9 @@ export class ParseTreeBuilder {
         return ParseTreeNode.findRootNode(this._currentNode);
     }
     public build(): ParseTreeNode | undefined {
-        return this.findRootNode()?.validate();
+        const rootNode = this.findRootNode();
+        rootNode?.test();
+        return rootNode;
     }
 
     private throwParseError(code: ErrorCode, token: Token): void {
