@@ -9,10 +9,11 @@ export type StringifyType = 'thisNode' | 'includeChildren';
  * 構文解析木のノード
  */
 export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
+    // #region private fields
     private readonly _type: NodeType;
     private readonly _value: Token[];
     private _parent?: ParseTreeNode;
-    abstract rules: Rule<ParseTreeNode>[];
+    // #endregion
 
     /**
      * コンストラクタ(直接呼ばれることはない)
@@ -56,6 +57,7 @@ export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
         this._parent = value;
     }
 
+    // #region static methods
     /**
      * ルートノードを返却します
      * @param node - 対象のノード
@@ -68,9 +70,13 @@ export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
         while (node.parent !== undefined) node = node.parent;
         return node;
     }
+    // #endregion
 
+    // #region abstracts
+    abstract rules: Rule<ParseTreeNode>[];
     public abstract toString(type: StringifyType): string;
     public abstract toNodeInfo(): ParseNodeInfo;
+    // #endregion
 }
 
 export type * from './parse-node-info';
