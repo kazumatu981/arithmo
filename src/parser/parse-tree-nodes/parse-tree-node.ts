@@ -3,7 +3,7 @@ import { type ErrorCode } from '../../common/error-messages';
 import { ParserError } from '../parser-error';
 import type { NodeType, ParseNodeInfo } from './parse-node-info';
 
-export type StringifyType = 'thisNode' | 'resolving' | 'resolved';
+export type StringifyType = 'thisNode' | 'includeChildren';
 
 export interface ValidationError {
     code: ErrorCode;
