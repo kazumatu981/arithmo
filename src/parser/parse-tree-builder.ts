@@ -7,6 +7,7 @@ import {
 } from './parse-tree-nodes';
 import type { ErrorCode } from '../common/error-messages';
 import { ParserError } from './parser-error';
+import { UnexpectedError } from '../common/unexpected-error';
 
 type ParseState = 'Initial' | 'WaitForNumber' | 'WaitForOperator';
 type ParseTreeStateTableRecord<T> = Record<TokenType, T>;
@@ -109,10 +110,9 @@ export class ParseTreeBuilder {
             } else if (this._currentNode.nodeType === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = numberNode;
             } else {
-                throw new ParserError('unexpected', {
-                    token,
+                throw new UnexpectedError('parser', {
                     appendixMessage:
-                        '現在のノードに数字ノードを追加しようとたが、子ノードを持てないノードである(バグの可能性がある)',
+                        '現在のノードに数字ノードを追加しようとたが、子ノードを持てないノードである',
                 });
             }
         }
@@ -132,10 +132,9 @@ export class ParseTreeBuilder {
             } else if (this._currentNode.nodeType === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = parenNode;
             } else {
-                throw new ParserError('unexpected', {
-                    token,
+                throw new UnexpectedError('parser', {
                     appendixMessage:
-                        '現在のノードに括弧ノードを追加しようとたが、子ノードを持てないノードである(バグの可能性がある)',
+                        '現在のノードに括弧ノードを追加しようとたが、子ノードを持てないノードである',
                 });
             }
         }

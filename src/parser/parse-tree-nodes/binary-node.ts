@@ -7,6 +7,7 @@ import {
 import type { Rule } from '../../common/testable';
 import { type ParenNode } from './paren-node';
 import { ParserError } from '../parser-error';
+import { UnexpectedError } from '../../common/unexpected-error';
 
 export class BinaryNode extends ParseTreeNode {
     private _left?: ParseTreeNode;
@@ -84,10 +85,10 @@ export class BinaryNode extends ParseTreeNode {
                     connected = this.parenConnectHandler(currentNode);
                     break;
                 case 'single':
-                    // TODO : 例外処理は共通のものを使うべし！！！ただしここは基本通らないはず！！！
-                    throw new Error(
-                        'single node cannot connect to binary node',
-                    );
+                    throw new UnexpectedError('parser', {
+                        appendixMessage:
+                            '数字ノードは子ノードを持てないノードである',
+                    });
             }
             if (connected) break;
             currentNode = currentNode.parent;
