@@ -1,8 +1,4 @@
-import {
-    ErrorMessageDictionary,
-    type ErrorCode,
-    unexpected,
-} from './error-messages';
+import { ErrorMessageDictionary, type ErrorCode } from './error-messages';
 
 /**
  * エラーオプション
@@ -23,6 +19,9 @@ export interface ErrorOptions {
  */
 export type ModuleName = 'tokenizer' | 'parser' | 'common';
 
+/**
+ * Arithmo で発生したエラー
+ */
 export class ArithmoError extends Error {
     /**
      * エラーコード
@@ -43,19 +42,21 @@ export class ArithmoError extends Error {
 
     /**
      * 新しい ArithmoError インスタンスを作成します。
-     *
      * @param code - エラーコード
      * @param moduleName - エラーが発生したモジュール名
      * @param options - エラーオプション（位置や補足メッセージを含む）
      */
-
     public constructor(
         code: ErrorCode,
         moduleName: ModuleName,
         options?: ErrorOptions,
     ) {
-        // eslint-disable-next-line jsdoc/require-jsdoc
-        const message: string = ErrorMessageDictionary[code] || unexpected;
+        /**
+         * エラーメッセージの設定
+         */
+        const message: string =
+            ErrorMessageDictionary[code] ||
+            ErrorMessageDictionary['unexpected'];
         super(message);
         this.code = code;
         this.moduleName = moduleName;

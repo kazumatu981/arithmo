@@ -7,11 +7,16 @@ import {
     isLeftParen,
 } from '../common/char-util';
 import { Token } from './token';
-export type ModuleName = 'tokenizer' | 'parser' | 'common';
 
+/**
+ * 入力文字列を字句に分割するクラス
+ */
 export class Tokenizer {
     private expression: string;
     private currentIndex = 0;
+    /**
+     * @param expression - 入力文字列
+     */
     constructor(expression: string) {
         this.expression = expression;
     }
@@ -30,6 +35,10 @@ export class Tokenizer {
         return tokens;
     }
 
+    /**
+     * 字句を生成するジェネレータ
+     * @returns Token - 切り出された字句
+     */
     public *tokens(): Generator<Token> {
         this.reset();
         while (this.currentIndex < this.expression.length) {
@@ -39,15 +48,20 @@ export class Tokenizer {
             }
         }
     }
+    /**
+     * Tokenizerの状態をリセットする
+     */
     public reset(): void {
         this.currentIndex = 0;
     }
 
     /**
-     * inputのstartIndexから始まる字句を切り出す。
-     * @param input 入力文字列
-     * @param startIndex 開始位置
-     * @returns 切り切り出した字句と次の開始位置
+     * 次の字句を読み込み、トークンとして返します。
+     * 空白をスキップし、現在の文字が数字、演算子、または括弧の場合に対応するトークンを切り出します。
+     * 入力文字列の末尾に達している場合、または空白のみの場合は未定義を返します。
+     * 予期しない文字が現れた場合は例外をスローします。
+     * @returns 切り出されたトークン、または未定義
+     * @throws TokenizerError - 予期しない文字が検出された場合
      */
     public readNextToken(): Token | undefined {
         this._skipSpaces();

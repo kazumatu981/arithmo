@@ -21,8 +21,6 @@ export type ErrorCode =
     // 共通
     | 'unexpected';
 
-export const unexpected = '予期せぬエラーが発生しました。';
-
 /**
  * エラーメッセージ
  */
@@ -48,5 +46,5 @@ export const ErrorMessageDictionary: Record<ErrorCode, string> = {
     'binary-node-must-have-left': '演算子ノードに左の子ノードがありません。',
     'binary-node-must-have-right': '演算子ノードに右の子ノードがありません。',
     // 共通エラー
-    unexpected: unexpected,
+    unexpected: '予期せぬエラーが発生しました。',
 };

@@ -6,6 +6,41 @@ import tseslint from 'typescript-eslint';
 import tsdoceslint from 'eslint-plugin-tsdoc';
 import jsdoc from 'eslint-plugin-jsdoc';
 
+const namingRules = [
+    {
+        selector: 'default',
+        format: ['camelCase'],
+    },
+
+    {
+        selector: 'variable',
+        format: ['camelCase', 'UPPER_CASE'],
+    },
+    {
+        selector: 'parameter',
+        format: ['camelCase'],
+        leadingUnderscore: 'allow',
+    },
+
+    {
+        selector: 'memberLike',
+        modifiers: ['private'],
+        format: ['camelCase'],
+        leadingUnderscore: 'require',
+    },
+
+    {
+        selector: 'typeLike',
+        format: ['PascalCase'],
+    },
+
+    {
+        selector: 'typeParameter',
+        format: ['PascalCase'],
+        prefix: ['T'],
+    },
+];
+
 const srcConfig = tseslint.config({
     files: ['src/**/*.{ts,tsx}'],
     extends: [eslint.configs.recommended, tseslint.configs.strict],
@@ -52,6 +87,7 @@ const srcConfig = tseslint.config({
             { prefer: 'type-imports' },
         ],
         '@typescript-eslint/consistent-type-exports': 'warn',
+        '@typescript-eslint/naming-convention': ['warn', ...namingRules],
         // no debugging code
         'no-console': 'warn',
         'tsdoc/syntax': 'warn',
@@ -59,6 +95,14 @@ const srcConfig = tseslint.config({
             'warn',
             {
                 publicOnly: true,
+                require: {
+                    ArrowFunctionExpression: true,
+                    ClassDeclaration: true,
+                    ClassExpression: true,
+                    FunctionDeclaration: true,
+                    FunctionExpression: true,
+                    MethodDefinition: true,
+                },
                 contexts: [
                     'VariableDeclaration',
                     'TSInterfaceDeclaration',
@@ -70,6 +114,7 @@ const srcConfig = tseslint.config({
         ],
         'jsdoc/require-param-type': 'off',
         'jsdoc/require-returns-type': 'off',
+        'jsdoc/require-yields': 'off',
     },
 });
 
