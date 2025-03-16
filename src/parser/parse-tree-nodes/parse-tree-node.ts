@@ -1,42 +1,21 @@
 import { type Token } from '../../tokenizer';
-import { type ErrorCode } from '../../common/error-messages';
-import { ParserError } from '../parser-error';
 import type { NodeType, ParseNodeInfo } from './parse-node-info';
+import { Testable, type Rule } from '../../common/testable';
 
 export type StringifyType = 'thisNode' | 'includeChildren';
 
-export interface ValidationError {
-    code: ErrorCode;
-    node: ParseTreeNode;
-    appendixMessage?: string;
-}
-
-export type ValidationRule = (
-    node: ParseTreeNode,
-) => ValidationError | undefined;
-
-export function simpleValidationRule(
-    isValid: (node: ParseTreeNode) => boolean,
-    code: ErrorCode,
-    appendixMessage?: string,
-): ValidationRule {
-    return (node: ParseTreeNode): ValidationError | undefined => {
-        if (isValid(node)) return undefined;
-        return { code, node, appendixMessage };
-    };
-}
-
-export abstract class ParseTreeNode {
+export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
     private readonly _type: NodeType;
     private readonly _value: Token[];
     private _parent?: ParseTreeNode;
-    abstract validations: ValidationRule[];
+    abstract rules: Rule<ParseTreeNode>[];
 
     /**
      * @param type ノードの型
      * @param tokens 使われた字句の配列
      */
     constructor(type: NodeType, tokens: Token[]) {
+        super();
         this._type = type;
         this._value = tokens;
     }
@@ -78,19 +57,6 @@ export abstract class ParseTreeNode {
         if (node === undefined) return undefined;
         while (node.parent !== undefined) node = node.parent;
         return node;
-    }
-
-    public validate(): this {
-        const validationErrors = this.validations
-            .map((v) => v(this))
-            .filter((v) => v !== undefined) as ValidationError[];
-        if (validationErrors.length > 0) {
-            throw new ParserError(validationErrors[0].code, {
-                token: validationErrors[0].node.value[0],
-                appendixMessage: validationErrors[0].appendixMessage,
-            });
-        }
-        return this;
     }
 
     public abstract toString(type: StringifyType): string;

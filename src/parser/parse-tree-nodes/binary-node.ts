@@ -1,35 +1,46 @@
 import { type Token } from '../../tokenizer';
 import {
     ParseTreeNode,
-    type ValidationError,
     type StringifyType,
     type ParseNodeInfo,
-    type ValidationRule,
-    simpleValidationRule,
 } from './parse-tree-node';
+import type { Rule } from '../../common/testable';
 import { type ParenNode } from './paren-node';
+import { ParserError } from '../parser-error';
 
 export class BinaryNode extends ParseTreeNode {
     private _left?: ParseTreeNode;
     private _right?: ParseTreeNode;
 
-    validations: ValidationRule[] = [
-        simpleValidationRule(
-            (node) => node.value.length === 1,
-            'binary-node-must-have-1-token',
-        ),
-        simpleValidationRule(
-            (node) => (node as BinaryNode).left !== undefined,
-            'binary-node-must-have-left',
-        ),
-        simpleValidationRule(
-            (node) => (node as BinaryNode).right !== undefined,
-            'binary-node-must-have-right',
-        ),
-        (node: ParseTreeNode): ValidationError | undefined => {
+    rules: Rule<ParseTreeNode>[] = [
+        (node): void => {
             const binaryNode = node as BinaryNode;
-            binaryNode.left?.validate();
-            binaryNode.right?.validate();
+            if (binaryNode.value.length !== 1) {
+                throw new ParserError('binary-node-must-have-1-token', {
+                    token: binaryNode.value[0],
+                });
+            }
+        },
+        (node): void => {
+            const binaryNode = node as BinaryNode;
+            if (binaryNode.left === undefined) {
+                throw new ParserError('binary-node-must-have-left', {
+                    token: binaryNode.value[0],
+                });
+            }
+        },
+        (node): void => {
+            const binaryNode = node as BinaryNode;
+            if (binaryNode.right === undefined) {
+                throw new ParserError('binary-node-must-have-right', {
+                    token: binaryNode.value[0],
+                });
+            }
+        },
+        (node): void => {
+            const binaryNode = node as BinaryNode;
+            binaryNode.left?.test();
+            binaryNode.right?.test();
             return undefined;
         },
     ];
