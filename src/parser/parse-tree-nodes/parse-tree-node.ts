@@ -2,8 +2,12 @@ import { type Token } from '../../tokenizer';
 import type { NodeType, ParseNodeInfo } from './parse-node-info';
 import { Testable, type Rule } from '../../common/testable';
 
+/** ノードの文字列化するタイプ */
 export type StringifyType = 'thisNode' | 'includeChildren';
 
+/**
+ * 構文解析木のノード
+ */
 export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
     private readonly _type: NodeType;
     private readonly _value: Token[];
@@ -11,8 +15,9 @@ export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
     abstract rules: Rule<ParseTreeNode>[];
 
     /**
-     * @param type ノードの型
-     * @param tokens 使われた字句の配列
+     * コンストラクタ(直接呼ばれることはない)
+     * @param type - ノードの型
+     * @param tokens - 使われた字句の配列
      */
     constructor(type: NodeType, tokens: Token[]) {
         super();
@@ -29,28 +34,33 @@ export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
     }
 
     /**
-     * この ParseTreeNodes の値を取得します
-     * @returns この ParseTreeNodes の値
+     * このノードの値(Token配列)を取得します
+     * @returns 値を表すToken配列
      */
     public get value(): Token[] {
         return this._value;
     }
 
     /**
-     * この ParseTreeNodes の親 ParseTreeNodes を取得します
-     * @returns 親 ParseTreeNodes
+     * このノードの親ノードを取得します
+     * @returns 親ノード
      */
     public get parent(): ParseTreeNode | undefined {
         return this._parent;
     }
     /**
-     * この ParseTreeNodes の親 ParseTreeNodes を設定します
-     * @param value 設定する親 ParseTreeNodes
+     * このノードの親ノードを設定します
+     * @param value - 設定する親ノード
      */
     public set parent(value: ParseTreeNode | undefined) {
         this._parent = value;
     }
 
+    /**
+     * ルートノードを返却します
+     * @param node - 対象のノード
+     * @returns ルートノード
+     */
     public static findRootNode(
         node: ParseTreeNode | undefined,
     ): ParseTreeNode | undefined {
