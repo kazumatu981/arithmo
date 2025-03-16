@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /**
  * エラーコード
  */
@@ -24,7 +25,7 @@ export type ErrorCode =
 /**
  * エラーメッセージ
  */
-export const ErrorMessageDictionary: Record<ErrorCode, string> = {
+export const ERROR_MESSAGES: Record<ErrorCode, string> = {
     // tokenizer
     'unknown-character': '予期せぬ文字を検出しました。',
     // parser

@@ -1,4 +1,4 @@
-import { ErrorMessageDictionary, type ErrorCode } from './error-messages';
+import { ERROR_MESSAGES, type ErrorCode } from './error-messages';
 
 /**
  * エラーオプション
@@ -55,8 +55,7 @@ export class ArithmoError extends Error {
          * エラーメッセージの設定
          */
         const message: string =
-            ErrorMessageDictionary[code] ||
-            ErrorMessageDictionary['unexpected'];
+            ERROR_MESSAGES[code] || ERROR_MESSAGES['unexpected'];
         super(message);
         this.code = code;
         this.moduleName = moduleName;
