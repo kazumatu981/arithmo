@@ -7,18 +7,16 @@ export type TokenType = 'number' | 'operator' | 'leftParen' | 'rightParen';
  * 切り出した字句
  */
 export class Token {
-    public readonly id: string;
     public readonly type: TokenType;
     public readonly value: string;
     public readonly position: number;
 
     /**
-     * @param type 字句の型
-     * @param value 字句の値
-     * @param position 字句の位置
+     * @param type - 字句の型
+     * @param value - 字句の値
+     * @param position - 字句の位置
      */
     constructor(type: TokenType, value: string, position: number) {
-        this.id = `${type}-${value}-${position}`;
         this.type = type;
         this.value = value;
         this.position = position;
@@ -26,6 +24,7 @@ export class Token {
 
     /**
      * 数字かどうか
+     * @returns 数字かどうかを表す真偽値
      */
     public get isNumber(): boolean {
         return this.type === 'number';
@@ -33,6 +32,7 @@ export class Token {
 
     /**
      * 演算子かどうか
+     * @returns 演算子かどうかを表す真偽値
      */
     public get isOperator(): boolean {
         return this.type === 'operator';
@@ -40,6 +40,7 @@ export class Token {
 
     /**
      * 左括弧かどうか
+     * @returns 左括弧かどうかを表す真偽値
      */
     public get isLeftParen(): boolean {
         return this.type === 'leftParen';
@@ -47,6 +48,7 @@ export class Token {
 
     /**
      * 右括弧かどうか
+     * @returns 右括弧かどうかを表す真偽値
      */
     public get isRightParen(): boolean {
         return this.type === 'rightParen';
@@ -54,6 +56,7 @@ export class Token {
 
     /**
      * 左括弧か右括弧かどうか
+     * @returns 左括弧か右括弧かどうかを表す真偽値
      */
     public get isParen(): boolean {
         return this.isLeftParen || this.isRightParen;
@@ -89,6 +92,10 @@ export class Token {
         );
     }
 
+    /**
+     * Tokenを文字列化する
+     * @returns 字句を表す文字列
+     */
     public toString(): string {
         return this.value;
     }

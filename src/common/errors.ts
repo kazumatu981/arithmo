@@ -1,67 +1,67 @@
-type ModuleName = 'tokenizer' | 'parser' | 'unknown';
-export type ErrorCodes =
-    | 'unknown-character'
-    | 'no-token'
-    | 'paren-must-be-expected'
-    | 'operator-must-be-expected'
-    | 'operator-must-not-be-last'
-    | 'unexpected-token'
-    | 'unknown-error';
-const MessageDictionary: Record<ErrorCodes, string> = {
-    // tokenizer errors
-    'unknown-character': '不明な文字を検出しました',
-    // parser errors
-    'no-token': 'トークンがありません',
-    'paren-must-be-expected': '括弧が期待されますが、括弧が見つかりません',
-    'operator-must-be-expected': '演算子が期待されますが、演算子が見つかりません',
-    'operator-must-not-be-last': '演算子は最後に来てはなりません',
-    'unexpected-token': '予期せぬトークンを検出しました',
-    'unknown-error': '不明なエラー',
-};
+import { ERROR_MESSAGES, type ErrorCode } from './error-messages';
 
-export class CalcErrorBase extends Error {
+/**
+ * エラーオプション
+ */
+export interface ErrorOptions {
     /**
-     * エラーが発生したモジュール名
+     * エラーメッセージに埋め込む位置
      */
-    private _moduleName: ModuleName = 'unknown';
-    public get moduleName(): ModuleName {
-        return this._moduleName;
-    }
-    protected set moduleName(moduleName: ModuleName) {
-        this._moduleName = moduleName;
-    }
+    position?: number;
+    /**
+     * エラーメッセージに付加するメッセージ
+     */
+    appendixMessage?: string;
+}
 
+/**
+ * エラーが発生したモジュール名
+ */
+export type ModuleName = 'tokenizer' | 'parser' | 'common';
+
+/**
+ * Arithmo で発生したエラー
+ */
+export class ArithmoError extends Error {
     /**
      * エラーコード
      */
-    public readonly code: ErrorCodes;
+    public readonly code: ErrorCode;
+    /**
+     * エラーが発生したモジュール名
+     */
+    public readonly moduleName: ModuleName;
+    /**
+     * エラーの発生個所
+     */
+    public readonly position?: number;
     /**
      * エラーの補足メッセージ
      */
     public readonly appendixMessage?: string;
-    public constructor(code: ErrorCodes, appendixMessage?: string) {
-        const message: string = MessageDictionary[code] ?? MessageDictionary['unknown-error'];
+
+    /**
+     * 新しい ArithmoError インスタンスを作成します。
+     * @param code - エラーコード
+     * @param moduleName - エラーが発生したモジュール名
+     * @param options - エラーオプション（位置や補足メッセージを含む）
+     */
+    public constructor(
+        code: ErrorCode,
+        moduleName: ModuleName,
+        options?: ErrorOptions,
+    ) {
+        /**
+         * エラーメッセージの設定
+         */
+        const message: string =
+            ERROR_MESSAGES[code] || ERROR_MESSAGES['unexpected'];
         super(message);
         this.code = code;
-        this.appendixMessage = appendixMessage;
+        this.moduleName = moduleName;
+        this.position = options?.position;
+        this.appendixMessage = options?.appendixMessage;
     }
 }
 
-export class TokenizerError extends CalcErrorBase {
-    /**
-     * トークンの位置(何文字目で検出したか)
-     */
-    public readonly position?: number;
-    public constructor(code: ErrorCodes, appendixMessage?: string, position?: number) {
-        super(code, appendixMessage);
-        this.moduleName = 'tokenizer';
-        this.position = position;
-    }
-}
-
-export class ParserError extends CalcErrorBase {
-    public constructor(code: ErrorCodes, appendixMessage?: string) {
-        super(code, appendixMessage);
-        this.moduleName = 'parser';
-    }
-}
+export { type ErrorCode } from './error-messages';
