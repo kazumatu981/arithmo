@@ -8,6 +8,7 @@ import type { Rule } from '../../common/testable';
 import { type ParenNode } from './paren-node';
 import { ParserError } from '../parser-error';
 import { UnexpectedError } from '../../common/unexpected-error';
+import { Operator } from '../../common/char-util';
 
 /** 演算子ノード */
 export class BinaryNode extends ParseTreeNode {
@@ -64,6 +65,13 @@ export class BinaryNode extends ParseTreeNode {
         return this.value[0];
     }
 
+    /**
+     * 演算子を取得する
+     * @returns 演算子
+     */
+    public get operator(): Operator {
+        return this.operatorToken.value as Operator;
+    }
     /**
      * 構文木に子ノードを接続する
      * @param currentNode - 接続する子ノードの親ノード
