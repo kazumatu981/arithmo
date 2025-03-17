@@ -7,12 +7,21 @@ import {
 
 import type { Operator } from '../common/char-util';
 
+/**
+ * 意味解析イベント引数
+ */
 export interface ResolveEventArg<T> {
+    /** 構文木ノード */
     node: ParseTreeNode;
+    /** 解析順 */
     order: number;
+    /** 解決結果 */
     result: T;
 }
 
+/**
+ * 意味解析イベントハンドラ
+ */
 export type ResolveHandler<T> = (eventArg: ResolveEventArg<T>) => void;
 
 /**
@@ -30,19 +39,26 @@ export abstract class ResolverBase<T> {
     protected abstract resolveSingleNode(node: SingleNode): T;
     protected abstract resolveParenNode(node: ParenNode): T;
 
+    /**
+     * 解決イベントハンドラ
+     */
     public onResolved?: ResolveHandler<T>;
 
     protected resolveBinaryNode(node: BinaryNode): T {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const operatorAction = this.operatorResolver[node.operator]!;
-        if (operatorAction === undefined) {
-            throw new Error('operator not found');
-        }
         const result = operatorAction(
             this.resolve(node.left as ParseTreeNode),
             this.resolve(node.right as ParseTreeNode),
         );
         return result;
+    }
+
+    /**
+     * 状態をリセットする。
+     */
+    public reset(): void {
+        this.currentOrder = 0;
     }
 
     /**

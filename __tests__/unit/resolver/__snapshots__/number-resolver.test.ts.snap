@@ -1,0 +1,221 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NumberResolver Snapshot process -(12+2)*2 = -28 1`] = `
+[
+  {
+    "nodeInfo": "12",
+    "order": 0,
+    "result": 12,
+  },
+  {
+    "nodeInfo": "2",
+    "order": 1,
+    "result": 2,
+  },
+  {
+    "nodeInfo": "12 + 2",
+    "order": 2,
+    "result": 14,
+  },
+  {
+    "nodeInfo": "-(12 + 2)",
+    "order": 3,
+    "result": -14,
+  },
+  {
+    "nodeInfo": "2",
+    "order": 4,
+    "result": 2,
+  },
+  {
+    "nodeInfo": "-(12 + 2) * 2",
+    "order": 5,
+    "result": -28,
+  },
+]
+`;
+
+exports[`NumberResolver Snapshot process -2-3 = -5 1`] = `
+[
+  {
+    "nodeInfo": "-2",
+    "order": 0,
+    "result": -2,
+  },
+  {
+    "nodeInfo": "3",
+    "order": 1,
+    "result": 3,
+  },
+  {
+    "nodeInfo": "-2 - 3",
+    "order": 2,
+    "result": -5,
+  },
+]
+`;
+
+exports[`NumberResolver Snapshot process 1*2 = 2 1`] = `
+[
+  {
+    "nodeInfo": "1",
+    "order": 0,
+    "result": 1,
+  },
+  {
+    "nodeInfo": "2",
+    "order": 1,
+    "result": 2,
+  },
+  {
+    "nodeInfo": "1 * 2",
+    "order": 2,
+    "result": 2,
+  },
+]
+`;
+
+exports[`NumberResolver Snapshot process 1+1 = 2 1`] = `
+[
+  {
+    "nodeInfo": "1",
+    "order": 0,
+    "result": 1,
+  },
+  {
+    "nodeInfo": "1",
+    "order": 1,
+    "result": 1,
+  },
+  {
+    "nodeInfo": "1 + 1",
+    "order": 2,
+    "result": 2,
+  },
+]
+`;
+
+exports[`NumberResolver Snapshot process 6*2/3 = 4 1`] = `
+[
+  {
+    "nodeInfo": "6",
+    "order": 0,
+    "result": 6,
+  },
+  {
+    "nodeInfo": "2",
+    "order": 1,
+    "result": 2,
+  },
+  {
+    "nodeInfo": "6 * 2",
+    "order": 2,
+    "result": 12,
+  },
+  {
+    "nodeInfo": "3",
+    "order": 3,
+    "result": 3,
+  },
+  {
+    "nodeInfo": "6 * 2 / 3",
+    "order": 4,
+    "result": 4,
+  },
+]
+`;
+
+exports[`NumberResolver Snapshot process 6/2 = 3 1`] = `
+[
+  {
+    "nodeInfo": "6",
+    "order": 0,
+    "result": 6,
+  },
+  {
+    "nodeInfo": "2",
+    "order": 1,
+    "result": 2,
+  },
+  {
+    "nodeInfo": "6 / 2",
+    "order": 2,
+    "result": 3,
+  },
+]
+`;
+
+exports[`NumberResolver Snapshot process 6/2/3 = 1 1`] = `
+[
+  {
+    "nodeInfo": "6",
+    "order": 0,
+    "result": 6,
+  },
+  {
+    "nodeInfo": "2",
+    "order": 1,
+    "result": 2,
+  },
+  {
+    "nodeInfo": "6 / 2",
+    "order": 2,
+    "result": 3,
+  },
+  {
+    "nodeInfo": "3",
+    "order": 3,
+    "result": 3,
+  },
+  {
+    "nodeInfo": "6 / 2 / 3",
+    "order": 4,
+    "result": 1,
+  },
+]
+`;
+
+exports[`NumberResolver Snapshot process 11+ (12+2)*2 = 39 1`] = `
+[
+  {
+    "nodeInfo": "11",
+    "order": 0,
+    "result": 11,
+  },
+  {
+    "nodeInfo": "12",
+    "order": 1,
+    "result": 12,
+  },
+  {
+    "nodeInfo": "2",
+    "order": 2,
+    "result": 2,
+  },
+  {
+    "nodeInfo": "12 + 2",
+    "order": 3,
+    "result": 14,
+  },
+  {
+    "nodeInfo": "(12 + 2)",
+    "order": 4,
+    "result": 14,
+  },
+  {
+    "nodeInfo": "2",
+    "order": 5,
+    "result": 2,
+  },
+  {
+    "nodeInfo": "(12 + 2) * 2",
+    "order": 6,
+    "result": 28,
+  },
+  {
+    "nodeInfo": "11 + (12 + 2) * 2",
+    "order": 7,
+    "result": 39,
+  },
+]
+`;
