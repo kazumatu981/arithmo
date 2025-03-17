@@ -12,7 +12,7 @@ export function isDigit(s: string, pos: number): boolean {
 /**
  * サポートする演算子
  */
-export const operators = ['+', '-', '*', '/'] as const;
+export const operators = ['+', '-', '/', '*'] as const;
 /**
  * 演算子
  */
