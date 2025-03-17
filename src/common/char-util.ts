@@ -30,6 +30,16 @@ export function isOperator(s: string, pos: number): boolean {
 }
 
 /**
+ * オペレータの優先度を計算する
+ * @param a - 比較元のオペレータ
+ * @param b - 比較対象のオペレータ
+ * @returns 比較元が大きい場合正の値、小さい場合負の値、等しい場合0
+ */
+export function compareOperator(a: Operator, b: Operator): number {
+    return operators.indexOf(a) - operators.indexOf(b);
+}
+
+/**
  * 空白文字かどうかを判定する
  * @param s - 対象文字列
  * @param pos - 対象文字の位置
