@@ -10,6 +10,15 @@ export function isDigit(s: string, pos: number): boolean {
 }
 
 /**
+ * サポートする演算子
+ */
+export const operators = ['+', '-', '*', '/'] as const;
+/**
+ * 演算子
+ */
+export type Operator = (typeof operators)[number];
+
+/**
  * 演算子かどうかを判定する
  * @param s - 対象文字列
  * @param pos - 対象文字の位置
@@ -17,7 +26,7 @@ export function isDigit(s: string, pos: number): boolean {
  */
 export function isOperator(s: string, pos: number): boolean {
     const c = s.charAt(pos);
-    return c === '+' || c === '-' || c === '*' || c === '/';
+    return operators.includes(c as Operator);
 }
 
 /**
