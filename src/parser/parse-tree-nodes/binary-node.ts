@@ -8,7 +8,7 @@ import type { Rule } from '../../common/testable';
 import { type ParenNode } from './paren-node';
 import { ParserError } from '../parser-error';
 import { UnexpectedError } from '../../common/unexpected-error';
-import { Operator } from '../../common/char-util';
+import { type Operator, compareOperator } from '../../common/char-util';
 
 /** 演算子ノード */
 export class BinaryNode extends ParseTreeNode {
@@ -113,10 +113,7 @@ export class BinaryNode extends ParseTreeNode {
         currentNode: ParseTreeNode | undefined,
     ): boolean {
         const binaryNode = currentNode?.parent as BinaryNode;
-        if (
-            this.operatorToken.isPrimaryOperator &&
-            binaryNode?.operatorToken.isSecondaryOperator
-        ) {
+        if (compareOperator(this.operator, binaryNode.operator) > 0) {
             this.left = binaryNode.right as ParseTreeNode;
             binaryNode.right = this;
             return true;
