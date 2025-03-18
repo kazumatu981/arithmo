@@ -12,7 +12,7 @@ export function isDigit(s: string, pos: number): boolean {
 /**
  * サポートする演算子
  */
-export const operators = ['+', '-', '*', '/'] as const;
+export const operators = ['+', '-', '/', '*'] as const;
 /**
  * 演算子
  */
@@ -27,6 +27,16 @@ export type Operator = (typeof operators)[number];
 export function isOperator(s: string, pos: number): boolean {
     const c = s.charAt(pos);
     return operators.includes(c as Operator);
+}
+
+/**
+ * オペレータの優先度を計算する
+ * @param a - 比較元のオペレータ
+ * @param b - 比較対象のオペレータ
+ * @returns 比較元が大きい場合正の値、小さい場合負の値、等しい場合0
+ */
+export function compareOperator(a: Operator, b: Operator): number {
+    return operators.indexOf(a) - operators.indexOf(b);
 }
 
 /**

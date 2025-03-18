@@ -26,7 +26,7 @@ export class SingleNode extends ParseTreeNode {
      * @returns 文字列化の結果
      */
     public toString(_: StringifyType): string {
-        return this.value.map((token) => token.value).join('');
+        return this.value.map((token) => token.toString()).join('');
     }
     /**
      * ノード情報の取得

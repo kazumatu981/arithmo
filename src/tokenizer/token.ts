@@ -23,73 +23,11 @@ export class Token {
     }
 
     /**
-     * 数字かどうか
-     * @returns 数字かどうかを表す真偽値
-     */
-    public get isNumber(): boolean {
-        return this.type === 'number';
-    }
-
-    /**
-     * 演算子かどうか
-     * @returns 演算子かどうかを表す真偽値
-     */
-    public get isOperator(): boolean {
-        return this.type === 'operator';
-    }
-
-    /**
-     * 左括弧かどうか
-     * @returns 左括弧かどうかを表す真偽値
-     */
-    public get isLeftParen(): boolean {
-        return this.type === 'leftParen';
-    }
-
-    /**
-     * 右括弧かどうか
-     * @returns 右括弧かどうかを表す真偽値
-     */
-    public get isRightParen(): boolean {
-        return this.type === 'rightParen';
-    }
-
-    /**
-     * 左括弧か右括弧かどうか
-     * @returns 左括弧か右括弧かどうかを表す真偽値
-     */
-    public get isParen(): boolean {
-        return this.isLeftParen || this.isRightParen;
-    }
-
-    /**
      * マイナス記号かどうか
      * @returns マイナス記号かどうかを表す真偽値
      */
     public get isNegativeSign(): boolean {
         return this.type === 'operator' && this.value === '-';
-    }
-
-    /**
-     * 優先度の高い演算子かどうか
-     * @returns 優先度が高い演算子かどうかを表す真偽値
-     */
-    public get isPrimaryOperator(): boolean {
-        return (
-            this.type === 'operator' &&
-            (this.value === '*' || this.value === '/')
-        );
-    }
-
-    /**
-     * 優先度の低い演算子かどうか
-     * @returns 優先度が低い演算子かどうかを表す真偽値
-     */
-    public get isSecondaryOperator(): boolean {
-        return (
-            this.type === 'operator' &&
-            (this.value === '+' || this.value === '-')
-        );
     }
 
     /**
