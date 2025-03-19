@@ -43,7 +43,7 @@ export class ParenNode extends ParseTreeNode {
      * @returns 閉じられているかどうか
      */
     public get isClosed(): boolean {
-        return this.value[this.value.length - 1].isRightParen;
+        return this.value[this.value.length - 1].type === 'rightParen';
     }
     /**
      * 括弧ノードの終わりを設定します。

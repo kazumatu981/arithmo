@@ -1,2 +1,2 @@
 export * from './number-resolver';
-export * from './resolver-base';
+export * from './common/resolver-base';

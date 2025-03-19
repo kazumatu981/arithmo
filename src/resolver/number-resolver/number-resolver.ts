@@ -1,6 +1,6 @@
 import { ParenNode, ParseTreeNode, SingleNode } from '../../parser';
-import { stringToNum } from './string-to-num';
-import { ResolverBase } from '../resolver-base';
+import { stringToNum } from '../common/string-to-num';
+import { ResolverBase } from '../common/resolver-base';
 
 export class NumberResolver extends ResolverBase<number> {
     protected operatorResolver = {

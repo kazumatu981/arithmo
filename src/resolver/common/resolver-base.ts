@@ -3,9 +3,9 @@ import {
     type ParenNode,
     type BinaryNode,
     type ParseTreeNode,
-} from '../parser';
+} from '../../parser';
 
-import type { Operator } from '../common/char-util';
+import type { Operator } from '../../common/char-util';
 
 /**
  * 意味解析イベント引数
