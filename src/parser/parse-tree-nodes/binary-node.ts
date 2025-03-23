@@ -22,8 +22,8 @@ export class BinaryNode extends ParseTreeNode {
      * コンストラクタ
      * @param tokens - 構文解析木のノードに対応するトークン配列
      */
-    public constructor(tokens: Token[]) {
-        super('binary', tokens);
+    public constructor(operatorToken: Token) {
+        super('binary', [operatorToken]);
     }
 
     /**

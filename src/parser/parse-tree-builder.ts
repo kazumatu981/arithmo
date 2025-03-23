@@ -181,7 +181,7 @@ export class ParseTreeBuilder {
         this._currentNode = numberNode;
     }
     private _appendOperatorNode(token: Token): void {
-        this._currentNode = new BinaryNode([token]).attachTo(this._currentNode);
+        this._currentNode = new BinaryNode(token).attachTo(this._currentNode);
     }
     private _appendParenStart(token: Token): void {
         const parenNode = new ParenNode(token, this._sign);
