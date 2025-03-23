@@ -1,5 +1,6 @@
 import { isOperator } from '../common/char-util';
 import { Testable, type Rule } from '../common/testable';
+import { TokenizerError } from './tokenizer-error';
 /**
  * 字句の型
  * @group Tokenizer
@@ -25,6 +26,7 @@ export class Token extends Testable<Token> {
         this.type = type;
         this.value = value;
         this.position = position;
+        this.test();
     }
 
     /**
@@ -51,7 +53,9 @@ export class Token extends Testable<Token> {
         (testable): void => {
             const token = testable as Token;
             if (token.type === 'number' && !token.value.match(/^[0-9]+$/)) {
-                throw new Error('number-token-must-be-number');
+                throw new TokenizerError('type-mismatch', {
+                    position: token.position,
+                });
             }
         },
         (testable): void => {
@@ -60,7 +64,25 @@ export class Token extends Testable<Token> {
                 token.type === 'operator' &&
                 (token.value.length !== 1 || !isOperator(token.value, 0))
             ) {
-                throw new Error('operator-token-must-be-operator');
+                throw new TokenizerError('type-mismatch', {
+                    position: token.position,
+                });
+            }
+        },
+        (testable): void => {
+            const token = testable as Token;
+            if (token.type === 'leftParen' && token.value !== '(') {
+                throw new TokenizerError('type-mismatch', {
+                    position: token.position,
+                });
+            }
+        },
+        (testable): void => {
+            const token = testable as Token;
+            if (token.type === 'rightParen' && token.value !== ')') {
+                throw new TokenizerError('type-mismatch', {
+                    position: token.position,
+                });
             }
         },
     ];

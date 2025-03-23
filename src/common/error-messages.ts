@@ -5,6 +5,7 @@
 export type ErrorCode =
     // tokenizer
     | 'unknown-character'
+    | 'type-mismatch'
     // parser
     | 'unexpected-number'
     | 'unexpected-operator'
@@ -29,6 +30,7 @@ export type ErrorCode =
 export const ERROR_MESSAGES: Record<ErrorCode, string> = {
     // tokenizer
     'unknown-character': '予期せぬ文字を検出しました。',
+    'type-mismatch': '型と値の形式が一致しません。',
     // parser
     'unexpected-number': '予期せぬ数字を検出しました。',
     'unexpected-operator': '予期せぬ演算子を検出しました。',
