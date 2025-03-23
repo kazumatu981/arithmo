@@ -7,6 +7,7 @@ export * from './tokenizer';
  * 入力文字列を字句に分割する
  * @param input - 入力文字列
  * @returns 切り出した字句
+ * @group Tokenizer
  */
 export function tokenize(input: string): Token[] {
     return new Tokenizer(input).tokenize();

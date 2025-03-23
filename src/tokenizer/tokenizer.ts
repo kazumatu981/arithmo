@@ -10,6 +10,7 @@ import { Token } from './token';
 
 /**
  * 入力文字列を字句に分割するクラス
+ * @group Tokenizer
  */
 export class Tokenizer {
     private _expression: string;

@@ -6,6 +6,7 @@ import {
 
 /**
  * 切り出し字句のエラー
+ * @group Tokenizer
  */
 export class TokenizerError extends ArithmoError {
     /**

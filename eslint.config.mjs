@@ -3,7 +3,6 @@
 import globals from 'globals';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import tsdoceslint from 'eslint-plugin-tsdoc';
 import jsdoc from 'eslint-plugin-jsdoc';
 
 const namingRules = [
@@ -46,7 +45,6 @@ const srcConfig = tseslint.config({
     extends: [eslint.configs.recommended, tseslint.configs.strict],
     plugins: {
         jsdoc,
-        tsdoc: tsdoceslint,
     },
     languageOptions: {
         globals: {
@@ -90,7 +88,6 @@ const srcConfig = tseslint.config({
         '@typescript-eslint/naming-convention': ['warn', ...namingRules],
         // no debugging code
         'no-console': 'warn',
-        'tsdoc/syntax': 'warn',
         'jsdoc/require-jsdoc': [
             'warn',
             {
@@ -111,6 +108,12 @@ const srcConfig = tseslint.config({
                 ],
             },
         ],
+        'jsdoc/check-tag-names': [
+            'warn',
+            {
+                definedTags: ['group'],
+            },
+        ],
         'jsdoc/require-param-type': 'off',
         'jsdoc/require-returns-type': 'off',
         'jsdoc/require-yields': 'off',
@@ -119,7 +122,7 @@ const srcConfig = tseslint.config({
 
 export default [
     {
-        ignores: ['node_modules/**', 'dist/**', 'coverage/**'],
+        ignores: ['node_modules/**', 'dist/**', 'coverage/**', 'type-doc/**'],
     },
     jsdoc.configs['flat/recommended'],
     ...srcConfig,

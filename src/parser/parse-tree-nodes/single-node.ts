@@ -9,6 +9,7 @@ import { ParserError } from '../parser-error';
 
 /**
  * 単項ノード(数字ノード)
+ * @group Parser
  */
 export class SingleNode extends ParseTreeNode {
     /**

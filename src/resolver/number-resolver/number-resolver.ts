@@ -1,7 +1,11 @@
-import { ParenNode, ParseTreeNode, SingleNode } from '../../parser';
+import type { ParenNode, ParseTreeNode, SingleNode } from '../../parser';
 import { stringToNum } from '../common/string-to-num';
 import { ResolverBase } from '../common/resolver-base';
 
+/**
+ * 数値解析クラス
+ * @group Resolver
+ */
 export class NumberResolver extends ResolverBase<number> {
     protected operatorResolver = {
         // eslint-disable-next-line @typescript-eslint/naming-convention

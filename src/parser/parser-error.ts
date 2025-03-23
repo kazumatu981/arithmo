@@ -8,6 +8,7 @@ import { type Token } from '../tokenizer';
 
 /**
  * 構文解析エラーのオプション
+ * @group Parser
  */
 export interface ParserErrorOptions extends ErrorOptions {
     /**
@@ -18,6 +19,7 @@ export interface ParserErrorOptions extends ErrorOptions {
 
 /**
  * 構文解析エラー
+ * @group Parser
  */
 export class ParserError extends ArithmoError {
     public readonly token?: Token;

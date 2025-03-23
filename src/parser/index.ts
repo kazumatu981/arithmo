@@ -6,6 +6,7 @@ import { type ParseTreeNode } from './parse-tree-nodes';
  * 字句解析の結果から構文を解析して構文木を返却する
  * @param tokens - 字句
  * @returns 解析結果のノードツリーのルート
+ * @group Parser
  */
 export function parse(tokens: Token[]): ParseTreeNode | undefined {
     const builder = new ParseTreeBuilder();
