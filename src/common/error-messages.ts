@@ -13,7 +13,7 @@ export type ErrorCode =
     | 'unexpected-sign'
     // parse-tree-nodes
     | 'sign-must-be-negative'
-    | 'single-node-must-have-1-or-2-tokens'
+    | 'single-node-must-have-single-token'
     | 'paren-node-must-have-2-or-3-tokens'
     | 'paren-node-must-be-closed'
     | 'paren-node-must-have-children'
@@ -37,8 +37,8 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
     'unexpected-sign': '子の演算子は符号として利用できません。',
     // parse-tree-nodes
     'sign-must-be-negative': '符号はマイナスである必要があります。',
-    'single-node-must-have-1-or-2-tokens':
-        '数値ノードは1または2の字句を持つ必要があります。',
+    'single-node-must-have-single-token':
+        '単項ノードは複数の字句を持てません。',
     'paren-node-must-have-2-or-3-tokens':
         '括弧ノードは2または3の字句を持つ必要があります。',
     'paren-node-must-be-closed': '括弧ノードは閉じられる必要があります。',

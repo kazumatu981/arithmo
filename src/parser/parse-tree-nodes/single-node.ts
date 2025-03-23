@@ -46,11 +46,8 @@ export class SingleNode extends SignedNode {
     protected readonly rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const singleNode = node as SingleNode;
-            if (
-                singleNode.tokens.length !== 1 &&
-                singleNode.tokens.length !== 2
-            ) {
-                throw new ParserError('single-node-must-have-1-or-2-tokens', {
+            if (singleNode.tokens.length !== 1) {
+                throw new ParserError('single-node-must-have-single-token', {
                     token: singleNode.tokens[0],
                 });
             }
