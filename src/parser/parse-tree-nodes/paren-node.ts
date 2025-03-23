@@ -18,10 +18,11 @@ export class ParenNode extends SignedNode {
 
     /**
      * 括弧ノードを作成します。
-     * @param tokens - 使われた字句
+     * @param parenStartToken - 括弧の始まりトークン
+     * @param signToken - 符号ノード
      */
-    public constructor(parenStart: Token, signToken?: Token) {
-        super('paren', [parenStart], signToken);
+    public constructor(parenStartToken: Token, signToken?: Token) {
+        super('paren', [parenStartToken], signToken);
     }
 
     /**
@@ -48,9 +49,10 @@ export class ParenNode extends SignedNode {
     }
     /**
      * 括弧ノードの終わりを設定します。
+     * @param parenEndToken - 括弧ノードの終わり
      */
-    public parenEnd(token: Token) {
-        this.tokens.push(token);
+    public parenEnd(parenEndToken: Token): void {
+        this.tokens.push(parenEndToken);
     }
 
     //#region statics

@@ -14,10 +14,27 @@ import { SignedNode } from './signed-node';
 export class SingleNode extends SignedNode {
     /**
      * 単項ノードを生成する
-     * @param tokens - 使われた字句
+     * @param token - 使われた字句
+     * @param signToken - 符号ノード
      */
     public constructor(token: Token, signToken?: Token) {
         super('single', [token], signToken);
+    }
+
+    /**
+     * 数値トークンを返却する
+     * @returns 数値トークン
+     */
+    public get valueToken(): Token {
+        return this.tokens[0];
+    }
+
+    /**
+     * 数値を返却する
+     * @returns 数値
+     */
+    public get value(): string {
+        return this.valueToken.value;
     }
 
     //#region overrides
@@ -28,9 +45,7 @@ export class SingleNode extends SignedNode {
      */
     public toString(_: StringifyType): string {
         const signature = this.isNegative ? '-' : '';
-        return `${signature}${this.tokens
-            .map((token) => token.toString())
-            .join('')}`;
+        return `${signature}${this.value}`;
     }
     /**
      * ノード情報の取得

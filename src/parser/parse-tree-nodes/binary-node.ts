@@ -20,10 +20,26 @@ export class BinaryNode extends ParseTreeNode {
 
     /**
      * コンストラクタ
-     * @param tokens - 構文解析木のノードに対応するトークン配列
+     * @param operatorToken - 構文解析木のノードに対応するトークン配列
      */
     public constructor(operatorToken: Token) {
         super('binary', [operatorToken]);
+    }
+
+    /**
+     * 演算子トークンを取得する
+     * @returns 演算子トークン
+     */
+    public get operatorToken(): Token {
+        return this.tokens[0];
+    }
+
+    /**
+     * 演算子を取得する
+     * @returns 演算子
+     */
+    public get operator(): Operator {
+        return this.operatorToken.value as Operator;
     }
 
     /**
@@ -60,21 +76,6 @@ export class BinaryNode extends ParseTreeNode {
         this._right.parent = this;
     }
 
-    /**
-     * 演算子トークンを取得する
-     * @returns 演算子トークン
-     */
-    public get operatorToken(): Token {
-        return this.tokens[0];
-    }
-
-    /**
-     * 演算子を取得する
-     * @returns 演算子
-     */
-    public get operator(): Operator {
-        return this.operatorToken.value as Operator;
-    }
     /**
      * 構文木に子ノードを接続する
      * @param currentNode - 接続する子ノードの親ノード
@@ -142,10 +143,10 @@ export class BinaryNode extends ParseTreeNode {
     public toString(stringifyType: StringifyType): string {
         if (stringifyType === 'includeChildren') {
             return `${this.left?.toString('includeChildren')} ${
-                this.operatorToken.value
+                this.operator
             } ${this.right?.toString('includeChildren')}`;
         }
-        return this.tokens.map((token) => token.value).join('');
+        return this.operator;
     }
 
     /**
