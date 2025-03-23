@@ -65,7 +65,7 @@ export class BinaryNode extends ParseTreeNode {
      * @returns 演算子トークン
      */
     public get operatorToken(): Token {
-        return this.value[0];
+        return this.tokens[0];
     }
 
     /**
@@ -83,7 +83,7 @@ export class BinaryNode extends ParseTreeNode {
     public attachTo(currentNode: ParseTreeNode | undefined): this {
         while (currentNode) {
             let connected = false;
-            switch (currentNode.parent?.nodeType ?? 'root') {
+            switch (currentNode.parent?.type ?? 'root') {
                 case 'root':
                     connected = this._rootConnectHandler(currentNode);
                     break;
@@ -145,7 +145,7 @@ export class BinaryNode extends ParseTreeNode {
                 this.operatorToken.value
             } ${this.right?.toString('includeChildren')}`;
         }
-        return this.value.map((token) => token.value).join('');
+        return this.tokens.map((token) => token.value).join('');
     }
 
     /**
@@ -154,19 +154,19 @@ export class BinaryNode extends ParseTreeNode {
      */
     public toNodeInfo(): ParseNodeInfo {
         return {
-            type: this.nodeType,
+            type: this.type,
             value: this.toString('thisNode'),
             left: this.left?.toNodeInfo(),
             right: this.right?.toNodeInfo(),
         };
     }
     //#region privates
-    rules: Rule<ParseTreeNode>[] = [
+    protected readonly rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const binaryNode = node as BinaryNode;
-            if (binaryNode.value.length !== 1) {
+            if (binaryNode.tokens.length !== 1) {
                 throw new ParserError('binary-node-must-have-1-token', {
-                    token: binaryNode.value[0],
+                    token: binaryNode.tokens[0],
                 });
             }
         },
@@ -174,7 +174,7 @@ export class BinaryNode extends ParseTreeNode {
             const binaryNode = node as BinaryNode;
             if (binaryNode.left === undefined) {
                 throw new ParserError('binary-node-must-have-left', {
-                    token: binaryNode.value[0],
+                    token: binaryNode.tokens[0],
                 });
             }
         },
@@ -182,7 +182,7 @@ export class BinaryNode extends ParseTreeNode {
             const binaryNode = node as BinaryNode;
             if (binaryNode.right === undefined) {
                 throw new ParserError('binary-node-must-have-right', {
-                    token: binaryNode.value[0],
+                    token: binaryNode.tokens[0],
                 });
             }
         },

@@ -44,20 +44,20 @@ export class ParenNode extends ParseTreeNode {
      * @returns 閉じられているかどうか
      */
     public get isClosed(): boolean {
-        return this.value[this.value.length - 1].type === 'rightParen';
+        return this.tokens[this.tokens.length - 1].type === 'rightParen';
     }
     /**
      * 括弧ノードの終わりを設定します。
      */
     public set parenEnd(token: Token) {
-        this.value.push(token);
+        this.tokens.push(token);
     }
     /**
      * 括弧ノードがマイナス記号を持っているかどうか
      * @returns マイナス記号を持っているかどうか
      */
     public get isNegative(): boolean {
-        return this.value[0].isNegativeSign;
+        return this.tokens[0].isNegativeSign;
     }
 
     //#region statics
@@ -71,7 +71,7 @@ export class ParenNode extends ParseTreeNode {
     ): ParenNode | undefined {
         let currentNode: ParseTreeNode | undefined = node?.parent;
         while (currentNode !== undefined) {
-            if (currentNode.nodeType === 'paren') {
+            if (currentNode.type === 'paren') {
                 return currentNode as ParenNode;
             }
             currentNode = currentNode.parent;
@@ -92,7 +92,7 @@ export class ParenNode extends ParseTreeNode {
                 'includeChildren',
             )})`;
         }
-        return this.value.map((token) => token.value).join('');
+        return this.tokens.map((token) => token.value).join('');
     }
 
     /**
@@ -101,18 +101,21 @@ export class ParenNode extends ParseTreeNode {
      */
     public toNodeInfo(): ParseNodeInfo {
         return {
-            type: this.nodeType,
+            type: this.type,
             value: this.toString('thisNode'),
             childrenRoot: this.childrenRoot?.toNodeInfo(),
         };
     }
     //#region privates
-    rules: Rule<ParseTreeNode>[] = [
+    protected readonly rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const parenNode = node as ParenNode;
-            if (parenNode.value.length !== 2 && parenNode.value.length !== 3) {
+            if (
+                parenNode.tokens.length !== 2 &&
+                parenNode.tokens.length !== 3
+            ) {
                 throw new ParserError('paren-node-must-have-2-or-3-tokens', {
-                    token: parenNode.value[0],
+                    token: parenNode.tokens[0],
                 });
             }
         },
@@ -120,7 +123,7 @@ export class ParenNode extends ParseTreeNode {
             const parenNode = node as ParenNode;
             if (!parenNode.isClosed) {
                 throw new ParserError('paren-node-must-be-closed', {
-                    token: parenNode.value[parenNode.value.length - 1],
+                    token: parenNode.tokens[parenNode.tokens.length - 1],
                 });
             }
         },
@@ -128,7 +131,7 @@ export class ParenNode extends ParseTreeNode {
             const parenNode = node as ParenNode;
             if (parenNode.childrenRoot === undefined) {
                 throw new ParserError('paren-node-must-have-children', {
-                    token: parenNode.value[0],
+                    token: parenNode.tokens[0],
                 });
             }
         },

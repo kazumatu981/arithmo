@@ -169,9 +169,9 @@ export class ParseTreeBuilder {
             : new SingleNode([token]);
         this._sign = null;
         if (this._currentNode) {
-            if (this._currentNode.nodeType === 'binary') {
+            if (this._currentNode.type === 'binary') {
                 (this._currentNode as BinaryNode).right = numberNode;
-            } else if (this._currentNode.nodeType === 'paren') {
+            } else if (this._currentNode.type === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = numberNode;
             } else {
                 throw new UnexpectedError('parser', {
@@ -191,9 +191,9 @@ export class ParseTreeBuilder {
             : new ParenNode([token]);
         this._sign = null;
         if (this._currentNode) {
-            if (this._currentNode.nodeType === 'binary') {
+            if (this._currentNode.type === 'binary') {
                 (this._currentNode as BinaryNode).right = parenNode;
-            } else if (this._currentNode.nodeType === 'paren') {
+            } else if (this._currentNode.type === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = parenNode;
             } else {
                 throw new UnexpectedError('parser', {

@@ -20,9 +20,9 @@ export class NumberResolver extends ResolverBase<number> {
 
     protected resolveSingleNode(node: SingleNode): number {
         const numberToken =
-            node.value.length === 1 ? node.value[0] : node.value[1];
+            node.tokens.length === 1 ? node.tokens[0] : node.tokens[1];
         const numberValue = stringToNum(numberToken.value);
-        return node.value.length === 2 ? -numberValue : numberValue;
+        return node.tokens.length === 2 ? -numberValue : numberValue;
     }
 
     protected resolveParenNode(node: ParenNode): number {

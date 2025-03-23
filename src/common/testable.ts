@@ -5,7 +5,7 @@ export abstract class Testable<T> {
     /**
      * テストルール
      */
-    abstract readonly rules: Rule<T>[];
+    protected abstract readonly rules: Rule<T>[];
 
     /**
      * テストの実行

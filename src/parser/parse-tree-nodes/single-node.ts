@@ -27,7 +27,7 @@ export class SingleNode extends ParseTreeNode {
      * @returns 文字列化の結果
      */
     public toString(_: StringifyType): string {
-        return this.value.map((token) => token.toString()).join('');
+        return this.tokens.map((token) => token.toString()).join('');
     }
     /**
      * ノード情報の取得
@@ -35,20 +35,20 @@ export class SingleNode extends ParseTreeNode {
      */
     public toNodeInfo(): ParseNodeInfo {
         return {
-            type: this.nodeType,
+            type: this.type,
             value: this.toString('thisNode'),
         };
     }
     //#region privates
-    rules: Rule<ParseTreeNode>[] = [
+    protected readonly rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const singleNode = node as SingleNode;
             if (
-                singleNode.value.length !== 1 &&
-                singleNode.value.length !== 2
+                singleNode.tokens.length !== 1 &&
+                singleNode.tokens.length !== 2
             ) {
                 throw new ParserError('single-node-must-have-1-or-2-tokens', {
-                    token: singleNode.value[0],
+                    token: singleNode.tokens[0],
                 });
             }
         },
