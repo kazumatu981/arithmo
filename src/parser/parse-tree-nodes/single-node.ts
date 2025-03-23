@@ -52,6 +52,7 @@ export class SingleNode extends SignedNode {
                 });
             }
         },
+        ...this.signedNodeRules,
     ];
     //#endregion
     //#endregion

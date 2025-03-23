@@ -125,6 +125,7 @@ export class ParenNode extends SignedNode {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             parenNode.childrenRoot!.test();
         },
+        ...this.signedNodeRules,
     ];
     //#endregion
     //#endregion
