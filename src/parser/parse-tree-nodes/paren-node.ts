@@ -1,17 +1,17 @@
 import {
-    ParseTreeNode,
+    type ParseTreeNode,
     type StringifyType,
     type ParseNodeInfo,
 } from './parse-tree-node';
 import { type Token } from '../../tokenizer';
 import { type Rule } from '../../common/testable';
 import { ParserError } from '../parser-error';
-
+import { SignedNode } from './signed-node';
 /**
  * 括弧ノード
  * @group Parser
  */
-export class ParenNode extends ParseTreeNode {
+export class ParenNode extends SignedNode {
     //#region private fields
     private _childrenRoot?: ParseTreeNode;
     //#endregion
@@ -20,8 +20,8 @@ export class ParenNode extends ParseTreeNode {
      * 括弧ノードを作成します。
      * @param tokens - 使われた字句
      */
-    public constructor(tokens: Token[]) {
-        super('paren', tokens);
+    public constructor(parenStart: Token, signToken?: Token) {
+        super('paren', [parenStart], signToken);
     }
 
     /**
@@ -52,13 +52,6 @@ export class ParenNode extends ParseTreeNode {
     public set parenEnd(token: Token) {
         this.tokens.push(token);
     }
-    /**
-     * 括弧ノードがマイナス記号を持っているかどうか
-     * @returns マイナス記号を持っているかどうか
-     */
-    public get isNegative(): boolean {
-        return this.tokens[0].isNegativeSign;
-    }
 
     //#region statics
     /**
@@ -87,12 +80,15 @@ export class ParenNode extends ParseTreeNode {
      * @returns 文字列化の結果
      */
     public toString(stringifyType: StringifyType): string {
+        const signature = this.isNegative ? '-' : '';
         if (stringifyType === 'includeChildren') {
-            return `${this.isNegative ? '-' : ''}(${this.childrenRoot?.toString(
+            return `${signature}(${this.childrenRoot?.toString(
                 'includeChildren',
             )})`;
         }
-        return this.tokens.map((token) => token.value).join('');
+        return `${signature}${this.tokens
+            .map((token) => token.value)
+            .join('')}`;
     }
 
     /**
@@ -108,17 +104,6 @@ export class ParenNode extends ParseTreeNode {
     }
     //#region privates
     protected readonly rules: Rule<ParseTreeNode>[] = [
-        (node): void => {
-            const parenNode = node as ParenNode;
-            if (
-                parenNode.tokens.length !== 2 &&
-                parenNode.tokens.length !== 3
-            ) {
-                throw new ParserError('paren-node-must-have-2-or-3-tokens', {
-                    token: parenNode.tokens[0],
-                });
-            }
-        },
         (node): void => {
             const parenNode = node as ParenNode;
             if (!parenNode.isClosed) {

@@ -53,7 +53,7 @@ export class ParseTreeBuilder {
     /**
      * 符号のキャッシュ
      */
-    private _sign: Token | null = null;
+    private _sign?: Token;
     /**
      * 状態遷移テーブル
      */
@@ -118,7 +118,7 @@ export class ParseTreeBuilder {
     public initialize(): void {
         this._currentNode = undefined;
         this._state = 'initial';
-        this._sign = null;
+        this._sign = undefined;
     }
 
     /**
@@ -164,10 +164,8 @@ export class ParseTreeBuilder {
         }
     }
     private _appendNumberNode(token: Token): void {
-        const numberNode = this._sign
-            ? new SingleNode([this._sign, token])
-            : new SingleNode([token]);
-        this._sign = null;
+        const numberNode = new SingleNode(token, this._sign);
+        this._sign = undefined;
         if (this._currentNode) {
             if (this._currentNode.type === 'binary') {
                 (this._currentNode as BinaryNode).right = numberNode;
@@ -186,10 +184,8 @@ export class ParseTreeBuilder {
         this._currentNode = new BinaryNode([token]).attachTo(this._currentNode);
     }
     private _appendParenStart(token: Token): void {
-        const parenNode = this._sign
-            ? new ParenNode([this._sign, token])
-            : new ParenNode([token]);
-        this._sign = null;
+        const parenNode = new ParenNode(token, this._sign);
+        this._sign = undefined;
         if (this._currentNode) {
             if (this._currentNode.type === 'binary') {
                 (this._currentNode as BinaryNode).right = parenNode;

@@ -1,23 +1,23 @@
 import {
-    ParseTreeNode,
+    type ParseTreeNode,
     type StringifyType,
     type ParseNodeInfo,
 } from './parse-tree-node';
 import { type Token } from '../../tokenizer';
 import type { Rule } from '../../common/testable';
 import { ParserError } from '../parser-error';
-
+import { SignedNode } from './signed-node';
 /**
  * 単項ノード(数字ノード)
  * @group Parser
  */
-export class SingleNode extends ParseTreeNode {
+export class SingleNode extends SignedNode {
     /**
      * 単項ノードを生成する
      * @param tokens - 使われた字句
      */
-    public constructor(tokens: Token[]) {
-        super('single', tokens);
+    public constructor(token: Token, signToken?: Token) {
+        super('single', [token], signToken);
     }
 
     //#region overrides
@@ -27,7 +27,10 @@ export class SingleNode extends ParseTreeNode {
      * @returns 文字列化の結果
      */
     public toString(_: StringifyType): string {
-        return this.tokens.map((token) => token.toString()).join('');
+        const signature = this.isNegative ? '-' : '';
+        return `${signature}${this.tokens
+            .map((token) => token.toString())
+            .join('')}`;
     }
     /**
      * ノード情報の取得

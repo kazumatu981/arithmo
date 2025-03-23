@@ -12,6 +12,7 @@ export type ErrorCode =
     | 'unexpected-left-paren'
     | 'unexpected-sign'
     // parse-tree-nodes
+    | 'sign-must-be-negative'
     | 'single-node-must-have-1-or-2-tokens'
     | 'paren-node-must-have-2-or-3-tokens'
     | 'paren-node-must-be-closed'
@@ -35,6 +36,7 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
     'unexpected-left-paren': '予期せぬ左括弧を検出しました。',
     'unexpected-sign': '子の演算子は符号として利用できません。',
     // parse-tree-nodes
+    'sign-must-be-negative': '符号はマイナスである必要があります。',
     'single-node-must-have-1-or-2-tokens':
         '数値ノードは1または2の字句を持つ必要があります。',
     'paren-node-must-have-2-or-3-tokens':

@@ -1,6 +1,6 @@
 import { type Token } from '../../tokenizer';
 import type { NodeType, ParseNodeInfo } from './parse-node-info';
-import { Testable, type Rule } from '../../common/testable';
+import { Testable } from '../../common/testable';
 
 /**
  *  ノードの文字列化するタイプ
@@ -46,7 +46,6 @@ export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
     // #endregion
 
     // #region abstracts
-    protected abstract rules: Rule<ParseTreeNode>[];
     public abstract toString(type: StringifyType): string;
     public abstract toNodeInfo(): ParseNodeInfo;
     // #endregion

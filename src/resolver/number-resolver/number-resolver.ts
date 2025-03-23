@@ -19,10 +19,8 @@ export class NumberResolver extends ResolverBase<number> {
     };
 
     protected resolveSingleNode(node: SingleNode): number {
-        const numberToken =
-            node.tokens.length === 1 ? node.tokens[0] : node.tokens[1];
-        const numberValue = stringToNum(numberToken.value);
-        return node.tokens.length === 2 ? -numberValue : numberValue;
+        const numberValue = stringToNum(node.tokens[0].value);
+        return node.isNegative ? -numberValue : numberValue;
     }
 
     protected resolveParenNode(node: ParenNode): number {
