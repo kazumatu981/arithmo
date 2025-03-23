@@ -1,3 +1,5 @@
+import { isOperator } from '../common/char-util';
+import { Testable, type Rule } from '../common/testable';
 /**
  * 字句の型
  * @group Tokenizer
@@ -8,7 +10,7 @@ export type TokenType = 'number' | 'operator' | 'leftParen' | 'rightParen';
  * 切り出した字句
  * @group Tokenizer
  */
-export class Token {
+export class Token extends Testable<Token> {
     public readonly type: TokenType;
     public readonly value: string;
     public readonly position?: number;
@@ -19,6 +21,7 @@ export class Token {
      * @param position - 字句の位置
      */
     constructor(type: TokenType, value: string, position?: number) {
+        super();
         this.type = type;
         this.value = value;
         this.position = position;
@@ -39,4 +42,26 @@ export class Token {
     public toString(): string {
         return this.value;
     }
+
+    protected readonly rules: Rule<Token>[] = [
+        /**
+         * number token は数字しか受け付けない
+         * @param testable - テスト対象
+         */
+        (testable): void => {
+            const token = testable as Token;
+            if (token.type === 'number' && !token.value.match(/^[0-9]+$/)) {
+                throw new Error('number-token-must-be-number');
+            }
+        },
+        (testable): void => {
+            const token = testable as Token;
+            if (
+                token.type === 'operator' &&
+                (token.value.length !== 1 || !isOperator(token.value, 0))
+            ) {
+                throw new Error('operator-token-must-be-operator');
+            }
+        },
+    ];
 }
