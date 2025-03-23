@@ -11,14 +11,14 @@ export type TokenType = 'number' | 'operator' | 'leftParen' | 'rightParen';
 export class Token {
     public readonly type: TokenType;
     public readonly value: string;
-    public readonly position: number;
+    public readonly position?: number;
 
     /**
      * @param type - 字句の型
      * @param value - 字句の値
      * @param position - 字句の位置
      */
-    constructor(type: TokenType, value: string, position: number) {
+    constructor(type: TokenType, value: string, position?: number) {
         this.type = type;
         this.value = value;
         this.position = position;
