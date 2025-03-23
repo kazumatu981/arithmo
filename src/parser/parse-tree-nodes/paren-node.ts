@@ -49,7 +49,7 @@ export class ParenNode extends SignedNode {
     /**
      * 括弧ノードの終わりを設定します。
      */
-    public set parenEnd(token: Token) {
+    public parenEnd(token: Token) {
         this.tokens.push(token);
     }
 

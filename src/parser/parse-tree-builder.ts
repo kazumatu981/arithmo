@@ -205,7 +205,7 @@ export class ParseTreeBuilder {
         if (!parenNode) {
             throw new ParserError('unexpected-right-paren', { token });
         }
-        parenNode.parenEnd = token;
+        parenNode.parenEnd(token);
         this._currentNode = parenNode;
     }
     private _throwParseError(code: ErrorCode, token: Token): void {
