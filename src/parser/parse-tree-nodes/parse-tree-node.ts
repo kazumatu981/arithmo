@@ -2,11 +2,15 @@ import { type Token } from '../../tokenizer';
 import type { NodeType, ParseNodeInfo } from './parse-node-info';
 import { Testable, type Rule } from '../../common/testable';
 
-/** ノードの文字列化するタイプ */
+/**
+ *  ノードの文字列化するタイプ
+ * @group Parser
+ */
 export type StringifyType = 'thisNode' | 'includeChildren';
 
 /**
  * 構文解析木のノード
+ * @group Parser
  */
 export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
     // #region private fields

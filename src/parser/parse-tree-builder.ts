@@ -38,6 +38,7 @@ type ActionTable = ParseTreeStateTable<StateAction>;
 
 /**
  * 構文解析木を構築するクラス
+ * @group Parser
  */
 export class ParseTreeBuilder {
     // #region private fields

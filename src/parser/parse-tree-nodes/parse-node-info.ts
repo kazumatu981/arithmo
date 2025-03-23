@@ -1,7 +1,13 @@
-/** ノード情報のタイプ */
+/**
+ * ノード情報のタイプ
+ * @group Parser
+ */
 export type NodeType = 'single' | 'binary' | 'paren';
 
-/** ノード情報 */
+/**
+ * ノード情報
+ * @group Parser
+ */
 export interface ParseNodeInfo {
     /** 値 */
     value: string;

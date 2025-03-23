@@ -9,6 +9,7 @@ import { ParserError } from '../parser-error';
 
 /**
  * 括弧ノード
+ * @group Parser
  */
 export class ParenNode extends ParseTreeNode {
     //#region private fields

@@ -10,7 +10,10 @@ import { ParserError } from '../parser-error';
 import { UnexpectedError } from '../../common/unexpected-error';
 import { type Operator, compareOperator } from '../../common/char-util';
 
-/** 演算子ノード */
+/**
+ *  演算子ノード
+ * @group Parser
+ */
 export class BinaryNode extends ParseTreeNode {
     private _left?: ParseTreeNode;
     private _right?: ParseTreeNode;

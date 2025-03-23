@@ -1,10 +1,12 @@
 /**
  * 字句の型
+ * @group Tokenizer
  */
 export type TokenType = 'number' | 'operator' | 'leftParen' | 'rightParen';
 
 /**
  * 切り出した字句
+ * @group Tokenizer
  */
 export class Token {
     public readonly type: TokenType;
