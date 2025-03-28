@@ -58,6 +58,10 @@ export class Token extends Testable<Token> {
                 });
             }
         },
+        /**
+         * operator token は演算子しか受け付けない
+         * @param testable テスト対象
+         */
         (testable): void => {
             const token = testable as Token;
             if (
@@ -69,6 +73,10 @@ export class Token extends Testable<Token> {
                 });
             }
         },
+        /**
+         * leftParen token は '(' しか受け付けない
+         * @param testable テスト対象
+         */
         (testable): void => {
             const token = testable as Token;
             if (token.type === 'leftParen' && token.value !== '(') {
@@ -77,6 +85,10 @@ export class Token extends Testable<Token> {
                 });
             }
         },
+        /**
+         * rightParen token は ')' しか受け付けない
+         * @param testable テスト対象
+         */
         (testable): void => {
             const token = testable as Token;
             if (token.type === 'rightParen' && token.value !== ')') {
