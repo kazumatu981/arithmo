@@ -38,6 +38,7 @@ type ActionTable = ParseTreeStateTable<StateAction>;
 
 /**
  * 構文解析木を構築するクラス
+ * @group Parser
  */
 export class ParseTreeBuilder {
     // #region private fields
@@ -52,7 +53,7 @@ export class ParseTreeBuilder {
     /**
      * 符号のキャッシュ
      */
-    private _sign: Token | null = null;
+    private _sign?: Token;
     /**
      * 状態遷移テーブル
      */
@@ -117,7 +118,7 @@ export class ParseTreeBuilder {
     public initialize(): void {
         this._currentNode = undefined;
         this._state = 'initial';
-        this._sign = null;
+        this._sign = undefined;
     }
 
     /**
@@ -148,7 +149,8 @@ export class ParseTreeBuilder {
      * ツリーを検証して構文解析木を返却する
      * @returns 構文解析木
      */
-    public build(): ParseTreeNode | undefined {
+    public build(tokens?: Token[]): ParseTreeNode | undefined {
+        tokens?.forEach((token) => this.addToken(token));
         const rootNode = this.findRootNode();
         rootNode?.test();
         return rootNode;
@@ -163,14 +165,12 @@ export class ParseTreeBuilder {
         }
     }
     private _appendNumberNode(token: Token): void {
-        const numberNode = this._sign
-            ? new SingleNode([this._sign, token])
-            : new SingleNode([token]);
-        this._sign = null;
+        const numberNode = new SingleNode(token, this._sign);
+        this._sign = undefined;
         if (this._currentNode) {
-            if (this._currentNode.nodeType === 'binary') {
+            if (this._currentNode.type === 'binary') {
                 (this._currentNode as BinaryNode).right = numberNode;
-            } else if (this._currentNode.nodeType === 'paren') {
+            } else if (this._currentNode.type === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = numberNode;
             } else {
                 throw new UnexpectedError('parser', {
@@ -182,17 +182,15 @@ export class ParseTreeBuilder {
         this._currentNode = numberNode;
     }
     private _appendOperatorNode(token: Token): void {
-        this._currentNode = new BinaryNode([token]).attachTo(this._currentNode);
+        this._currentNode = new BinaryNode(token).attachTo(this._currentNode);
     }
     private _appendParenStart(token: Token): void {
-        const parenNode = this._sign
-            ? new ParenNode([this._sign, token])
-            : new ParenNode([token]);
-        this._sign = null;
+        const parenNode = new ParenNode(token, this._sign);
+        this._sign = undefined;
         if (this._currentNode) {
-            if (this._currentNode.nodeType === 'binary') {
+            if (this._currentNode.type === 'binary') {
                 (this._currentNode as BinaryNode).right = parenNode;
-            } else if (this._currentNode.nodeType === 'paren') {
+            } else if (this._currentNode.type === 'paren') {
                 (this._currentNode as ParenNode).childrenRoot = parenNode;
             } else {
                 throw new UnexpectedError('parser', {
@@ -208,7 +206,7 @@ export class ParseTreeBuilder {
         if (!parenNode) {
             throw new ParserError('unexpected-right-paren', { token });
         }
-        parenNode.parenEnd = token;
+        parenNode.parenEnd(token);
         this._currentNode = parenNode;
     }
     private _throwParseError(code: ErrorCode, token: Token): void {

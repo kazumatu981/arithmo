@@ -9,6 +9,7 @@ import type { Operator } from '../../common/char-util';
 
 /**
  * 意味解析イベント引数
+ * @group Resolver
  */
 export interface ResolveEventArg<T> {
     /** 構文木ノード */
@@ -21,11 +22,13 @@ export interface ResolveEventArg<T> {
 
 /**
  * 意味解析イベントハンドラ
+ * @group Resolver
  */
 export type ResolveHandler<T> = (eventArg: ResolveEventArg<T>) => void;
 
 /**
  * 意味解析基底クラス
+ * @group Resolver
  */
 export abstract class ResolverBase<T> {
     protected abstract operatorResolver: Record<Operator, (a: T, b: T) => T>;
@@ -68,7 +71,7 @@ export abstract class ResolverBase<T> {
      */
     public resolve(node: ParseTreeNode): T {
         let result: T;
-        switch (node.nodeType) {
+        switch (node.type) {
             case 'single':
                 result = this.resolveSingleNode(node as SingleNode);
                 break;

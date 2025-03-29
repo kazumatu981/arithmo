@@ -1,26 +1,28 @@
 import {
-    ParseTreeNode,
+    type ParseTreeNode,
     type StringifyType,
     type ParseNodeInfo,
 } from './parse-tree-node';
 import { type Token } from '../../tokenizer';
 import { type Rule } from '../../common/testable';
 import { ParserError } from '../parser-error';
-
+import { SignedNode } from './signed-node';
 /**
  * 括弧ノード
+ * @group Parser
  */
-export class ParenNode extends ParseTreeNode {
+export class ParenNode extends SignedNode {
     //#region private fields
     private _childrenRoot?: ParseTreeNode;
     //#endregion
 
     /**
      * 括弧ノードを作成します。
-     * @param tokens - 使われた字句
+     * @param parenStartToken - 括弧の始まりトークン
+     * @param signToken - 符号ノード
      */
-    public constructor(tokens: Token[]) {
-        super('paren', tokens);
+    public constructor(parenStartToken: Token, signToken?: Token) {
+        super('paren', [parenStartToken], signToken);
     }
 
     /**
@@ -43,20 +45,14 @@ export class ParenNode extends ParseTreeNode {
      * @returns 閉じられているかどうか
      */
     public get isClosed(): boolean {
-        return this.value[this.value.length - 1].type === 'rightParen';
+        return this.tokens[this.tokens.length - 1].type === 'rightParen';
     }
     /**
      * 括弧ノードの終わりを設定します。
+     * @param parenEndToken - 括弧ノードの終わり
      */
-    public set parenEnd(token: Token) {
-        this.value.push(token);
-    }
-    /**
-     * 括弧ノードがマイナス記号を持っているかどうか
-     * @returns マイナス記号を持っているかどうか
-     */
-    public get isNegative(): boolean {
-        return this.value[0].isNegativeSign;
+    public parenEnd(parenEndToken: Token): void {
+        this.tokens.push(parenEndToken);
     }
 
     //#region statics
@@ -70,7 +66,7 @@ export class ParenNode extends ParseTreeNode {
     ): ParenNode | undefined {
         let currentNode: ParseTreeNode | undefined = node?.parent;
         while (currentNode !== undefined) {
-            if (currentNode.nodeType === 'paren') {
+            if (currentNode.type === 'paren') {
                 return currentNode as ParenNode;
             }
             currentNode = currentNode.parent;
@@ -86,12 +82,15 @@ export class ParenNode extends ParseTreeNode {
      * @returns 文字列化の結果
      */
     public toString(stringifyType: StringifyType): string {
+        const signature = this.isNegative ? '-' : '';
         if (stringifyType === 'includeChildren') {
-            return `${this.isNegative ? '-' : ''}(${this.childrenRoot?.toString(
+            return `${signature}(${this.childrenRoot?.toString(
                 'includeChildren',
             )})`;
         }
-        return this.value.map((token) => token.value).join('');
+        return `${signature}${this.tokens
+            .map((token) => token.value)
+            .join('')}`;
     }
 
     /**
@@ -100,18 +99,18 @@ export class ParenNode extends ParseTreeNode {
      */
     public toNodeInfo(): ParseNodeInfo {
         return {
-            type: this.nodeType,
+            type: this.type,
             value: this.toString('thisNode'),
             childrenRoot: this.childrenRoot?.toNodeInfo(),
         };
     }
     //#region privates
-    rules: Rule<ParseTreeNode>[] = [
+    protected readonly rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const parenNode = node as ParenNode;
-            if (parenNode.value.length !== 2 && parenNode.value.length !== 3) {
-                throw new ParserError('paren-node-must-have-2-or-3-tokens', {
-                    token: parenNode.value[0],
+            if (parenNode.tokens.length !== 2) {
+                throw new ParserError('paren-node-must-have-2-token', {
+                    token: parenNode.tokens[0],
                 });
             }
         },
@@ -119,7 +118,15 @@ export class ParenNode extends ParseTreeNode {
             const parenNode = node as ParenNode;
             if (!parenNode.isClosed) {
                 throw new ParserError('paren-node-must-be-closed', {
-                    token: parenNode.value[parenNode.value.length - 1],
+                    token: parenNode.tokens[parenNode.tokens.length - 1],
+                });
+            }
+        },
+        (node): void => {
+            const parenNode = node as ParenNode;
+            if (parenNode.tokens[0].type !== 'leftParen') {
+                throw new ParserError('paren-node-must-start-with-left-paren', {
+                    token: parenNode.tokens[0],
                 });
             }
         },
@@ -127,15 +134,15 @@ export class ParenNode extends ParseTreeNode {
             const parenNode = node as ParenNode;
             if (parenNode.childrenRoot === undefined) {
                 throw new ParserError('paren-node-must-have-children', {
-                    token: parenNode.value[0],
+                    token: parenNode.tokens[0],
                 });
             }
         },
         (node): void => {
             const parenNode = node as ParenNode;
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            parenNode.childrenRoot!.test();
+            parenNode.childrenRoot?.test();
         },
+        ...this.signedNodeRules,
     ];
     //#endregion
     //#endregion

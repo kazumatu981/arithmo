@@ -1,18 +1,23 @@
 import { type Token } from '../../tokenizer';
 import type { NodeType, ParseNodeInfo } from './parse-node-info';
-import { Testable, type Rule } from '../../common/testable';
+import { Testable } from '../../common/testable';
 
-/** ノードの文字列化するタイプ */
+/**
+ *  ノードの文字列化するタイプ
+ * @group Parser
+ */
 export type StringifyType = 'thisNode' | 'includeChildren';
 
 /**
  * 構文解析木のノード
+ * @group Parser
  */
 export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
+    protected readonly moduleName = 'parser';
     // #region private fields
-    private readonly _type: NodeType;
-    private readonly _value: Token[];
-    private _parent?: ParseTreeNode;
+    public readonly type: NodeType;
+    public readonly tokens: Token[];
+    public parent?: ParseTreeNode;
     // #endregion
 
     /**
@@ -22,39 +27,8 @@ export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
      */
     constructor(type: NodeType, tokens: Token[]) {
         super();
-        this._type = type;
-        this._value = tokens;
-    }
-
-    /**
-     * ノードの型を取得します
-     * @returns ノードの型
-     */
-    public get nodeType(): NodeType {
-        return this._type;
-    }
-
-    /**
-     * このノードの値(Token配列)を取得します
-     * @returns 値を表すToken配列
-     */
-    public get value(): Token[] {
-        return this._value;
-    }
-
-    /**
-     * このノードの親ノードを取得します
-     * @returns 親ノード
-     */
-    public get parent(): ParseTreeNode | undefined {
-        return this._parent;
-    }
-    /**
-     * このノードの親ノードを設定します
-     * @param value - 設定する親ノード
-     */
-    public set parent(value: ParseTreeNode | undefined) {
-        this._parent = value;
+        this.type = type;
+        this.tokens = tokens;
     }
 
     // #region static methods
@@ -73,7 +47,6 @@ export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
     // #endregion
 
     // #region abstracts
-    abstract rules: Rule<ParseTreeNode>[];
     public abstract toString(type: StringifyType): string;
     public abstract toNodeInfo(): ParseNodeInfo;
     // #endregion

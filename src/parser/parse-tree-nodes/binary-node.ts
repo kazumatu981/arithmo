@@ -10,17 +10,36 @@ import { ParserError } from '../parser-error';
 import { UnexpectedError } from '../../common/unexpected-error';
 import { type Operator, compareOperator } from '../../common/char-util';
 
-/** 演算子ノード */
+/**
+ *  演算子ノード
+ * @group Parser
+ */
 export class BinaryNode extends ParseTreeNode {
     private _left?: ParseTreeNode;
     private _right?: ParseTreeNode;
 
     /**
      * コンストラクタ
-     * @param tokens - 構文解析木のノードに対応するトークン配列
+     * @param operatorToken - 構文解析木のノードに対応するトークン配列
      */
-    public constructor(tokens: Token[]) {
-        super('binary', tokens);
+    public constructor(operatorToken: Token) {
+        super('binary', [operatorToken]);
+    }
+
+    /**
+     * 演算子トークンを取得する
+     * @returns 演算子トークン
+     */
+    public get operatorToken(): Token {
+        return this.tokens[0];
+    }
+
+    /**
+     * 演算子を取得する
+     * @returns 演算子
+     */
+    public get operator(): Operator {
+        return this.operatorToken.value as Operator;
     }
 
     /**
@@ -58,21 +77,6 @@ export class BinaryNode extends ParseTreeNode {
     }
 
     /**
-     * 演算子トークンを取得する
-     * @returns 演算子トークン
-     */
-    public get operatorToken(): Token {
-        return this.value[0];
-    }
-
-    /**
-     * 演算子を取得する
-     * @returns 演算子
-     */
-    public get operator(): Operator {
-        return this.operatorToken.value as Operator;
-    }
-    /**
      * 構文木に子ノードを接続する
      * @param currentNode - 接続する子ノードの親ノード
      * @returns このノード
@@ -80,7 +84,7 @@ export class BinaryNode extends ParseTreeNode {
     public attachTo(currentNode: ParseTreeNode | undefined): this {
         while (currentNode) {
             let connected = false;
-            switch (currentNode.parent?.nodeType ?? 'root') {
+            switch (currentNode.parent?.type ?? 'root') {
                 case 'root':
                     connected = this._rootConnectHandler(currentNode);
                     break;
@@ -139,10 +143,10 @@ export class BinaryNode extends ParseTreeNode {
     public toString(stringifyType: StringifyType): string {
         if (stringifyType === 'includeChildren') {
             return `${this.left?.toString('includeChildren')} ${
-                this.operatorToken.value
+                this.operator
             } ${this.right?.toString('includeChildren')}`;
         }
-        return this.value.map((token) => token.value).join('');
+        return this.operator;
     }
 
     /**
@@ -151,19 +155,27 @@ export class BinaryNode extends ParseTreeNode {
      */
     public toNodeInfo(): ParseNodeInfo {
         return {
-            type: this.nodeType,
+            type: this.type,
             value: this.toString('thisNode'),
             left: this.left?.toNodeInfo(),
             right: this.right?.toNodeInfo(),
         };
     }
     //#region privates
-    rules: Rule<ParseTreeNode>[] = [
+    protected readonly rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const binaryNode = node as BinaryNode;
-            if (binaryNode.value.length !== 1) {
+            if (binaryNode.tokens.length !== 1) {
                 throw new ParserError('binary-node-must-have-1-token', {
-                    token: binaryNode.value[0],
+                    token: binaryNode.tokens[0],
+                });
+            }
+        },
+        (node): void => {
+            const binaryNode = node as BinaryNode;
+            if (binaryNode.tokens[0].type !== 'operator') {
+                throw new ParserError('binary-node-must-be-operator-token', {
+                    token: binaryNode.tokens[0],
                 });
             }
         },
@@ -171,7 +183,7 @@ export class BinaryNode extends ParseTreeNode {
             const binaryNode = node as BinaryNode;
             if (binaryNode.left === undefined) {
                 throw new ParserError('binary-node-must-have-left', {
-                    token: binaryNode.value[0],
+                    token: binaryNode.tokens[0],
                 });
             }
         },
@@ -179,7 +191,7 @@ export class BinaryNode extends ParseTreeNode {
             const binaryNode = node as BinaryNode;
             if (binaryNode.right === undefined) {
                 throw new ParserError('binary-node-must-have-right', {
-                    token: binaryNode.value[0],
+                    token: binaryNode.tokens[0],
                 });
             }
         },
