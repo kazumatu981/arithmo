@@ -63,13 +63,13 @@ export class RationalNumber extends Testable<RationalNumber> {
 
     public subtract(other: RationalNumber): RationalNumber {
         const numerator =
-            this.numerator * other.denominator -
-            this.denominator * other.numerator;
+            (this.isNegative ? -1 : 1) * this.numerator * other.denominator -
+            (other.isNegative ? -1 : 1) * this.denominator * other.numerator;
         const denominator = this.denominator * other.denominator;
         return new RationalNumber(
-            numerator,
+            numerator < 0 ? -numerator : numerator,
             denominator,
-            this.isNegative || other.isNegative,
+            numerator < 0,
         );
     }
     public multiply(other: RationalNumber): RationalNumber {

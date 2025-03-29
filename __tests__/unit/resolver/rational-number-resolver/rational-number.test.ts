@@ -155,4 +155,37 @@ describe('RationalNumber', () => {
             expect(r3.equals(new RationalNumber(3, 4, true))).toBeTruthy();
         });
     });
+
+    describe('subtract', () => {
+        test('2/3 - 1/3 === 1/3', () => {
+            const r1 = new RationalNumber(2, 3);
+            const r2 = new RationalNumber(1, 3);
+            const r3 = r1.subtract(r2);
+            expect(r3.equals(new RationalNumber(1, 3))).toBeTruthy();
+        });
+        test('1/2 - 1/3 === 1/6', () => {
+            const r1 = new RationalNumber(1, 2);
+            const r2 = new RationalNumber(1, 3);
+            const r3 = r1.subtract(r2);
+            expect(r3.equals(new RationalNumber(1, 6))).toBeTruthy();
+        });
+        test('1/2 - -1/3 === 5/6', () => {
+            const r1 = new RationalNumber(1, 2);
+            const r2 = new RationalNumber(1, 3, true);
+            const r3 = r1.subtract(r2);
+            expect(r3.equals(new RationalNumber(5, 6))).toBeTruthy();
+        });
+        test('-3/4 - - 1/2 === -1/4', () => {
+            const r1 = new RationalNumber(3, 4, true);
+            const r2 = new RationalNumber(1, 2, true);
+            const r3 = r1.subtract(r2);
+            expect(r3.equals(new RationalNumber(1, 4, true))).toBeTruthy();
+        });
+        test('5/6 - 5/6 === 0/1', () => {
+            const r1 = new RationalNumber(5, 6);
+            const r2 = new RationalNumber(5, 6);
+            const r3 = r1.subtract(r2);
+            expect(r3.equals(new RationalNumber(0, 1))).toBeTruthy();
+        });
+    });
 });
