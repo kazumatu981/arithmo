@@ -188,4 +188,49 @@ describe('RationalNumber', () => {
             expect(r3.equals(new RationalNumber(0, 1))).toBeTruthy();
         });
     });
+
+    describe('multiply', () => {
+        test('1/2 * 1/2 === 1/4', () => {
+            const r1 = new RationalNumber(1, 2);
+            const r2 = new RationalNumber(1, 2);
+            const r3 = r1.multiply(r2);
+            expect(r3.equals(new RationalNumber(1, 4))).toBeTruthy();
+        });
+        test('1/2 * 1/3 === 1/6', () => {
+            const r1 = new RationalNumber(1, 2);
+            const r2 = new RationalNumber(1, 3);
+            const r3 = r1.multiply(r2);
+            expect(r3.equals(new RationalNumber(1, 6))).toBeTruthy();
+        });
+        test('1/2 * -1/3 === -1/6', () => {
+            const r1 = new RationalNumber(1, 2);
+            const r2 = new RationalNumber(1, 3, true);
+            const r3 = r1.multiply(r2);
+            expect(r3.equals(new RationalNumber(1, 6, true))).toBeTruthy();
+        });
+        test('-1/2 * 1/3 === -1/6', () => {
+            const r1 = new RationalNumber(1, 2, true);
+            const r2 = new RationalNumber(1, 3, false);
+            const r3 = r1.multiply(r2);
+            expect(r3.equals(new RationalNumber(1, 6, true))).toBeTruthy();
+        });
+        test('-1/4 * -1/2 === 1/8', () => {
+            const r1 = new RationalNumber(1, 4, true);
+            const r2 = new RationalNumber(1, 2, true);
+            const r3 = r1.multiply(r2);
+            expect(r3.equals(new RationalNumber(1, 8))).toBeTruthy();
+        });
+        test('5/6 * 1/1 === 5/6', () => {
+            const r1 = new RationalNumber(5, 6);
+            const r2 = new RationalNumber(1, 1);
+            const r3 = r1.multiply(r2);
+            expect(r3.equals(new RationalNumber(5, 6))).toBeTruthy();
+        });
+        test('5/6 * 0/1 === 0/1', () => {
+            const r1 = new RationalNumber(5, 6);
+            const r2 = new RationalNumber(0, 1);
+            const r3 = r1.multiply(r2);
+            expect(r3.equals(new RationalNumber(0, 1))).toBeTruthy();
+        });
+    });
 });

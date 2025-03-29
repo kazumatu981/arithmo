@@ -78,7 +78,7 @@ export class RationalNumber extends Testable<RationalNumber> {
         return new RationalNumber(
             numerator,
             denominator,
-            this.isNegative || other.isNegative,
+            this.isNegative !== other.isNegative,
         );
     }
 
