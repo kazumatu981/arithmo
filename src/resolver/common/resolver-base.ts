@@ -71,7 +71,7 @@ export abstract class ResolverBase<T> {
      */
     public resolve(node: ParseTreeNode): T {
         let result: T;
-        switch (node.nodeType) {
+        switch (node.type) {
             case 'single':
                 result = this.resolveSingleNode(node as SingleNode);
                 break;

@@ -37,10 +37,9 @@ describe('unittest-parse-tree-builder', () => {
     abnormalTestCases.forEach((testCase) => {
         test(`Cannot build tree from ${testCase}`, () => {
             const tokens = tokenize(testCase);
-            const builder = new ParseTreeBuilder();
             expect(() => {
-                tokens.forEach((token) => builder.addToken(token));
-                builder.build();
+                const builder = new ParseTreeBuilder();
+                builder.build(tokens);
             }).toThrowErrorMatchingSnapshot();
         });
     });
