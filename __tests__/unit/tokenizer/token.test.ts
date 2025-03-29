@@ -1,10 +1,17 @@
 import { describe, expect, test } from '@jest/globals';
 import { Token, TokenType } from '../../../src/tokenizer/token';
 import { TokenizerError } from '../../../src/tokenizer/tokenizer-error';
+import { ArithmoTestError } from '../../../src/common/testable';
+import { ErrorCode } from '../../../src/common/error-messages';
+import { ArithmoTestErrorUtil } from '../util/ArithmoTestErrorUtil';
 
 interface TestCase {
     type: TokenType;
     value: string;
+}
+
+interface ErrorTestCase extends TestCase {
+    expectedError: ErrorCode;
 }
 
 const notErrorTestCases: TestCase[] = [
@@ -26,26 +33,31 @@ const notErrorTestCases: TestCase[] = [
     },
 ];
 
-const errorTestCases: TestCase[] = [
+const errorTestCases: ErrorTestCase[] = [
     {
         type: 'number',
         value: '1234a',
+        expectedError: 'unknown-character',
     },
     {
         type: 'operator',
         value: '%',
+        expectedError: 'type-mismatch',
     },
     {
         type: 'operator',
         value: '123',
+        expectedError: 'type-mismatch',
     },
     {
         type: 'leftParen',
         value: ')',
+        expectedError: 'type-mismatch',
     },
     {
         type: 'rightParen',
         value: '(',
+        expectedError: 'type-mismatch',
     },
 ];
 
@@ -71,8 +83,10 @@ describe('Token', () => {
                     new Token(testCase.type, testCase.value);
                     throw new Error('Should be thrown');
                 } catch (e) {
-                    expect(e).toBeInstanceOf(TokenizerError);
-                    expect((e as TokenizerError).code).toBe('type-mismatch');
+                    const util = new ArithmoTestErrorUtil(e as Error);
+                    util.isEqualModuleName('tokenizer');
+                    util.hasError();
+                    util.hasErrorCode(testCase.expectedError);
                 }
             });
         }

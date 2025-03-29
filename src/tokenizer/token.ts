@@ -1,4 +1,4 @@
-import { isOperator } from '../common/char-util';
+import { isAllValidCharacters, isOperator } from '../common/char-util';
 import { Testable, type Rule } from '../common/testable';
 import { TokenizerError } from './tokenizer-error';
 /**
@@ -12,6 +12,8 @@ export type TokenType = 'number' | 'operator' | 'leftParen' | 'rightParen';
  * @group Tokenizer
  */
 export class Token extends Testable<Token> {
+    protected readonly moduleName = 'tokenizer';
+
     public readonly type: TokenType;
     public readonly value: string;
     public readonly position?: number;
@@ -46,6 +48,13 @@ export class Token extends Testable<Token> {
     }
 
     protected readonly rules: Rule<Token>[] = [
+        (testable): void => {
+            const token = testable as Token;
+            if (isAllValidCharacters(token.value)) return;
+            throw new TokenizerError('unknown-character', {
+                position: token.position,
+            });
+        },
         /**
          * number token は数字しか受け付けない
          * @param testable - テスト対象

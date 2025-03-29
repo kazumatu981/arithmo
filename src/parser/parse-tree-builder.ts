@@ -149,7 +149,8 @@ export class ParseTreeBuilder {
      * ツリーを検証して構文解析木を返却する
      * @returns 構文解析木
      */
-    public build(): ParseTreeNode | undefined {
+    public build(tokens?: Token[]): ParseTreeNode | undefined {
+        tokens?.forEach((token) => this.addToken(token));
         const rootNode = this.findRootNode();
         rootNode?.test();
         return rootNode;

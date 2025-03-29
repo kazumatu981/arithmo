@@ -108,9 +108,25 @@ export class ParenNode extends SignedNode {
     protected readonly rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const parenNode = node as ParenNode;
+            if (parenNode.tokens.length !== 2) {
+                throw new ParserError('paren-node-must-have-2-token', {
+                    token: parenNode.tokens[0],
+                });
+            }
+        },
+        (node): void => {
+            const parenNode = node as ParenNode;
             if (!parenNode.isClosed) {
                 throw new ParserError('paren-node-must-be-closed', {
                     token: parenNode.tokens[parenNode.tokens.length - 1],
+                });
+            }
+        },
+        (node): void => {
+            const parenNode = node as ParenNode;
+            if (parenNode.tokens[0].type !== 'leftParen') {
+                throw new ParserError('paren-node-must-start-with-left-paren', {
+                    token: parenNode.tokens[0],
                 });
             }
         },
@@ -124,8 +140,7 @@ export class ParenNode extends SignedNode {
         },
         (node): void => {
             const parenNode = node as ParenNode;
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            parenNode.childrenRoot!.test();
+            parenNode.childrenRoot?.test();
         },
         ...this.signedNodeRules,
     ];

@@ -13,6 +13,7 @@ export type StringifyType = 'thisNode' | 'includeChildren';
  * @group Parser
  */
 export abstract class ParseTreeNode extends Testable<ParseTreeNode> {
+    protected readonly moduleName = 'parser';
     // #region private fields
     public readonly type: NodeType;
     public readonly tokens: Token[];

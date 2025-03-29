@@ -173,6 +173,14 @@ export class BinaryNode extends ParseTreeNode {
         },
         (node): void => {
             const binaryNode = node as BinaryNode;
+            if (binaryNode.tokens[0].type !== 'operator') {
+                throw new ParserError('binary-node-must-be-operator-token', {
+                    token: binaryNode.tokens[0],
+                });
+            }
+        },
+        (node): void => {
+            const binaryNode = node as BinaryNode;
             if (binaryNode.left === undefined) {
                 throw new ParserError('binary-node-must-have-left', {
                     token: binaryNode.tokens[0],

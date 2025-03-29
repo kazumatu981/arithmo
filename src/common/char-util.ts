@@ -1,3 +1,12 @@
+export function isAllValidCharacters(s: string): boolean {
+    return s
+        .split('')
+        .map((c) => {
+            return isDigit(c, 0) || isOperator(c, 0) || isParen(c, 0);
+        })
+        .every((result) => result);
+}
+
 /**
  * 数字どうかを判定する
  * @param s - 対象文字列
