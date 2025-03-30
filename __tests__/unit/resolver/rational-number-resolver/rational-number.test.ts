@@ -8,18 +8,21 @@ describe('RationalNumber', () => {
             expect(r.numerator).toBe(1);
             expect(r.denominator).toBe(2);
             expect(r.isNegative).toBe(false);
+            expect(r.toString()).toBe('1/2');
         });
         test('-1/2', () => {
             const r = new RationalNumber(1, 2, true);
             expect(r.numerator).toBe(1);
             expect(r.denominator).toBe(2);
             expect(r.isNegative).toBe(true);
+            expect(r.toString()).toBe('-1/2');
         });
         test('0/2', () => {
             const r = new RationalNumber(0, 2);
             expect(r.numerator).toBe(0);
             expect(r.denominator).toBe(1);
             expect(r.isNegative).toBe(false);
+            expect(r.toString()).toBe('0');
         });
         test('(-1)/2', () => {
             expect(() => {
@@ -231,6 +234,27 @@ describe('RationalNumber', () => {
             const r2 = new RationalNumber(0, 1);
             const r3 = r1.multiply(r2);
             expect(r3.equals(new RationalNumber(0, 1))).toBeTruthy();
+        });
+    });
+
+    describe('divide', () => {
+        test('1/2 / 1/2 === 1/1', () => {
+            const r1 = new RationalNumber(1, 2);
+            const r2 = new RationalNumber(1, 2);
+            const r3 = r1.divide(r2);
+            expect(r3.equals(new RationalNumber(1, 1))).toBeTruthy();
+        });
+        test('1/2 / 1/3 === 3/2', () => {
+            const r1 = new RationalNumber(1, 2);
+            const r2 = new RationalNumber(1, 3);
+            const r3 = r1.divide(r2);
+            expect(r3.equals(new RationalNumber(3, 2))).toBeTruthy();
+        });
+        test('1/2 / -1/3 === -3/2', () => {
+            const r1 = new RationalNumber(1, 2);
+            const r2 = new RationalNumber(1, 3, true);
+            const r3 = r1.divide(r2);
+            expect(r3.equals(new RationalNumber(3, 2, true))).toBeTruthy();
         });
     });
 });

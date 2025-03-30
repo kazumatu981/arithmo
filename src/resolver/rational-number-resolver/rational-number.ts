@@ -101,7 +101,9 @@ export class RationalNumber extends Testable<RationalNumber> {
     }
     public toString(): string {
         const signature = this.isNegative ? '-' : '';
-        return `${signature}${this.numerator}/${this.denominator}`;
+        return this.numerator === 0
+            ? '0'
+            : `${signature}${this.numerator}/${this.denominator}`;
     }
     protected normalize(): void {
         const gcdOfNumeratorAndDenominator = gcd(
