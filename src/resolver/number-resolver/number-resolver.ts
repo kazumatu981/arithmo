@@ -1,4 +1,3 @@
-import type { ParenNode, ParseTreeNode, SingleNode } from '../../parser';
 import { stringToNum } from '../common/string-to-num';
 import { ResolverBase } from '../common/resolver-base';
 
@@ -18,14 +17,11 @@ export class NumberResolver extends ResolverBase<number> {
         '/': (a: number, b: number): number => a / b,
     };
 
-    protected resolveSingleNode(node: SingleNode): number {
-        const numberValue = stringToNum(node.tokens[0].value);
-        return node.isNegative ? -numberValue : numberValue;
+    protected resolveValue(tokenValue: string): number {
+        return stringToNum(tokenValue);
     }
 
-    protected resolveParenNode(node: ParenNode): number {
-        const childrenRoot = node.childrenRoot as ParseTreeNode;
-        const numberValue = this.resolve(childrenRoot);
-        return node.isNegative ? -numberValue : numberValue;
+    protected toNegative(value: number): number {
+        return -value;
     }
 }
