@@ -1,7 +1,11 @@
 import { gcd, isNumeric } from '../common/numeric';
 import { Testable, type Rule } from '../../common/testable';
+import { ArithmeticOperations } from '../common/arithmetic-operations';
 
-export class RationalNumber extends Testable<RationalNumber> {
+export class RationalNumber
+    extends Testable<RationalNumber>
+    implements ArithmeticOperations<RationalNumber>
+{
     /**
      * 分子
      */
@@ -62,15 +66,8 @@ export class RationalNumber extends Testable<RationalNumber> {
     }
 
     public subtract(other: RationalNumber): RationalNumber {
-        const numerator =
-            (this.isNegative ? -1 : 1) * this.numerator * other.denominator -
-            (other.isNegative ? -1 : 1) * this.denominator * other.numerator;
-        const denominator = this.denominator * other.denominator;
-        return new RationalNumber(
-            numerator < 0 ? -numerator : numerator,
-            denominator,
-            numerator < 0,
-        );
+        const negated = other.negate();
+        return this.add(negated);
     }
     public multiply(other: RationalNumber): RationalNumber {
         const numerator = this.numerator * other.numerator;
@@ -83,13 +80,32 @@ export class RationalNumber extends Testable<RationalNumber> {
     }
 
     public divide(other: RationalNumber): RationalNumber {
-        const numerator = this.numerator * other.denominator;
-        const denominator = this.denominator * other.numerator;
+        const reciprocated = other.reciprocate();
+        return this.multiply(reciprocated);
+    }
+
+    public negate(): RationalNumber {
         return new RationalNumber(
-            numerator,
-            denominator,
-            this.isNegative !== other.isNegative,
+            this.numerator,
+            this.denominator,
+            !this.isNegative,
         );
+    }
+
+    public reciprocate(): RationalNumber {
+        return new RationalNumber(
+            this.denominator,
+            this.numerator,
+            this.isNegative,
+        );
+    }
+
+    public zero(): RationalNumber {
+        return Zero;
+    }
+
+    public unit(): RationalNumber {
+        return One;
     }
 
     public equals(other: RationalNumber): boolean {
@@ -147,3 +163,6 @@ export class RationalNumber extends Testable<RationalNumber> {
         },
     ];
 }
+
+export const Zero: RationalNumber = new RationalNumber(0, 1);
+export const One: RationalNumber = new RationalNumber(1, 1);
