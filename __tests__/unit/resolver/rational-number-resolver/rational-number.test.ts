@@ -1,20 +1,19 @@
 import { describe, expect, test } from '@jest/globals';
 import { RationalNumber } from '../../../../src/resolver/rational-number-resolver/rational-number';
+import { Numeric } from '../../../../src/resolver/numeric-resolver/numeric';
 
 describe('RationalNumber', () => {
     describe('constructor', () => {
         test('1/2', () => {
             const r = new RationalNumber(1, 2);
-            expect(r.numerator).toBe(1);
-            expect(r.denominator).toBe(2);
-            expect(r.isNegative).toBe(false);
+            expect(r.numerator.equals(new Numeric(1))).toBeTruthy();
+            expect(r.denominator.equals(new Numeric(2))).toBeTruthy();
             expect(r.toString()).toBe('1/2');
         });
         test('-1/2', () => {
-            const r = new RationalNumber(1, 2, true);
-            expect(r.numerator).toBe(1);
+            const r = new RationalNumber(-1, 2);
+            expect(r.numerator).toBe(-1);
             expect(r.denominator).toBe(2);
-            expect(r.isNegative).toBe(true);
             expect(r.toString()).toBe('-1/2');
         });
         test('0/2', () => {
