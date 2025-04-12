@@ -23,6 +23,10 @@ export class Numeric implements Ring<Numeric> {
         return new Numeric(this._value * b.value);
     }
 
+    public remainder(b: Numeric): Numeric {
+        return new Numeric(this._value % b.value);
+    }
+
     public negate(): Numeric {
         return new Numeric(-this._value);
     }

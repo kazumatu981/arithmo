@@ -1,16 +1,18 @@
 // TODO 多項式を実装する
 
-import { type Ring } from '../common/arithmetic-operations';
+import { type Field, type Ring } from '../common/arithmetic-operations';
 
-export abstract class Polynomial<T extends Ring<T>>
+export abstract class Polynomial<T extends Field<T>>
     implements Ring<Polynomial<T>>
 {
     abstract readonly _constructable: {
         new (coefficients: T[]): Polynomial<T>;
     };
     private _coefficients: T[];
+    private readonly _variable: string;
 
-    constructor(coefficients: T[]) {
+    constructor(coefficients: T[], variable: string) {
+        this._variable = variable;
         this._coefficients = coefficients;
     }
 
@@ -55,6 +57,12 @@ export abstract class Polynomial<T extends Ring<T>>
             .reduce((a, b) => a.add(b));
         return result._trim();
     }
+
+    public remainder(_b: Polynomial<T>): Polynomial<T> {
+        // TODO 多項式の除算を実装する
+        throw new Error('not implemented');
+    }
+
     public negate(): Polynomial<T> {
         const neCoefficients = this._coefficients.map((c) => c.negate());
         return new this._constructable(neCoefficients);
@@ -66,6 +74,9 @@ export abstract class Polynomial<T extends Ring<T>>
         return new this._constructable([this._coefficients[0].unit()]);
     }
     public equals(b: Polynomial<T>): boolean {
+        if (this._variable !== b._variable) {
+            return false;
+        }
         if (this._coefficients.length !== b._coefficients.length) {
             return false;
         }

@@ -13,6 +13,11 @@ export interface Ring<T> {
      */
     multiply(b: T): T;
     /**
+     * 割り算した結果のあまりを返却する
+     * @param b - 除算対象
+     */
+    remainder(b: T): T;
+    /**
      * 符号を反転する
      */
     negate(): T;

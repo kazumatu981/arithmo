@@ -53,6 +53,10 @@ export abstract class RationalBase<
         const newDenominator = this.denominator.multiply(other.denominator);
         return new this.constructable(newNumerator, newDenominator);
     }
+
+    public remainder(b: TThis): TThis {
+        throw new Error('not implemented');
+    }
     public negate(): TThis {
         return new this.constructable(
             this.numerator.negate(),
