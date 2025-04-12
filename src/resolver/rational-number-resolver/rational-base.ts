@@ -5,17 +5,32 @@ export abstract class RationalBase<
     TBase extends Ring<TBase>,
 > implements Field<TThis>
 {
+    abstract _numerator: TBase;
+    abstract _denominator: TBase;
     abstract readonly constructable: {
         new (numerator: TBase, denominator: TBase): TThis;
     };
     /**
      * 分子
      */
-    public abstract numerator: TBase;
+    public get numerator(): TBase {
+        return this._numerator;
+    }
+    public set numerator(value: TBase) {
+        this._numerator = value;
+    }
     /**
      * 分母
      */
-    public abstract denominator: TBase;
+    public get denominator(): TBase {
+        return this._denominator;
+    }
+    public set denominator(value: TBase) {
+        if (this.denominator.zero().equals(value)) {
+            throw new Error('分母は0ではありません');
+        }
+        this._denominator = value;
+    }
 
     /**
      * 足し算

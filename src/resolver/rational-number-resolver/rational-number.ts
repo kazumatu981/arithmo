@@ -3,14 +3,8 @@ import { RationalBase } from './rational-base';
 
 export class RationalNumber extends RationalBase<RationalNumber, Numeric> {
     readonly constructable = RationalNumber;
-    /**
-     * 分子
-     */
-    public numerator: Numeric;
-    /**
-     * 分母
-     */
-    public denominator: Numeric;
+    _numerator: Numeric = new Numeric(0);
+    _denominator: Numeric = new Numeric(1);
 
     public constructor(
         numerator: Numeric | number,
