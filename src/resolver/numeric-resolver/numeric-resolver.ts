@@ -1,6 +1,6 @@
 import { RingResolverBase } from '../common/arithmetic-resolver-base';
 import { stringToNum } from '../common/string-to-num';
-import { Numeric } from './numeric';
+import { Numeric } from '../algebra/numeric';
 
 export class NumericResolver extends RingResolverBase<Numeric> {
     protected resolveValue(tokenValue: string): Numeric {

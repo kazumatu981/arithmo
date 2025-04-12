@@ -1,4 +1,4 @@
-import type { Ring, Field } from './arithmetic-operations';
+import type { Ring, Field } from '../algebra/arithmetic-operations';
 import { ResolverBase } from './resolver-base';
 
 export abstract class RingResolverBase<

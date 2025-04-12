@@ -1,6 +1,6 @@
-import { type Ring } from '../common/arithmetic-operations';
+import { type RingWithRemainderProvider } from './arithmetic-operations';
 
-export class Numeric implements Ring<Numeric> {
+export class Numeric implements RingWithRemainderProvider<Numeric> {
     private _value: number = 0;
 
     constructor(value: number) {

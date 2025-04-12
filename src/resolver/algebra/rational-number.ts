@@ -1,4 +1,4 @@
-import { Numeric } from '../numeric-resolver/numeric';
+import { Numeric } from './numeric';
 import { RationalBase } from './rational-base';
 import { type Rule } from '../../common/testable';
 import { isNumeric } from '../common/numeric';

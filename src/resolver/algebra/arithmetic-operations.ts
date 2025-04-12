@@ -13,11 +13,6 @@ export interface Ring<T> {
      */
     multiply(b: T): T;
     /**
-     * 割り算した結果のあまりを返却する
-     * @param b - 除算対象
-     */
-    remainder(b: T): T;
-    /**
      * 符号を反転する
      */
     negate(): T;
@@ -44,4 +39,15 @@ export interface Field<T> extends Ring<T> {
      * 逆数を計算する
      */
     reciprocate(): T;
+}
+
+/**
+ * 剰余計算可能な環インターフェイス
+ */
+export interface RingWithRemainderProvider<T> extends Ring<T> {
+    /**
+     * 割り算した結果のあまりを返却する
+     * @param b - 除算対象
+     */
+    remainder(b: T): T;
 }

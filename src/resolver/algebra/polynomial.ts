@@ -1,12 +1,12 @@
 // TODO 多項式を実装する
 
-import { type Field, type Ring } from '../common/arithmetic-operations';
+import { type Field, RingWithRemainderProvider } from './arithmetic-operations';
 
 export abstract class Polynomial<T extends Field<T>>
-    implements Ring<Polynomial<T>>
+    implements RingWithRemainderProvider<Polynomial<T>>
 {
     abstract readonly _constructable: {
-        new (coefficients: T[]): Polynomial<T>;
+        new (coefficients: T[], variable: string): Polynomial<T>;
     };
     private _coefficients: T[];
     private readonly _variable: string;
@@ -14,6 +14,13 @@ export abstract class Polynomial<T extends Field<T>>
     constructor(coefficients: T[], variable: string) {
         this._variable = variable;
         this._coefficients = coefficients;
+    }
+
+    public get coefficients(): T[] {
+        return this._coefficients;
+    }
+    public get variable(): string {
+        return this._variable;
     }
 
     public safeCoefficient(index: number): T {
@@ -25,33 +32,36 @@ export abstract class Polynomial<T extends Field<T>>
     }
     public elevate(order: number): Polynomial<T> {
         const zeros = new Array(order).fill(this._coefficients[0].zero());
-        return new this._constructable([...zeros, ...this._coefficients]);
+        return new this._constructable(
+            [...zeros, ...this._coefficients],
+            this._variable,
+        );
     }
     public scalarMultiply(scalar: T): Polynomial<T> {
         const neCoefficients = this._coefficients.map((c) =>
             c.multiply(scalar),
         );
-        return new this._constructable(neCoefficients);
+        return new this._constructable(neCoefficients, this._variable);
     }
-    public add(b: Polynomial<T>): Polynomial<T> {
+    public add(other: Polynomial<T>): Polynomial<T> {
         const newLength = Math.max(
             this._coefficients.length,
-            b._coefficients.length,
+            other._coefficients.length,
         );
         const newCoefficients = new Array(newLength).fill(
             this._coefficients[0].zero(),
         );
         for (let index = 0; index < newLength; index++) {
             newCoefficients[index] = this.safeCoefficient(index).add(
-                b.safeCoefficient(index),
+                other.safeCoefficient(index),
             );
         }
-        return new this._constructable(newCoefficients)._trim();
+        return new this._constructable(newCoefficients, this._variable)._trim();
     }
-    public multiply(b: Polynomial<T>): Polynomial<T> {
+    public multiply(other: Polynomial<T>): Polynomial<T> {
         const result = this._coefficients
             .map((c, index) => {
-                const element = b.scalarMultiply(c).elevate(index);
+                const element = other.scalarMultiply(c).elevate(index);
                 return element;
             })
             .reduce((a, b) => a.add(b));
@@ -59,19 +69,23 @@ export abstract class Polynomial<T extends Field<T>>
     }
 
     public remainder(_b: Polynomial<T>): Polynomial<T> {
-        // TODO 多項式の除算を実装する
         throw new Error('not implemented');
     }
-
     public negate(): Polynomial<T> {
         const neCoefficients = this._coefficients.map((c) => c.negate());
-        return new this._constructable(neCoefficients);
+        return new this._constructable(neCoefficients, this._variable);
     }
     public zero(): Polynomial<T> {
-        return new this._constructable([this._coefficients[0].zero()]);
+        return new this._constructable(
+            [this._coefficients[0].zero()],
+            this._variable,
+        );
     }
     public unit(): Polynomial<T> {
-        return new this._constructable([this._coefficients[0].unit()]);
+        return new this._constructable(
+            [this._coefficients[0].unit()],
+            this._variable,
+        );
     }
     public equals(b: Polynomial<T>): boolean {
         if (this._variable !== b._variable) {

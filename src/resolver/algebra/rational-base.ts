@@ -1,5 +1,5 @@
 import { Testable } from '../../common/testable';
-import type { Ring, Field } from '../common/arithmetic-operations';
+import type { Ring, Field } from './arithmetic-operations';
 
 export abstract class RationalBase<
         TThis extends RationalBase<TThis, TBase>,
@@ -56,9 +56,6 @@ export abstract class RationalBase<
         return new this.constructable(newNumerator, newDenominator);
     }
 
-    public remainder(_b: TThis): TThis {
-        throw new Error('not implemented');
-    }
     public negate(): TThis {
         return new this.constructable(
             this.numerator.negate(),
