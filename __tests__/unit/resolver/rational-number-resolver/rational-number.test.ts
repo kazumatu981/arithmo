@@ -33,28 +33,25 @@ describe('RationalNumber', () => {
             test('1/2 --> 分子を3に変更', () => {
                 const r = new RationalNumber(1, 2);
                 r.numerator = new Numeric(3);
-                expect(r.numerator).toBe(3);
-                expect(r.denominator).toBe(2);
+                expect(r.equals(new RationalNumber(3, 2))).toBeTruthy();
             });
             test('1/2 --> 分子を4に変更', () => {
                 const r = new RationalNumber(1, 2);
                 r.numerator = new Numeric(4);
-                expect(r.numerator).toBe(4);
-                expect(r.denominator).toBe(2);
+                expect(r.equals(new RationalNumber(2, 1))).toBeTruthy();
             });
         });
         describe('denominator', () => {
             test('1/2 --> 分母を3に変更', () => {
                 const r = new RationalNumber(1, 2);
                 r.denominator = new Numeric(3);
-                expect(r.numerator).toBe(1);
-                expect(r.denominator).toBe(3);
+                expect(r.numerator.equals(1)).toBeTruthy();
+                expect(r.denominator.equals(3)).toBeTruthy();
             });
             test('2/3 --> 分母を4に変更', () => {
                 const r = new RationalNumber(2, 3);
                 r.denominator = new Numeric(4);
-                expect(r.numerator).toBe(2);
-                expect(r.denominator).toBe(4);
+                expect(r.equals(new RationalNumber(1, 2))).toBeTruthy();
             });
             test('1/2 --> 分母を0に変更', () => {
                 const r = new RationalNumber(1, 2);

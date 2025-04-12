@@ -1,8 +1,11 @@
 import { Numeric } from '../numeric-resolver/numeric';
 import { RationalBase } from './rational-base';
+import { type Rule } from '../../common/testable';
+import { isNumeric } from '../common/numeric';
 
 export class RationalNumber extends RationalBase<RationalNumber, Numeric> {
     readonly constructable = RationalNumber;
+    readonly moduleName = 'resolver';
     _numerator: Numeric = new Numeric(0);
     _denominator: Numeric = new Numeric(1);
 
@@ -18,4 +21,23 @@ export class RationalNumber extends RationalBase<RationalNumber, Numeric> {
                 ? new Numeric(denominator)
                 : denominator;
     }
+    protected readonly rules: Rule<RationalNumber>[] = [
+        (r): void => {
+            const rationalNumber = r as RationalNumber;
+            if (rationalNumber.denominator.equals(0)) {
+                throw new Error('分母は0にできません。');
+            }
+        },
+        (r): void => {
+            const rationalNumber = r as RationalNumber;
+            if (
+                !isNumeric(rationalNumber.numerator.value) ||
+                !isNumeric(rationalNumber.denominator.value)
+            ) {
+                throw new Error(
+                    '分子分母の両方が整数でなければなりません。',
+                );
+            }
+        },
+    ];
 }

@@ -1,9 +1,12 @@
+import { Testable } from '../../common/testable';
 import type { Ring, Field } from '../common/arithmetic-operations';
 
 export abstract class RationalBase<
-    TThis extends RationalBase<TThis, TBase>,
-    TBase extends Ring<TBase>,
-> implements Field<TThis>
+        TThis extends RationalBase<TThis, TBase>,
+        TBase extends Ring<TBase>,
+    >
+    extends Testable<TThis>
+    implements Field<TThis>
 {
     abstract _numerator: TBase;
     abstract _denominator: TBase;
@@ -18,6 +21,7 @@ export abstract class RationalBase<
     }
     public set numerator(value: TBase) {
         this._numerator = value;
+        this.test();
     }
     /**
      * 分母
@@ -26,10 +30,8 @@ export abstract class RationalBase<
         return this._denominator;
     }
     public set denominator(value: TBase) {
-        if (this.denominator.zero().equals(value)) {
-            throw new Error('分母は0ではありません');
-        }
         this._denominator = value;
+        this.test();
     }
 
     /**
