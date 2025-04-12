@@ -27,8 +27,12 @@ export class Numeric implements Ring<Numeric> {
         return new Numeric(-this._value);
     }
 
-    public equals(b: Numeric): boolean {
-        return this._value === b.value;
+    public equals(other: Numeric | number): boolean {
+        if (typeof other === 'number') {
+            return this._value === other;
+        } else {
+            return this._value === other.value;
+        }
     }
 
     public zero(): Numeric {
