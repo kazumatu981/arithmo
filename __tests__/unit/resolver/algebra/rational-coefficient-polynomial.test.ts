@@ -27,4 +27,53 @@ describe('RationalCoefficientPolynomial', () => {
             p.safeCoefficient(2).equals(new RationalNumber(0, 1)),
         ).toBeTruthy();
     });
+    test('evaluate', () => {
+        let p = new RationalCoefficientPolynomial(
+            [new RationalNumber(1, 2), new RationalNumber(3, 4)],
+            'x',
+        );
+        p = p.elevate(2);
+        expect(
+            p.safeCoefficient(0).equals(new RationalNumber(0, 1)),
+        ).toBeTruthy();
+        expect(
+            p.safeCoefficient(1).equals(new RationalNumber(0, 1)),
+        ).toBeTruthy();
+        expect(
+            p.safeCoefficient(2).equals(new RationalNumber(1, 2)),
+        ).toBeTruthy();
+        expect(
+            p.safeCoefficient(3).equals(new RationalNumber(3, 4)),
+        ).toBeTruthy();
+    });
+    describe('scalarMultiply', () => {
+        test('normal case', () => {
+            let p = new RationalCoefficientPolynomial(
+                [new RationalNumber(1, 2), new RationalNumber(3, 4)],
+                'x',
+            );
+            p = p.scalarMultiply(new RationalNumber(2, 3));
+            expect(
+                p.safeCoefficient(0).equals(new RationalNumber(1, 3)),
+            ).toBeTruthy();
+            expect(
+                p.safeCoefficient(1).equals(new RationalNumber(1, 2)),
+            ).toBeTruthy();
+        });
+        test('zero case', () => {
+            let p = new RationalCoefficientPolynomial(
+                [new RationalNumber(1, 2), new RationalNumber(3, 4)],
+                'x',
+            );
+            p = p.scalarMultiply(new RationalNumber(0, 1));
+            expect(
+                p.equals(
+                    new RationalCoefficientPolynomial(
+                        [new RationalNumber(0, 1)],
+                        'x',
+                    ),
+                ),
+            ).toBeTruthy();
+        });
+    });
 });
