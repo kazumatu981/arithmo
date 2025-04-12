@@ -34,19 +34,26 @@ export abstract class ResolverBase<T> {
     protected abstract operatorResolver: Record<Operator, (a: T, b: T) => T>;
     protected currentOrder = 0;
 
-    /**
-     * 単項ノードを解決する
-     * @param node - 解析対象の単項ノード
-     * @returns 解決結果
-     */
-    protected abstract resolveSingleNode(node: SingleNode): T;
-    protected abstract resolveParenNode(node: ParenNode): T;
+    protected abstract resolveValue(tokenValue: string): T;
+    protected abstract toNegative(value: T): T;
 
     /**
      * 解決イベントハンドラ
      */
     public onResolved?: ResolveHandler<T>;
 
+    protected resolveSingleNode(node: SingleNode): T {
+        return node.isNegative
+            ? this.toNegative(this.resolveValue(node.value))
+            : this.resolveValue(node.value);
+    }
+
+    protected resolveParenNode(node: ParenNode): T {
+        const childrenResult = this.resolve(node.childrenRoot as ParseTreeNode);
+        return node.isNegative
+            ? this.toNegative(childrenResult)
+            : childrenResult;
+    }
     protected resolveBinaryNode(node: BinaryNode): T {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const operatorAction = this.operatorResolver[node.operator]!;
