@@ -40,12 +40,12 @@ export class Numeric implements Ring<Numeric> {
     }
 
     public zero(): Numeric {
-        return Zero;
+        return ZERO;
     }
     public unit(): Numeric {
-        return One;
+        return ONE;
     }
 }
 
-const Zero = new Numeric(0);
-const One = new Numeric(1);
+const ZERO = new Numeric(0);
+const ONE = new Numeric(1);

@@ -8,9 +8,13 @@ export abstract class RingResolverBase<
         '+' | '-' | '/' | '*',
         (a: T, b: T) => T
     > = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         '+': (a, b) => a.add(b),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         '-': (a, b) => a.add(b.negate()),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         '*': (a, b) => a.multiply(b),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         '/': (_a, _b) => {
             throw new Error('not implemented');
         },
@@ -27,9 +31,13 @@ export abstract class FieldResolverBase<
         '+' | '-' | '/' | '*',
         (a: T, b: T) => T
     > = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         '+': (a, b) => a.add(b),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         '-': (a, b) => a.add(b.negate()),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         '*': (a, b) => a.multiply(b),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         '/': (a, b) => a.multiply(b.reciprocate()),
     };
     protected toNegative(value: T): T {

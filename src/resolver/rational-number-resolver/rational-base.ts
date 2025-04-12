@@ -8,7 +8,9 @@ export abstract class RationalBase<
     extends Testable<TThis>
     implements Field<TThis>
 {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     abstract _numerator: TBase;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     abstract _denominator: TBase;
     abstract readonly constructable: {
         new (numerator: TBase, denominator: TBase): TThis;
@@ -54,7 +56,7 @@ export abstract class RationalBase<
         return new this.constructable(newNumerator, newDenominator);
     }
 
-    public remainder(b: TThis): TThis {
+    public remainder(_b: TThis): TThis {
         throw new Error('not implemented');
     }
     public negate(): TThis {
