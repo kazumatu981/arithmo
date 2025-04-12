@@ -1,7 +1,7 @@
 /**
- * 算術演算の基底インターフェイス
+ * 環インターフェイス
  */
-export interface ArithmeticOperations<T> {
+export interface Ring<T> {
     /**
      * 加算する
      * @param b - 加算対象
@@ -17,10 +17,6 @@ export interface ArithmeticOperations<T> {
      */
     negate(): T;
     /**
-     * 逆数を計算する
-     */
-    reciprocate(): T;
-    /**
      * 0を返却する
      */
     zero(): T;
@@ -33,4 +29,14 @@ export interface ArithmeticOperations<T> {
      * @param b - 比較対象
      */
     equals(b: T): boolean;
+}
+
+/**
+ * 体インターフェイス
+ */
+export interface Field<T> extends Ring<T> {
+    /**
+     * 逆数を計算する
+     */
+    reciprocate(): T;
 }

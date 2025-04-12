@@ -1,9 +1,9 @@
 // TODO 多項式を実装する
 
-import { type ArithmeticOperations } from '../common/arithmetic-operations';
+import { type Ring } from '../common/arithmetic-operations';
 
-export abstract class Polynomial<T extends ArithmeticOperations<T>>
-    implements ArithmeticOperations<Polynomial<T>>
+export abstract class Polynomial<T extends Ring<T>>
+    implements Ring<Polynomial<T>>
 {
     abstract readonly _constructable: {
         new (coefficients: T[]): Polynomial<T>;
@@ -44,16 +44,20 @@ export abstract class Polynomial<T extends ArithmeticOperations<T>>
                 b.safeCoefficient(index),
             );
         }
-        return new this._constructable(newCoefficients);
+        return new this._constructable(newCoefficients)._trim();
     }
-    public multiply(_b: Polynomial<T>): Polynomial<T> {
-        throw new Error('Method not implemented.');
+    public multiply(b: Polynomial<T>): Polynomial<T> {
+        const result = this._coefficients
+            .map((c, index) => {
+                const element = b.scalarMultiply(c).elevate(index);
+                return element;
+            })
+            .reduce((a, b) => a.add(b));
+        return result._trim();
     }
     public negate(): Polynomial<T> {
-        throw new Error('Method not implemented.');
-    }
-    public reciprocate(): Polynomial<T> {
-        throw new Error('Method not implemented.');
+        const neCoefficients = this._coefficients.map((c) => c.negate());
+        return new this._constructable(neCoefficients);
     }
     public zero(): Polynomial<T> {
         return new this._constructable([this._coefficients[0].zero()]);
@@ -61,7 +65,29 @@ export abstract class Polynomial<T extends ArithmeticOperations<T>>
     public unit(): Polynomial<T> {
         return new this._constructable([this._coefficients[0].unit()]);
     }
-    public equals(_b: Polynomial<T>): boolean {
-        throw new Error('Method not implemented.');
+    public equals(b: Polynomial<T>): boolean {
+        if (this._coefficients.length !== b._coefficients.length) {
+            return false;
+        }
+        for (let index = 0; index < this._coefficients.length; index++) {
+            if (!this._coefficients[index].equals(b._coefficients[index])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private _trim(): this {
+        while (this._coefficients.length > 1) {
+            if (
+                this._coefficients[this._coefficients.length - 1].equals(
+                    this._coefficients[0].zero(),
+                )
+            ) {
+                this._coefficients.pop();
+            } else {
+                break;
+            }
+        }
+        return this;
     }
 }

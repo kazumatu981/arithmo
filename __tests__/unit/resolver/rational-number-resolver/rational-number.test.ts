@@ -20,7 +20,7 @@ describe('RationalNumber', () => {
         test('0/2', () => {
             const r = new RationalNumber(0, 2);
             expect(r.numerator).toBe(0);
-            expect(r.denominator).toBe(1);
+            expect(r.denominator).toBe(2);
             expect(r.isNegative).toBe(false);
             expect(r.toString()).toBe('0');
         });
@@ -55,8 +55,8 @@ describe('RationalNumber', () => {
             test('1/2 --> 分子を4に変更', () => {
                 const r = new RationalNumber(1, 2);
                 r.numerator = 4;
-                expect(r.numerator).toBe(2);
-                expect(r.denominator).toBe(1);
+                expect(r.numerator).toBe(4);
+                expect(r.denominator).toBe(2);
             });
             test('1/2 --> 分子を-1に変更', () => {
                 const r = new RationalNumber(1, 2);
@@ -73,8 +73,8 @@ describe('RationalNumber', () => {
             test('2/3 --> 分母を4に変更', () => {
                 const r = new RationalNumber(2, 3);
                 r.denominator = 4;
-                expect(r.numerator).toBe(1);
-                expect(r.denominator).toBe(2);
+                expect(r.numerator).toBe(2);
+                expect(r.denominator).toBe(4);
             });
             test('1/2 --> 分母を0に変更', () => {
                 const r = new RationalNumber(1, 2);

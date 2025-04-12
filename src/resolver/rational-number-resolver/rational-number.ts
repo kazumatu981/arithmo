@@ -1,10 +1,10 @@
 import { gcd, isNumeric } from '../common/numeric';
 import { Testable, type Rule } from '../../common/testable';
-import { ArithmeticOperations } from '../common/arithmetic-operations';
+import { Field } from '../common/arithmetic-operations';
 
 export class RationalNumber
     extends Testable<RationalNumber>
-    implements ArithmeticOperations<RationalNumber>
+    implements Field<RationalNumber>
 {
     /**
      * 分子
@@ -26,7 +26,6 @@ export class RationalNumber
         this._denominator = denominator;
         this._isNegative = isNegative;
         this.test();
-        this.normalize();
     }
     public get numerator(): number {
         return this._numerator;
@@ -34,7 +33,6 @@ export class RationalNumber
 
     public set numerator(value: number) {
         this._numerator = value;
-        this.normalize();
         this.test();
     }
     public get denominator(): number {
@@ -42,7 +40,6 @@ export class RationalNumber
     }
     public set denominator(value: number) {
         this._denominator = value;
-        this.normalize();
         this.test();
     }
     public get isNegative(): boolean {
@@ -110,8 +107,8 @@ export class RationalNumber
 
     public equals(other: RationalNumber): boolean {
         return (
-            this.numerator === other.numerator &&
-            this.denominator === other.denominator &&
+            this.numerator * other.denominator ===
+                this.denominator * other.numerator &&
             this.isNegative === other.isNegative
         );
     }

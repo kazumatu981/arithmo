@@ -1,15 +1,9 @@
-import type { BinaryNode } from '../../parser';
-import { isNumeric } from '../common/numeric';
-import { NumberResolver } from '../number-resolver';
+import { RingResolverBase } from '../common/arithmetic-resolver-base';
+import { stringToNum } from '../common/string-to-num';
+import { Numeric } from './numeric';
 
-export class NumericResolver extends NumberResolver {
-    protected resolveBinaryNode(node: BinaryNode): number {
-        const result = super.resolveBinaryNode(node);
-
-        if (!isNumeric(result)) {
-            // TODO throw resolver error.
-            throw new Error('割り切れません');
-        }
-        return result;
+export class NumericResolver extends RingResolverBase<Numeric> {
+    protected resolveValue(tokenValue: string): Numeric {
+        return new Numeric(stringToNum(tokenValue));
     }
 }
