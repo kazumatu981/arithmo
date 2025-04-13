@@ -22,6 +22,9 @@ export abstract class Polynomial<T extends Field<T>>
     public get variable(): string {
         return this._variable;
     }
+    public get degree(): number {
+        return this._coefficients.length - 1;
+    }
 
     public safeCoefficient(index: number): T {
         if (index < this._coefficients.length) {
@@ -41,9 +44,10 @@ export abstract class Polynomial<T extends Field<T>>
         const neCoefficients = this._coefficients.map((c) =>
             c.multiply(scalar),
         );
-        return new this._constructable(neCoefficients, this._variable);
+        return new this._constructable(neCoefficients, this._variable)._trim();
     }
     public add(other: Polynomial<T>): Polynomial<T> {
+        Polynomial._assertSameVariable(this, other);
         const newLength = Math.max(
             this._coefficients.length,
             other._coefficients.length,
@@ -59,6 +63,7 @@ export abstract class Polynomial<T extends Field<T>>
         return new this._constructable(newCoefficients, this._variable)._trim();
     }
     public multiply(other: Polynomial<T>): Polynomial<T> {
+        Polynomial._assertSameVariable(this, other);
         const result = this._coefficients
             .map((c, index) => {
                 const element = other.scalarMultiply(c).elevate(index);
@@ -100,6 +105,14 @@ export abstract class Polynomial<T extends Field<T>>
             }
         }
         return true;
+    }
+    private static _assertSameVariable<S extends Field<S>>(
+        a: Polynomial<S>,
+        b: Polynomial<S>,
+    ) {
+        if (a._variable !== b._variable) {
+            throw new Error('not same variable');
+        }
     }
     private _trim(): this {
         while (this._coefficients.length > 1) {
