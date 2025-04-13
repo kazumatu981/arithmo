@@ -4,17 +4,17 @@ import { ArithmoError } from './errors';
  * 自信のプロパティをテストする機能を持つ抽象クラス
  */
 export abstract class Testable<T> {
-    protected abstract readonly moduleName: string;
+    protected abstract readonly _moduleName: string;
     /**
      * テストルール
      */
-    protected abstract readonly rules: Rule<T>[];
+    protected abstract readonly _rules: Rule<T>[];
 
     /**
      * テストの実行
      */
     public test(): void {
-        const errors = this.rules
+        const errors = this._rules
             .map((rule) => {
                 try {
                     rule(this);
@@ -29,7 +29,7 @@ export abstract class Testable<T> {
             })
             .filter((error) => error !== undefined) as ArithmoError[];
         if (errors.length > 0) {
-            throw new ArithmoTestError(this.moduleName, errors);
+            throw new ArithmoTestError(this._moduleName, errors);
         }
     }
 }
@@ -39,10 +39,18 @@ export abstract class Testable<T> {
  */
 export type Rule<T> = (test: Testable<T>) => void;
 
+/**
+ * テストの実行結果
+ */
 export class ArithmoTestError extends Error {
     public readonly errors: ArithmoError[];
     public readonly moduleName: string;
 
+    /**
+     * 新しい ArithmoTestError インスタンスを作成します。
+     * @param moduleName - モジュール名称
+     * @param errors - 発生したエラーの配列
+     */
     public constructor(moduleName: string, errors: ArithmoError[]) {
         super(`${moduleName} でエラーが発生しました。`);
         this.moduleName = moduleName;

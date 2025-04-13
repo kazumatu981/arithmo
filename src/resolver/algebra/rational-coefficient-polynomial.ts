@@ -1,9 +1,9 @@
-import { Polynomial } from './polynomial';
+import { PolynomialBase } from './polynomial-base';
 import { RationalNumber } from './rational-number';
 
-export class RationalCoefficientPolynomial extends Polynomial<RationalNumber> {
-    _constructable: new (
+export class RationalCoefficientPolynomial extends PolynomialBase<RationalNumber> {
+    protected readonly _constructable: new (
         coefficients: RationalNumber[],
         variable: string,
-    ) => Polynomial<RationalNumber> = RationalCoefficientPolynomial;
+    ) => PolynomialBase<RationalNumber> = RationalCoefficientPolynomial;
 }

@@ -8,11 +8,9 @@ export abstract class RationalBase<
     extends Testable<TThis>
     implements Field<TThis>
 {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    abstract _numerator: TBase;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    abstract _denominator: TBase;
-    abstract readonly constructable: {
+    protected abstract _numerator: TBase;
+    protected abstract _denominator: TBase;
+    protected abstract readonly _constructable: {
         new (numerator: TBase, denominator: TBase): TThis;
     };
     /**
@@ -47,33 +45,33 @@ export abstract class RationalBase<
 
         const newNumerator = firstElement.add(secondElement);
         const newDenominator = this.denominator.multiply(other.denominator);
-        return new this.constructable(newNumerator, newDenominator);
+        return new this._constructable(newNumerator, newDenominator);
     }
 
     public multiply(other: TThis): TThis {
         const newNumerator = this.numerator.multiply(other.numerator);
         const newDenominator = this.denominator.multiply(other.denominator);
-        return new this.constructable(newNumerator, newDenominator);
+        return new this._constructable(newNumerator, newDenominator);
     }
 
     public negate(): TThis {
-        return new this.constructable(
+        return new this._constructable(
             this.numerator.negate(),
             this.denominator,
         );
     }
 
     public reciprocate(): TThis {
-        return new this.constructable(this.denominator, this.numerator);
+        return new this._constructable(this.denominator, this.numerator);
     }
     public zero(): TThis {
-        return new this.constructable(
+        return new this._constructable(
             this.numerator.zero(),
             this.denominator.unit(),
         );
     }
     public unit(): TThis {
-        return new this.constructable(
+        return new this._constructable(
             this.numerator.unit(),
             this.denominator.unit(),
         );

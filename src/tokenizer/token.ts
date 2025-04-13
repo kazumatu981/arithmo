@@ -12,7 +12,7 @@ export type TokenType = 'number' | 'operator' | 'leftParen' | 'rightParen';
  * @group Tokenizer
  */
 export class Token extends Testable<Token> {
-    protected readonly moduleName = 'tokenizer';
+    protected readonly _moduleName = 'tokenizer';
 
     public readonly type: TokenType;
     public readonly value: string;
@@ -47,7 +47,7 @@ export class Token extends Testable<Token> {
         return this.value;
     }
 
-    protected readonly rules: Rule<Token>[] = [
+    protected readonly _rules: Rule<Token>[] = [
         (testable): void => {
             const token = testable as Token;
             if (isAllValidCharacters(token.value)) return;

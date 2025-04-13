@@ -32,10 +32,9 @@ export type ResolveHandler<T> = (eventArg: ResolveEventArg<T>) => void;
  */
 export abstract class ResolverBase<T> {
     protected abstract operatorResolver: Record<Operator, (a: T, b: T) => T>;
-    protected currentOrder = 0;
-
     protected abstract resolveValue(tokenValue: string): T;
     protected abstract toNegative(value: T): T;
+    protected currentOrder = 0;
 
     /**
      * 解決イベントハンドラ

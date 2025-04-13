@@ -1,3 +1,8 @@
+/**
+ * 文字列中の各文字が利用できる文字かを判定する
+ * @param s - 対象文字列
+ * @returns 検証結果
+ */
 export function isAllValidCharacters(s: string): boolean {
     return s
         .split('')

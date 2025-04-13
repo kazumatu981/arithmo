@@ -1,12 +1,16 @@
-// TODO 多項式を実装する
+import {
+    type Field,
+    type RingWithRemainderProvider,
+} from './arithmetic-operations';
 
-import { type Field, RingWithRemainderProvider } from './arithmetic-operations';
-
-export abstract class Polynomial<T extends Field<T>>
-    implements RingWithRemainderProvider<Polynomial<T>>
+/**
+ * 多項式を表すクラス
+ */
+export abstract class PolynomialBase<T extends Field<T>>
+    implements RingWithRemainderProvider<PolynomialBase<T>>
 {
-    abstract readonly _constructable: {
-        new (coefficients: T[], variable: string): Polynomial<T>;
+    protected abstract readonly _constructable: {
+        new (coefficients: T[], variable: string): PolynomialBase<T>;
     };
     private _coefficients: T[];
     private readonly _variable: string;
@@ -33,21 +37,21 @@ export abstract class Polynomial<T extends Field<T>>
             return this._coefficients[0].zero();
         }
     }
-    public elevate(order: number): Polynomial<T> {
+    public elevate(order: number): PolynomialBase<T> {
         const zeros = new Array(order).fill(this._coefficients[0].zero());
         return new this._constructable(
             [...zeros, ...this._coefficients],
             this._variable,
         );
     }
-    public scalarMultiply(scalar: T): Polynomial<T> {
+    public scalarMultiply(scalar: T): PolynomialBase<T> {
         const neCoefficients = this._coefficients.map((c) =>
             c.multiply(scalar),
         );
         return new this._constructable(neCoefficients, this._variable)._trim();
     }
-    public add(other: Polynomial<T>): Polynomial<T> {
-        Polynomial._assertSameVariable(this, other);
+    public add(other: PolynomialBase<T>): PolynomialBase<T> {
+        PolynomialBase._assertSameVariable(this, other);
         const newLength = Math.max(
             this._coefficients.length,
             other._coefficients.length,
@@ -62,8 +66,8 @@ export abstract class Polynomial<T extends Field<T>>
         }
         return new this._constructable(newCoefficients, this._variable)._trim();
     }
-    public multiply(other: Polynomial<T>): Polynomial<T> {
-        Polynomial._assertSameVariable(this, other);
+    public multiply(other: PolynomialBase<T>): PolynomialBase<T> {
+        PolynomialBase._assertSameVariable(this, other);
         const result = this._coefficients
             .map((c, index) => {
                 const element = other.scalarMultiply(c).elevate(index);
@@ -73,26 +77,26 @@ export abstract class Polynomial<T extends Field<T>>
         return result._trim();
     }
 
-    public remainder(_b: Polynomial<T>): Polynomial<T> {
+    public remainder(_b: PolynomialBase<T>): PolynomialBase<T> {
         throw new Error('not implemented');
     }
-    public negate(): Polynomial<T> {
+    public negate(): PolynomialBase<T> {
         const neCoefficients = this._coefficients.map((c) => c.negate());
         return new this._constructable(neCoefficients, this._variable);
     }
-    public zero(): Polynomial<T> {
+    public zero(): PolynomialBase<T> {
         return new this._constructable(
             [this._coefficients[0].zero()],
             this._variable,
         );
     }
-    public unit(): Polynomial<T> {
+    public unit(): PolynomialBase<T> {
         return new this._constructable(
             [this._coefficients[0].unit()],
             this._variable,
         );
     }
-    public equals(b: Polynomial<T>): boolean {
+    public equals(b: PolynomialBase<T>): boolean {
         if (this._variable !== b._variable) {
             return false;
         }
@@ -107,8 +111,8 @@ export abstract class Polynomial<T extends Field<T>>
         return true;
     }
     private static _assertSameVariable<S extends Field<S>>(
-        a: Polynomial<S>,
-        b: Polynomial<S>,
+        a: PolynomialBase<S>,
+        b: PolynomialBase<S>,
     ) {
         if (a._variable !== b._variable) {
             throw new Error('not same variable');
