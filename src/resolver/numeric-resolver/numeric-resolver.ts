@@ -7,7 +7,7 @@ import { Numeric } from '../algebra/numeric';
  * @group Resolver
  */
 export class NumericResolver extends RingResolverBase<Numeric> {
-    protected resolveValue(tokenValue: string): Numeric {
+    protected _resolveValue(tokenValue: string): Numeric {
         return new Numeric(stringToNum(tokenValue));
     }
 }

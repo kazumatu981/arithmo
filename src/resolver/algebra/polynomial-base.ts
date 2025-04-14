@@ -176,10 +176,10 @@ export abstract class PolynomialBase<T extends Field<T>>
         return true;
     }
 
-    private static _assertSameVariable<S extends Field<S>>(
-        a: PolynomialBase<S>,
-        b: PolynomialBase<S>,
-    ) {
+    private static _assertSameVariable<TBase extends Field<TBase>>(
+        a: PolynomialBase<TBase>,
+        b: PolynomialBase<TBase>,
+    ): void {
         if (a._variable !== b._variable) {
             throw new Error('not same variable');
         }

@@ -1,6 +1,9 @@
 import { PolynomialBase } from './polynomial-base';
-import { RationalNumber } from './rational-number';
+import { type RationalNumber } from './rational-number';
 
+/**
+ * 分数係数多項式
+ */
 export class RationalCoefficientPolynomial extends PolynomialBase<RationalNumber> {
     protected readonly _constructable: new (
         coefficients: RationalNumber[],

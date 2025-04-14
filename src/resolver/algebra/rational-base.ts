@@ -1,6 +1,9 @@
 import { Testable } from '../../common/testable';
 import type { Ring, Field } from './arithmetic-operations';
 
+/**
+ * 有理数(抽象貸したモデル)
+ */
 export abstract class RationalBase<
         TThis extends RationalBase<TThis, TBase>,
         TBase extends Ring<TBase>,
@@ -15,25 +18,34 @@ export abstract class RationalBase<
     };
     /**
      * 分子
+     * @returns 分子
      */
     public get numerator(): TBase {
         return this._numerator;
     }
+
+    /**
+     * 分子を設定する
+     * @param value - 設定する分子
+     */
     public set numerator(value: TBase) {
         this._numerator = value;
         this.test();
     }
     /**
      * 分母
+     * @returns 分母
      */
     public get denominator(): TBase {
         return this._denominator;
     }
+    /**
+     * 分母を設定する
+     */
     public set denominator(value: TBase) {
         this._denominator = value;
         this.test();
     }
-
     /**
      * 足し算
      * @param other 足す数
@@ -47,13 +59,21 @@ export abstract class RationalBase<
         const newDenominator = this.denominator.multiply(other.denominator);
         return new this._constructable(newNumerator, newDenominator);
     }
-
+    /**
+     * 掛け算
+     * @param other 掛ける数
+     * @returns 計算結果
+     */
     public multiply(other: TThis): TThis {
         const newNumerator = this.numerator.multiply(other.numerator);
         const newDenominator = this.denominator.multiply(other.denominator);
         return new this._constructable(newNumerator, newDenominator);
     }
 
+    /**
+     * 符号を反転する
+     * @returns 計算結果
+     */
     public negate(): TThis {
         return new this._constructable(
             this.numerator.negate(),
@@ -61,21 +81,38 @@ export abstract class RationalBase<
         );
     }
 
+    /**
+     * 逆数を求める
+     * @returns 計算結果
+     */
     public reciprocate(): TThis {
         return new this._constructable(this.denominator, this.numerator);
     }
+    /**
+     * 零元
+     * @returns 計算結果
+     */
     public zero(): TThis {
         return new this._constructable(
             this.numerator.zero(),
             this.denominator.unit(),
         );
     }
+    /**
+     * 単位元
+     * @returns 計算結果
+     */
     public unit(): TThis {
         return new this._constructable(
             this.numerator.unit(),
             this.denominator.unit(),
         );
     }
+    /**
+     * 比較する
+     * @param other 比較対象
+     * @returns 比較結果
+     */
     public equals(other: TThis): boolean {
         return this.numerator
             .multiply(other.denominator)

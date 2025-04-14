@@ -7,7 +7,7 @@ import { RationalNumber } from '../algebra/rational-number';
  * @group Resolver
  */
 export class RationalNumberResolver extends FieldResolverBase<RationalNumber> {
-    protected resolveValue(tokenValue: string): RationalNumber {
+    protected _resolveValue(tokenValue: string): RationalNumber {
         const number = stringToNum(tokenValue);
         return new RationalNumber(number, 1);
     }

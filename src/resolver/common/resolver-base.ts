@@ -31,31 +31,31 @@ export type ResolveHandler<T> = (eventArg: ResolveEventArg<T>) => void;
  * @group Resolver
  */
 export abstract class ResolverBase<T> {
-    protected abstract operatorResolver: Record<Operator, (a: T, b: T) => T>;
-    protected abstract resolveValue(tokenValue: string): T;
-    protected abstract toNegative(value: T): T;
-    protected currentOrder = 0;
+    protected abstract _operatorResolver: Record<Operator, (a: T, b: T) => T>;
+    protected abstract _resolveValue(tokenValue: string): T;
+    protected abstract _toNegative(value: T): T;
+    protected _currentOrder = 0;
 
     /**
      * 解決イベントハンドラ
      */
     public onResolved?: ResolveHandler<T>;
 
-    protected resolveSingleNode(node: SingleNode): T {
+    protected _resolveSingleNode(node: SingleNode): T {
         return node.isNegative
-            ? this.toNegative(this.resolveValue(node.value))
-            : this.resolveValue(node.value);
+            ? this._toNegative(this._resolveValue(node.value))
+            : this._resolveValue(node.value);
     }
 
-    protected resolveParenNode(node: ParenNode): T {
+    protected _resolveParenNode(node: ParenNode): T {
         const childrenResult = this.resolve(node.childrenRoot as ParseTreeNode);
         return node.isNegative
-            ? this.toNegative(childrenResult)
+            ? this._toNegative(childrenResult)
             : childrenResult;
     }
-    protected resolveBinaryNode(node: BinaryNode): T {
+    protected _resolveBinaryNode(node: BinaryNode): T {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const operatorAction = this.operatorResolver[node.operator]!;
+        const operatorAction = this._operatorResolver[node.operator]!;
         const result = operatorAction(
             this.resolve(node.left as ParseTreeNode),
             this.resolve(node.right as ParseTreeNode),
@@ -67,7 +67,7 @@ export abstract class ResolverBase<T> {
      * 状態をリセットする。
      */
     public reset(): void {
-        this.currentOrder = 0;
+        this._currentOrder = 0;
     }
 
     /**
@@ -79,16 +79,16 @@ export abstract class ResolverBase<T> {
         let result: T;
         switch (node.type) {
             case 'single':
-                result = this.resolveSingleNode(node as SingleNode);
+                result = this._resolveSingleNode(node as SingleNode);
                 break;
             case 'paren':
-                result = this.resolveParenNode(node as ParenNode);
+                result = this._resolveParenNode(node as ParenNode);
                 break;
             case 'binary':
-                result = this.resolveBinaryNode(node as BinaryNode);
+                result = this._resolveBinaryNode(node as BinaryNode);
                 break;
         }
-        this.onResolved?.({ node, order: this.currentOrder++, result });
+        this.onResolved?.({ node, order: this._currentOrder++, result });
         return result;
     }
 }

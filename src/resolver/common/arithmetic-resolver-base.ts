@@ -1,10 +1,13 @@
 import type { Ring, Field } from '../algebra/arithmetic-operations';
 import { ResolverBase } from './resolver-base';
 
+/**
+ * 環を解決する解決機
+ */
 export abstract class RingResolverBase<
     T extends Ring<T>,
 > extends ResolverBase<T> {
-    protected operatorResolver: Record<
+    protected _operatorResolver: Record<
         '+' | '-' | '/' | '*',
         (a: T, b: T) => T
     > = {
@@ -19,15 +22,18 @@ export abstract class RingResolverBase<
             throw new Error('not implemented');
         },
     };
-    protected toNegative(value: T): T {
+    protected _toNegative(value: T): T {
         return value.negate();
     }
 }
 
+/**
+ * 体を解決する解決機
+ */
 export abstract class FieldResolverBase<
     T extends Field<T>,
 > extends RingResolverBase<T> {
-    protected operatorResolver: Record<
+    protected _operatorResolver: Record<
         '+' | '-' | '/' | '*',
         (a: T, b: T) => T
     > = {
@@ -40,7 +46,7 @@ export abstract class FieldResolverBase<
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '/': (a, b) => a.multiply(b.reciprocate()),
     };
-    protected toNegative(value: T): T {
+    protected _toNegative(value: T): T {
         return value.negate();
     }
 }
