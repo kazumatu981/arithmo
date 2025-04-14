@@ -8,7 +8,7 @@ export abstract class RingResolverBase<
     T extends Ring<T>,
 > extends ResolverBase<T> {
     protected _operatorResolver: Record<
-        '+' | '-' | '/' | '*',
+        '+' | '-' | '/' | '*' | '^',
         (a: T, b: T) => T
     > = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -19,6 +19,10 @@ export abstract class RingResolverBase<
         '*': (a, b) => a.multiply(b),
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '/': (_a, _b) => {
+            throw new Error('not implemented');
+        },
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        '^': (_a, _b) => {
             throw new Error('not implemented');
         },
     };
@@ -34,7 +38,7 @@ export abstract class FieldResolverBase<
     T extends Field<T>,
 > extends RingResolverBase<T> {
     protected _operatorResolver: Record<
-        '+' | '-' | '/' | '*',
+        '+' | '-' | '/' | '*' | '^',
         (a: T, b: T) => T
     > = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -45,6 +49,10 @@ export abstract class FieldResolverBase<
         '*': (a, b) => a.multiply(b),
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '/': (a, b) => a.multiply(b.reciprocate()),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        '^': (_a, _b) => {
+            throw new Error('not implemented');
+        },
     };
     protected _toNegative(value: T): T {
         return value.negate();
