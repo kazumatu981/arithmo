@@ -6,13 +6,15 @@ import {
 /**
  * 多項式を表すクラス
  */
-export abstract class PolynomialBase<T extends Field<T>>
-    implements RingWithRemainderProvider<PolynomialBase<T>>
+export abstract class PolynomialBase<
+    TThis extends PolynomialBase<TThis, TCoefficient>,
+    TCoefficient extends Field<TCoefficient>,
+> implements RingWithRemainderProvider<TThis>
 {
     protected abstract readonly _constructable: {
-        new (coefficients: T[], variable: string): PolynomialBase<T>;
+        new (coefficients: TCoefficient[], variable: string): TThis;
     };
-    private _coefficients: T[];
+    private _coefficients: TCoefficient[];
     private readonly _variable: string;
 
     /**
@@ -20,7 +22,7 @@ export abstract class PolynomialBase<T extends Field<T>>
      * @param coefficients - 多項式の係数の配列
      * @param variable - 多項式の変数
      */
-    constructor(coefficients: T[], variable: string) {
+    constructor(coefficients: TCoefficient[], variable: string) {
         this._variable = variable;
         this._coefficients = coefficients;
     }
@@ -29,7 +31,7 @@ export abstract class PolynomialBase<T extends Field<T>>
      * 多項式の係数を取得します。
      * @returns 係数の配列
      */
-    public get coefficients(): T[] {
+    public get coefficients(): TCoefficient[] {
         return this._coefficients;
     }
     /**
@@ -52,7 +54,7 @@ export abstract class PolynomialBase<T extends Field<T>>
      * @param index - 取得したい係数のインデックス
      * @returns 指定されたインデックスの係数。インデックスが範囲外の場合は零を返します。
      */
-    public safeCoefficient(index: number): T {
+    public safeCoefficient(index: number): TCoefficient {
         if (index < this._coefficients.length) {
             return this._coefficients[index];
         } else {
@@ -64,7 +66,7 @@ export abstract class PolynomialBase<T extends Field<T>>
      * @param order - 生成する行列の次数
      * @returns 生成された行列
      */
-    public elevate(order: number): PolynomialBase<T> {
+    public elevate(order: number): TThis {
         const zeros = new Array(order).fill(this._coefficients[0].zero());
         return new this._constructable(
             [...zeros, ...this._coefficients],
@@ -76,7 +78,7 @@ export abstract class PolynomialBase<T extends Field<T>>
      * @param scalar - スカラー
      * @returns スカラー倍された多項式
      */
-    public scalarMultiply(scalar: T): PolynomialBase<T> {
+    public scalarMultiply(scalar: TCoefficient): TThis {
         const neCoefficients = this._coefficients.map((c) =>
             c.multiply(scalar),
         );
@@ -87,8 +89,8 @@ export abstract class PolynomialBase<T extends Field<T>>
      * @param other - 足し算する多項式
      * @returns 足し算された多項式
      */
-    public add(other: PolynomialBase<T>): PolynomialBase<T> {
-        PolynomialBase._assertSameVariable(this, other);
+    public add(other: TThis): TThis {
+        this._assertSameVariable(other);
         const newLength = Math.max(
             this._coefficients.length,
             other._coefficients.length,
@@ -108,8 +110,8 @@ export abstract class PolynomialBase<T extends Field<T>>
      * @param other - 積み算する多項式
      * @returns 積み算された多項式
      */
-    public multiply(other: PolynomialBase<T>): PolynomialBase<T> {
-        PolynomialBase._assertSameVariable(this, other);
+    public multiply(other: TThis): TThis {
+        this._assertSameVariable(other);
         const result = this._coefficients
             .map((c, index) => {
                 const element = other.scalarMultiply(c).elevate(index);
@@ -125,14 +127,14 @@ export abstract class PolynomialBase<T extends Field<T>>
      * @returns 除算結果
      * @throws Error - 除算の実装がされていない場合
      */
-    public remainder(_b: PolynomialBase<T>): PolynomialBase<T> {
+    public remainder(_b: TThis): TThis {
         throw new Error('not implemented');
     }
     /**
      * 多項式を符号反転させる
      * @returns 符号反転された多項式
      */
-    public negate(): PolynomialBase<T> {
+    public negate(): TThis {
         const neCoefficients = this._coefficients.map((c) => c.negate());
         return new this._constructable(neCoefficients, this._variable);
     }
@@ -140,7 +142,7 @@ export abstract class PolynomialBase<T extends Field<T>>
      * ゼロの多項式を生成します
      * @returns ゼロの多項式
      */
-    public zero(): PolynomialBase<T> {
+    public zero(): TThis {
         return new this._constructable(
             [this._coefficients[0].zero()],
             this._variable,
@@ -150,7 +152,7 @@ export abstract class PolynomialBase<T extends Field<T>>
      * 単位多項式を生成します。
      * @returns 係数が1の単位多項式
      */
-    public unit(): PolynomialBase<T> {
+    public unit(): TThis {
         return new this._constructable(
             [this._coefficients[0].unit()],
             this._variable,
@@ -161,7 +163,7 @@ export abstract class PolynomialBase<T extends Field<T>>
      * @param b - 比較する多項式
      * @returns 等しいかどうか
      */
-    public equals(b: PolynomialBase<T>): boolean {
+    public equals(b: TThis): boolean {
         if (this._variable !== b._variable) {
             return false;
         }
@@ -176,11 +178,8 @@ export abstract class PolynomialBase<T extends Field<T>>
         return true;
     }
 
-    private static _assertSameVariable<TBase extends Field<TBase>>(
-        a: PolynomialBase<TBase>,
-        b: PolynomialBase<TBase>,
-    ): void {
-        if (a._variable !== b._variable) {
+    private _assertSameVariable(other: TThis): void {
+        if (this._variable !== other._variable) {
             throw new Error('not same variable');
         }
     }
