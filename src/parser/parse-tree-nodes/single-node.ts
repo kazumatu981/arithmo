@@ -58,7 +58,7 @@ export class SingleNode extends SignedNode {
         };
     }
     //#region privates
-    protected readonly rules: Rule<ParseTreeNode>[] = [
+    protected readonly _rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const singleNode = node as SingleNode;
             if (singleNode.tokens.length !== 1) {
@@ -75,7 +75,7 @@ export class SingleNode extends SignedNode {
                 });
             }
         },
-        ...this.signedNodeRules,
+        ...this._signedNodeRules,
     ];
     //#endregion
     //#endregion

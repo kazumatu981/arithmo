@@ -3,12 +3,20 @@ import { RationalBase } from './rational-base';
 import { type Rule } from '../../common/testable';
 import { isNumeric } from '../common/numeric';
 
+/**
+ * 有理数
+ */
 export class RationalNumber extends RationalBase<RationalNumber, Numeric> {
-    readonly constructable = RationalNumber;
-    readonly moduleName = 'resolver';
-    _numerator: Numeric = new Numeric(0);
-    _denominator: Numeric = new Numeric(1);
+    protected readonly _constructable = RationalNumber;
+    protected readonly _moduleName = 'resolver';
+    protected _numerator: Numeric = new Numeric(0);
+    protected _denominator: Numeric = new Numeric(1);
 
+    /**
+     * インスタンスを生成する。
+     * @param numerator 分子
+     * @param denominator 分母
+     */
     public constructor(
         numerator: Numeric | number,
         denominator: Numeric | number,
@@ -21,7 +29,7 @@ export class RationalNumber extends RationalBase<RationalNumber, Numeric> {
                 ? new Numeric(denominator)
                 : denominator;
     }
-    protected readonly rules: Rule<RationalNumber>[] = [
+    protected readonly _rules: Rule<RationalNumber>[] = [
         (r): void => {
             const rationalNumber = r as RationalNumber;
             if (rationalNumber.denominator.equals(0)) {

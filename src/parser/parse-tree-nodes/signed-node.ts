@@ -33,7 +33,7 @@ export abstract class SignedNode extends ParseTreeNode {
         return this.signToken?.isNegativeSign ?? false;
     }
 
-    protected signedNodeRules: Rule<ParseTreeNode>[] = [
+    protected _signedNodeRules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const signedNode = node as SignedNode;
             if (signedNode.signToken) {

@@ -162,7 +162,7 @@ export class BinaryNode extends ParseTreeNode {
         };
     }
     //#region privates
-    protected readonly rules: Rule<ParseTreeNode>[] = [
+    protected readonly _rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const binaryNode = node as BinaryNode;
             if (binaryNode.tokens.length !== 1) {
