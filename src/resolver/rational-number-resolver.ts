@@ -1,6 +1,6 @@
-import { FieldResolverBase } from '../common/arithmetic-resolver-base';
+import { FieldResolverBase } from './abstract/arithmetic-resolver-base';
 import { stringToNum } from '../common/string-to-num';
-import { RationalNumber } from '../algebra/rational-number';
+import { RationalNumber } from './algebra/rational-number';
 
 /**
  * 分数解析クラス
@@ -12,3 +12,5 @@ export class RationalNumberResolver extends FieldResolverBase<RationalNumber> {
         return new RationalNumber(number, 1);
     }
 }
+
+export { RationalNumber };

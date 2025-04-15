@@ -1,5 +1,5 @@
 import type { Ring, Field } from '../algebra/arithmetic-operations';
-import { ResolverBase } from './resolver-base';
+import { ResolverBase } from '../abstract/resolver-base';
 
 /**
  * 環を解決する解決機
