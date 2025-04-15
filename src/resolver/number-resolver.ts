@@ -1,5 +1,5 @@
 import { stringToNum } from '../common/string-to-num';
-import { ResolverBase } from '../common/resolver-base';
+import { ResolverBase } from './abstract/resolver-base';
 
 /**
  * 数値解析クラス
@@ -15,6 +15,8 @@ export class NumberResolver extends ResolverBase<number> {
         '*': (a: number, b: number): number => a * b,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '/': (a: number, b: number): number => a / b,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        '^': (a: number, b: number): number => Math.pow(a, b),
     };
 
     protected _resolveValue(tokenValue: string): number {

@@ -12,6 +12,14 @@ describe('NumericResolver は整数しか扱いません', () => {
             resolver.resolve(nodes!);
         }).not.toThrow();
     });
+    test('1+1^(-2)', () => {
+        const tokens = tokenize('1+1^(-2)');
+        const nodes = parse(tokens);
+        const resolver = new NumericResolver();
+        expect(() => {
+            resolver.resolve(nodes!);
+        }).toThrow();
+    });
     test('1/2', () => {
         const tokens = tokenize('1/2');
         const nodes = parse(tokens);

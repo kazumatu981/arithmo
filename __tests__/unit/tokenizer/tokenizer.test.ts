@@ -81,6 +81,25 @@ const successTestCases: SuccessTestCase[] = [
         },
     },
     {
+        test: '123 * (12+13   + 12) ^ 23',
+        description: '括弧とべき乗を含む',
+        expected: {
+            tokens: [
+                { tokenType: 'number', value: '123' },
+                { tokenType: 'operator', value: '*' },
+                { tokenType: 'leftParen', value: '(' },
+                { tokenType: 'number', value: '12' },
+                { tokenType: 'operator', value: '+' },
+                { tokenType: 'number', value: '13' },
+                { tokenType: 'operator', value: '+' },
+                { tokenType: 'number', value: '12' },
+                { tokenType: 'rightParen', value: ')' },
+                { tokenType: 'operator', value: '^' },
+                { tokenType: 'number', value: '23' },
+            ],
+        },
+    },
+    {
         test: '123 * (( 12+13   + 12)',
         description: '括弧が変(ここではエラーが起きない)',
         expected: {

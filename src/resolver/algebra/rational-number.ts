@@ -1,7 +1,7 @@
 import { Numeric } from './numeric';
 import { RationalBase } from './rational-base';
 import { type Rule } from '../../common/testable';
-import { isNumeric } from '../common/numeric';
+import { isNumeric } from '../algebra/numeric';
 
 /**
  * 有理数

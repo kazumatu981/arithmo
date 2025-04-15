@@ -88,6 +88,17 @@ export abstract class RationalBase<
     public reciprocate(): TThis {
         return new this._constructable(this.denominator, this.numerator);
     }
+
+    /**
+     * 整数に変換する
+     * @returns 変換結果
+     */
+    public toNumeric(): number {
+        if (this.denominator.equals(this.denominator.unit())) {
+            return this.numerator.toNumeric();
+        }
+        throw new Error('整数に変換できません。');
+    }
     /**
      * 零元
      * @returns 計算結果

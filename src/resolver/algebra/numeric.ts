@@ -1,6 +1,25 @@
 import { type RingWithRemainderProvider } from './arithmetic-operations';
 
 /**
+ * 二つの整数の最大公約数を計算する
+ * @param a - 整数
+ * @param b - 整数
+ * @returns 最大公約数
+ */
+export function gcd(a: number, b: number): number {
+    return b === 0 ? a : gcd(b, a % b);
+}
+
+/**
+ * x が整数かどうかを判定する
+ * @param x - 整数かどうかを判定する値
+ * @returns x が整数の場合 true
+ */
+export function isNumeric(x: number): boolean {
+    return Number.isInteger(x);
+}
+
+/**
  * 数値を表現するクラス
  */
 export class Numeric implements RingWithRemainderProvider<Numeric> {
@@ -65,6 +84,16 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
         return new Numeric(-this._value);
     }
 
+    /**
+     * 整数に変換する
+     * @returns 数値
+     */
+    public toNumeric(): number {
+        if (isNumeric(this._value)) {
+            return this._value;
+        }
+        throw new Error('整数に変換できません。');
+    }
     /**
      * 数値を比較する
      * @param other - 比較する数値
