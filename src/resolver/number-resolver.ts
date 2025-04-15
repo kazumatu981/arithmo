@@ -1,5 +1,5 @@
 import { stringToNum } from '../common/string-to-num';
-import { ResolverBase } from '../common/resolver-base';
+import { ResolverBase } from './abstract/resolver-base';
 
 /**
  * 数値解析クラス
