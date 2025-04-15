@@ -63,18 +63,21 @@ export class ParseTreeBuilder {
             leftParen: 'initial',
             rightParen: undefined,
             operator: 'waitForNumber',
+            variable: 'waitForOperator',
         },
         waitForNumber: {
             number: 'waitForOperator',
             leftParen: 'initial',
             rightParen: undefined,
             operator: undefined,
+            variable: 'waitForOperator',
         },
         waitForOperator: {
             number: undefined,
             leftParen: undefined,
             rightParen: 'waitForOperator',
             operator: 'waitForNumber',
+            variable: undefined,
         },
     };
     /**
@@ -88,6 +91,7 @@ export class ParseTreeBuilder {
                 this._throwParseError('unexpected-right-paren', token);
             }).bind(this),
             operator: this._appendSign.bind(this),
+            variable: this._appendNumberNode.bind(this),
         },
         waitForNumber: {
             number: this._appendNumberNode.bind(this),
@@ -98,6 +102,7 @@ export class ParseTreeBuilder {
             operator: ((token: Token): void => {
                 this._throwParseError('unexpected-operator', token);
             }).bind(this),
+            variable: this._appendNumberNode.bind(this),
         },
         waitForOperator: {
             number: ((token: Token): void => {
@@ -108,6 +113,9 @@ export class ParseTreeBuilder {
             }).bind(this),
             rightParen: this._appendParenEnd.bind(this),
             operator: this._appendOperatorNode.bind(this),
+            variable: ((token: Token): void => {
+                this._throwParseError('unexpected-number', token);
+            }).bind(this),
         },
     };
     // #endregion

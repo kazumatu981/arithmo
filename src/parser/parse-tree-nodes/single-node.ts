@@ -69,7 +69,10 @@ export class SingleNode extends SignedNode {
         },
         (node): void => {
             const singleNode = node as SingleNode;
-            if (singleNode.tokens[0].type !== 'number') {
+            if (
+                singleNode.tokens[0].type !== 'number' &&
+                singleNode.tokens[0].type !== 'variable'
+            ) {
                 throw new ParserError('single-node-must-be-number-token', {
                     token: singleNode.tokens[0],
                 });
