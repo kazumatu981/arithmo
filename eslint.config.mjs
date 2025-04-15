@@ -27,7 +27,12 @@ const namingRules = [
         format: ['camelCase'],
         leadingUnderscore: 'require',
     },
-
+    {
+        selector: 'memberLike',
+        modifiers: ['protected'],
+        format: ['camelCase'],
+        leadingUnderscore: 'require',
+    },
     {
         selector: 'typeLike',
         format: ['PascalCase'],

@@ -223,6 +223,41 @@ exports[`unittest-parse-tree-builder Can build tree from 1-(-1+5) 1`] = `
 }
 `;
 
+exports[`unittest-parse-tree-builder Can build tree from 1-(-1+5)^2 1`] = `
+{
+  "left": {
+    "type": "single",
+    "value": "1",
+  },
+  "right": {
+    "left": {
+      "childrenRoot": {
+        "left": {
+          "type": "single",
+          "value": "-1",
+        },
+        "right": {
+          "type": "single",
+          "value": "5",
+        },
+        "type": "binary",
+        "value": "+",
+      },
+      "type": "paren",
+      "value": "()",
+    },
+    "right": {
+      "type": "single",
+      "value": "2",
+    },
+    "type": "binary",
+    "value": "^",
+  },
+  "type": "binary",
+  "value": "-",
+}
+`;
+
 exports[`unittest-parse-tree-builder Can build tree from 1-1 1`] = `
 {
   "left": {

@@ -1,12 +1,12 @@
 import { stringToNum } from '../common/string-to-num';
-import { ResolverBase } from '../common/resolver-base';
+import { ResolverBase } from './abstract/resolver-base';
 
 /**
  * 数値解析クラス
  * @group Resolver
  */
 export class NumberResolver extends ResolverBase<number> {
-    protected operatorResolver = {
+    protected _operatorResolver = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '+': (a: number, b: number): number => a + b,
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -15,13 +15,15 @@ export class NumberResolver extends ResolverBase<number> {
         '*': (a: number, b: number): number => a * b,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '/': (a: number, b: number): number => a / b,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        '^': (a: number, b: number): number => Math.pow(a, b),
     };
 
-    protected resolveValue(tokenValue: string): number {
+    protected _resolveValue(tokenValue: string): number {
         return stringToNum(tokenValue);
     }
 
-    protected toNegative(value: number): number {
+    protected _toNegative(value: number): number {
         return -value;
     }
 }

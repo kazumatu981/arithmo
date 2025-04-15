@@ -147,6 +147,7 @@ export class ParseTreeBuilder {
 
     /**
      * ツリーを検証して構文解析木を返却する
+     * @param tokens - 検証するトークン
      * @returns 構文解析木
      */
     public build(tokens?: Token[]): ParseTreeNode | undefined {

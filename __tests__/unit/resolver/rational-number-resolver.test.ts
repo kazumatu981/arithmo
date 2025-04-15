@@ -32,4 +32,18 @@ describe('RationalNumberResolver', () => {
         const result = resolver.resolve(nodes!);
         expect(result.equals(new RationalNumber(3, 2))).toBeTruthy();
     });
+    test('(1/2)^3', () => {
+        const tokens = tokenize('(1/2)^3');
+        const nodes = parse(tokens);
+        const resolver = new RationalNumberResolver();
+        const result = resolver.resolve(nodes!);
+        expect(result.equals(new RationalNumber(1, 8))).toBeTruthy();
+    });
+    test('(1/2)^(-3)', () => {
+        const tokens = tokenize('(1/2)^(-3)');
+        const nodes = parse(tokens);
+        const resolver = new RationalNumberResolver();
+        const result = resolver.resolve(nodes!);
+        expect(result.equals(new RationalNumber(8, 1))).toBeTruthy();
+    });
 });

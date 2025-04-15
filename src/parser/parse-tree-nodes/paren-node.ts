@@ -105,7 +105,7 @@ export class ParenNode extends SignedNode {
         };
     }
     //#region privates
-    protected readonly rules: Rule<ParseTreeNode>[] = [
+    protected readonly _rules: Rule<ParseTreeNode>[] = [
         (node): void => {
             const parenNode = node as ParenNode;
             if (parenNode.tokens.length !== 2) {
@@ -142,7 +142,7 @@ export class ParenNode extends SignedNode {
             const parenNode = node as ParenNode;
             parenNode.childrenRoot?.test();
         },
-        ...this.signedNodeRules,
+        ...this._signedNodeRules,
     ];
     //#endregion
     //#endregion

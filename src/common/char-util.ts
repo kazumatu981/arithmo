@@ -1,3 +1,8 @@
+/**
+ * 文字列中の各文字が利用できる文字かを判定する
+ * @param s - 対象文字列
+ * @returns 検証結果
+ */
 export function isAllValidCharacters(s: string): boolean {
     return s
         .split('')
@@ -21,7 +26,7 @@ export function isDigit(s: string, pos: number): boolean {
 /**
  * サポートする演算子
  */
-export const operators = ['+', '-', '/', '*'] as const;
+export const operators = ['+', '-', '/', '^', '*'] as const;
 /**
  * 演算子
  */
