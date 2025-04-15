@@ -51,6 +51,17 @@ const successTestCases: SuccessTestCase[] = [
         },
     },
     {
+        test: '    1 + x      ',
+        description: '通常の二項演算 変数',
+        expected: {
+            tokens: [
+                { tokenType: 'number', value: '1' },
+                { tokenType: 'operator', value: '+' },
+                { tokenType: 'variable', value: 'x' },
+            ],
+        },
+    },
+    {
         test: '25 + 13 *  12',
         description: '通常の三項演算',
         expected: {
@@ -135,14 +146,22 @@ const successTestCases: SuccessTestCase[] = [
             ],
         },
     },
-];
-
-const failTestCases: FailTestCase[] = [
     {
         test: '1z23+12',
         description: '数字以外の文字を含む',
-        expected: {},
+        expected: {
+            tokens: [
+                { tokenType: 'number', value: '1' },
+                { tokenType: 'variable', value: 'z' },
+                { tokenType: 'number', value: '23' },
+                { tokenType: 'operator', value: '+' },
+                { tokenType: 'number', value: '12' },
+            ],
+        },
     },
+];
+
+const failTestCases: FailTestCase[] = [
     {
         test: '1!23+12',
         description: '数字以外の文字を含む',

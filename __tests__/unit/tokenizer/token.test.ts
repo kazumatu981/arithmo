@@ -31,13 +31,22 @@ const notErrorTestCases: TestCase[] = [
         type: 'rightParen',
         value: ')',
     },
+    {
+        type: 'variable',
+        value: 'x',
+    },
 ];
 
 const errorTestCases: ErrorTestCase[] = [
     {
         type: 'number',
-        value: '1234a',
+        value: '$',
         expectedError: 'unknown-character',
+    },
+    {
+        type: 'number',
+        value: '1234a',
+        expectedError: 'type-mismatch',
     },
     {
         type: 'operator',
@@ -57,6 +66,11 @@ const errorTestCases: ErrorTestCase[] = [
     {
         type: 'rightParen',
         value: '(',
+        expectedError: 'type-mismatch',
+    },
+    {
+        type: 'variable',
+        value: '123',
         expectedError: 'type-mismatch',
     },
 ];

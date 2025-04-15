@@ -7,7 +7,12 @@ export function isAllValidCharacters(s: string): boolean {
     return s
         .split('')
         .map((c) => {
-            return isDigit(c, 0) || isOperator(c, 0) || isParen(c, 0);
+            return (
+                isDigit(c, 0) ||
+                isOperator(c, 0) ||
+                isParen(c, 0) ||
+                isAlphabet(c, 0)
+            );
         })
         .every((result) => result);
 }
@@ -94,4 +99,15 @@ export function isLeftParen(s: string, pos: number): boolean {
 export function isRightParen(s: string, pos: number): boolean {
     const c = s.charAt(pos);
     return c === ')';
+}
+
+/**
+ * アルファベットかどうかを判定する
+ * @param s - 対象文字列
+ * @param pos - 対象文字の位置
+ * @returns アルファベットかどうかを表す真偽値
+ */
+export function isAlphabet(s: string, pos: number): boolean {
+    const c = s.charAt(pos);
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }

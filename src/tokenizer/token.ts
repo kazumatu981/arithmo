@@ -1,11 +1,16 @@
-import { isAllValidCharacters, isOperator } from '../common/char-util';
+import { isAllValidCharacters, isDigit, isOperator, isAlphabet } from '../common/char-util';
 import { Testable, type Rule } from '../common/testable';
 import { TokenizerError } from './tokenizer-error';
 /**
  * 字句の型
  * @group Tokenizer
  */
-export type TokenType = 'number' | 'operator' | 'leftParen' | 'rightParen';
+export type TokenType =
+    | 'number'
+    | 'operator'
+    | 'leftParen'
+    | 'rightParen'
+    | 'variable';
 
 /**
  * 切り出した字句
@@ -61,7 +66,10 @@ export class Token extends Testable<Token> {
          */
         (testable): void => {
             const token = testable as Token;
-            if (token.type === 'number' && !token.value.match(/^[0-9]+$/)) {
+            if (
+                token.type === 'number' &&
+                token.value.split('').some((c) => !isDigit(c, 0))
+            ) {
                 throw new TokenizerError('type-mismatch', {
                     position: token.position,
                 });
@@ -101,6 +109,17 @@ export class Token extends Testable<Token> {
         (testable): void => {
             const token = testable as Token;
             if (token.type === 'rightParen' && token.value !== ')') {
+                throw new TokenizerError('type-mismatch', {
+                    position: token.position,
+                });
+            }
+        },
+        (testable): void => {
+            const token = testable as Token;
+            if (
+                token.type === 'variable' &&
+                token.value.split('').some((c) => !isAlphabet(c, 0))
+            ) {
                 throw new TokenizerError('type-mismatch', {
                     position: token.position,
                 });
