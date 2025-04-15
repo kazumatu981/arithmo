@@ -85,6 +85,16 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
     }
 
     /**
+     * 整数に変換する
+     * @returns 数値
+     */
+    public toNumeric(): number {
+        if (isNumeric(this._value)) {
+            return this._value;
+        }
+        throw new Error('整数に変換できません。');
+    }
+    /**
      * 数値を比較する
      * @param other - 比較する数値
      * @returns 数値の比較結果

@@ -26,8 +26,24 @@ const testCases: NormalTestCase[] = [
         expected: 3,
     },
     {
+        test: '2^3',
+        expected: 8,
+    },
+    {
         test: '-2-3',
         expected: -5,
+    },
+    {
+        test: '-2^3',
+        expected: -8,
+    },
+    {
+        test: '(-2)^3',
+        expected: -8,
+    },
+    {
+        test: '(2)^(1/2)',
+        expected: Math.pow(2, 1 / 2),
     },
     {
         test: '6/2/3',

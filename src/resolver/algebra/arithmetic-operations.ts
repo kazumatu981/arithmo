@@ -25,6 +25,10 @@ export interface Ring<T> {
      */
     unit(): T;
     /**
+     * 整数に変換する
+     */
+    toNumeric(): number;
+    /**
      * 比較する
      * @param b - 比較対象
      */

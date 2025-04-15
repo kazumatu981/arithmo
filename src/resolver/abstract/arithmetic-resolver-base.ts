@@ -22,9 +22,7 @@ export abstract class RingResolverBase<
             throw new Error('not implemented');
         },
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        '^': (_a, _b) => {
-            throw new Error('not implemented');
-        },
+        '^': (a, b) => powOnRing(a, b.toNumeric()),
     };
     protected _toNegative(value: T): T {
         return value.negate();
@@ -50,11 +48,31 @@ export abstract class FieldResolverBase<
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '/': (a, b) => a.multiply(b.reciprocate()),
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        '^': (_a, _b) => {
-            throw new Error('not implemented');
-        },
+        '^': (a, b) => powOnField(a, b.toNumeric()),
     };
     protected _toNegative(value: T): T {
         return value.negate();
     }
+}
+
+function powOnRing<T extends Ring<T>>(a: T, b: number): T {
+    if (b < 0) {
+        throw new Error('not implemented');
+    }
+    let result = a.unit();
+    for (let count = 0; count < b; count++) {
+        result = result.multiply(a);
+    }
+
+    return result;
+}
+
+function powOnField<T extends Field<T>>(a: T, b: number): T {
+    let result = a.unit();
+    if (b < 0) {
+        result = powOnRing(a.reciprocate(), -b);
+    } else {
+        result = powOnRing(a, b);
+    }
+    return result;
 }

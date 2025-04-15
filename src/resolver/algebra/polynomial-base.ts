@@ -159,6 +159,16 @@ export abstract class PolynomialBase<
         );
     }
     /**
+     * 整数に変換します。
+     * @returns 変換結果
+     */
+    public toNumeric(): number {
+        if (this._coefficients.length === 1) {
+            return this._coefficients[0].toNumeric();
+        }
+        throw new Error('整数に変換できません');
+    }
+    /**
      * 等しいかどうかを比較します
      * @param b - 比較する多項式
      * @returns 等しいかどうか
