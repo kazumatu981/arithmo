@@ -4,7 +4,7 @@ import {
     type BinaryNode,
     type ParseTreeNode,
 } from '../../parser';
-
+import { type TokenType } from '../../tokenizer';
 import type { Operator } from '../../common/char-util';
 
 /**
@@ -32,7 +32,10 @@ export type ResolveHandler<T> = (eventArg: ResolveEventArg<T>) => void;
  */
 export abstract class ResolverBase<T> {
     protected abstract _operatorResolver: Record<Operator, (a: T, b: T) => T>;
-    protected abstract _resolveValue(tokenValue: string): T;
+    protected abstract _resolveValue(
+        tokenType: TokenType,
+        tokenValue: string,
+    ): T;
     protected abstract _toNegative(value: T): T;
     protected _currentOrder = 0;
 
@@ -43,8 +46,8 @@ export abstract class ResolverBase<T> {
 
     protected _resolveSingleNode(node: SingleNode): T {
         return node.isNegative
-            ? this._toNegative(this._resolveValue(node.value))
-            : this._resolveValue(node.value);
+            ? this._toNegative(this._resolveValue(node.tokenType, node.value))
+            : this._resolveValue(node.tokenType, node.value);
     }
 
     protected _resolveParenNode(node: ParenNode): T {
