@@ -1,5 +1,5 @@
 import { Testable } from '../../common/testable';
-import type { Ring, Field } from './arithmetic-operations';
+import type { Ring, Field, DivisionResult } from './arithmetic-operations';
 
 /**
  * 有理数(抽象貸したモデル)
@@ -70,6 +70,14 @@ export abstract class RationalBase<
         return new this._constructable(newNumerator, newDenominator);
     }
 
+    public divide(b: TThis): TThis {
+        return this.multiply(b.inverse());
+    }
+
+    public euclideanDivision(_b: TThis): DivisionResult<TThis> {
+        throw new Error('Method not implemented.');
+    }
+
     /**
      * 符号を反転する
      * @returns 計算結果
@@ -85,7 +93,7 @@ export abstract class RationalBase<
      * 逆数を求める
      * @returns 計算結果
      */
-    public reciprocate(): TThis {
+    public inverse(): TThis {
         return new this._constructable(this.denominator, this.numerator);
     }
 
@@ -93,9 +101,9 @@ export abstract class RationalBase<
      * 整数に変換する
      * @returns 変換結果
      */
-    public toNumeric(): number {
+    public toNumericNumber(): number {
         if (this.denominator.equals(this.denominator.unit())) {
-            return this.numerator.toNumeric();
+            return this.numerator.toNumericNumber();
         }
         throw new Error('整数に変換できません。');
     }
@@ -118,6 +126,16 @@ export abstract class RationalBase<
             this.numerator.unit(),
             this.denominator.unit(),
         );
+    }
+
+    public clone(): TThis {
+        return new this._constructable(
+            this.numerator.clone(),
+            this.denominator.clone(),
+        );
+    }
+    isZero(): boolean {
+        return this.equals(this.zero());
     }
     /**
      * 比較する

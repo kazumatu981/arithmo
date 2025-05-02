@@ -10,6 +10,6 @@ export class RationalCoefficientPolynomial extends PolynomialBase<
 > {
     protected readonly _constructable: new (
         coefficients: RationalNumber[],
-        variable: string,
+        variable: string | undefined,
     ) => RationalCoefficientPolynomial = RationalCoefficientPolynomial;
 }

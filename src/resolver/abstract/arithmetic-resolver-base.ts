@@ -18,11 +18,15 @@ export abstract class RingResolverBase<
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '*': (a, b) => a.multiply(b),
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        '/': (_a, _b) => {
-            throw new Error('not implemented');
+        '/': (a, b) => {
+            const result = a.euclideanDivision(b);
+            if (!result.remainder.equals(result.quotient.zero())) {
+                throw new Error('割り切れません。');
+            }
+            return result.quotient;
         },
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        '^': (a, b) => powOnRing(a, b.toNumeric()),
+        '^': (a, b) => powOnRing(a, b.toNumericNumber()),
     };
     protected _toNegative(value: T): T {
         return value.negate();
@@ -46,9 +50,9 @@ export abstract class FieldResolverBase<
         // eslint-disable-next-line @typescript-eslint/naming-convention
         '*': (a, b) => a.multiply(b),
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        '/': (a, b) => a.multiply(b.reciprocate()),
+        '/': (a, b) => a.divide(b),
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        '^': (a, b) => powOnField(a, b.toNumeric()),
+        '^': (a, b) => powOnField(a, b.toNumericNumber()),
     };
     protected _toNegative(value: T): T {
         return value.negate();
@@ -70,7 +74,7 @@ function powOnRing<T extends Ring<T>>(a: T, b: number): T {
 function powOnField<T extends Field<T>>(a: T, b: number): T {
     let result = a.unit();
     if (b < 0) {
-        result = powOnRing(a.reciprocate(), -b);
+        result = powOnRing(a.inverse(), -b);
     } else {
         result = powOnRing(a, b);
     }

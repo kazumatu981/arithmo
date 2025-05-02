@@ -1,4 +1,4 @@
-import { type RingWithRemainderProvider } from './arithmetic-operations';
+import { DivisionResult, type Ring } from './arithmetic-operations';
 
 /**
  * 二つの整数の最大公約数を計算する
@@ -22,7 +22,7 @@ export function isNumeric(x: number): boolean {
 /**
  * 数値を表現するクラス
  */
-export class Numeric implements RingWithRemainderProvider<Numeric> {
+export class Numeric implements Ring<Numeric> {
     private _value: number = 0;
 
     /**
@@ -67,13 +67,12 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
         return new Numeric(this._value * b.value);
     }
 
-    /**
-     * 数値を除算する
-     * @param b - 除算する数値
-     * @returns 除算した数値
-     */
-    public remainder(b: Numeric): Numeric {
-        return new Numeric(this._value % b.value);
+    public euclideanDivision(b: Numeric): DivisionResult<Numeric> {
+        const gcdValue = gcd(this._value, b.value);
+        return {
+            quotient: new Numeric(Math.trunc(this._value / gcdValue)),
+            remainder: new Numeric(b.value / gcdValue),
+        };
     }
 
     /**
@@ -88,11 +87,18 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
      * 整数に変換する
      * @returns 数値
      */
-    public toNumeric(): number {
+    public toNumericNumber(): number {
         if (isNumeric(this._value)) {
             return this._value;
         }
         throw new Error('整数に変換できません。');
+    }
+    /**
+     * 複製する
+     * @returns 複製したインスタンス
+     */
+    public clone(): Numeric {
+        return new Numeric(this._value);
     }
     /**
      * 数値を比較する
@@ -105,6 +111,9 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
         } else {
             return this._value === other.value;
         }
+    }
+    public isZero(): boolean {
+        return this.equals(this.zero());
     }
 
     /**

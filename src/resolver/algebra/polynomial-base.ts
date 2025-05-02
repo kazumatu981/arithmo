@@ -1,6 +1,7 @@
 import {
     type Field,
-    type RingWithRemainderProvider,
+    type Ring,
+    type DivisionResult,
 } from './arithmetic-operations';
 
 /**
@@ -9,20 +10,23 @@ import {
 export abstract class PolynomialBase<
     TThis extends PolynomialBase<TThis, TCoefficient>,
     TCoefficient extends Field<TCoefficient>,
-> implements RingWithRemainderProvider<TThis>
+> implements Ring<TThis>
 {
     protected abstract readonly _constructable: {
-        new (coefficients: TCoefficient[], variable: string): TThis;
+        new (coefficients: TCoefficient[], variable: string | undefined): TThis;
     };
     private _coefficients: TCoefficient[];
-    private readonly _variable: string;
+    private readonly _variable: string | undefined;
 
     /**
      * 多項式を表すクラス
      * @param coefficients - 多項式の係数の配列
      * @param variable - 多項式の変数
      */
-    constructor(coefficients: TCoefficient[], variable: string) {
+    constructor(
+        coefficients: TCoefficient[],
+        variable: string | undefined = undefined,
+    ) {
         this._variable = variable;
         this._coefficients = coefficients;
     }
@@ -38,7 +42,7 @@ export abstract class PolynomialBase<
      * 多項式の変数を取得します。
      * @returns 多項式の変数
      */
-    public get variable(): string {
+    public get variable(): string | undefined {
         return this._variable;
     }
     /**
@@ -103,7 +107,10 @@ export abstract class PolynomialBase<
                 other.safeCoefficient(index),
             );
         }
-        return new this._constructable(newCoefficients, this._variable)._trim();
+        return new this._constructable(
+            newCoefficients,
+            this._variable ?? other.variable,
+        )._trim();
     }
     /**
      * 2つの多項式を積み算します。
@@ -127,8 +134,28 @@ export abstract class PolynomialBase<
      * @returns 除算結果
      * @throws Error - 除算の実装がされていない場合
      */
-    public remainder(_b: TThis): TThis {
-        throw new Error('not implemented');
+    public euclideanDivision(other: TThis): DivisionResult<TThis> {
+        let quotient = this.zero();
+        let remainder = this.clone();
+        while (remainder.degree >= other.degree && !remainder.isZero()) {
+            const quotientCoefficient = remainder.coefficients[
+                remainder.degree
+            ].divide(other.coefficients[other.degree]);
+
+            quotient = quotient
+                .elevate(1)
+                .add(
+                    new this._constructable(
+                        [quotientCoefficient],
+                        this._variable,
+                    ),
+                );
+            remainder = remainder
+                .add(other.scalarMultiply(quotientCoefficient).negate())
+                ._trim();
+        }
+
+        return { quotient, remainder };
     }
     /**
      * 多項式を符号反転させる
@@ -158,15 +185,26 @@ export abstract class PolynomialBase<
             this._variable,
         );
     }
+
     /**
      * 整数に変換します。
      * @returns 変換結果
      */
-    public toNumeric(): number {
+    public toNumericNumber(): number {
         if (this._coefficients.length === 1) {
-            return this._coefficients[0].toNumeric();
+            return this._coefficients[0].toNumericNumber();
         }
         throw new Error('整数に変換できません');
+    }
+    /**
+     * 複製します。
+     * @returns 複製したインスタンス
+     */
+    public clone(): TThis {
+        return new this._constructable(
+            this._coefficients.map((c) => c.clone()),
+            this._variable,
+        );
     }
     /**
      * 等しいかどうかを比較します
@@ -187,8 +225,15 @@ export abstract class PolynomialBase<
         }
         return true;
     }
+    public isZero(): boolean {
+        return this._coefficients.every((c) => c.isZero());
+    }
 
+    public get isScalar(): boolean {
+        return this.degree === 0;
+    }
     private _assertSameVariable(other: TThis): void {
+        if (this.isScalar || other.isScalar) return;
         if (this._variable !== other._variable) {
             throw new Error('not same variable');
         }

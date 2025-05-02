@@ -1,3 +1,8 @@
+export interface DivisionResult<T> {
+    quotient: T;
+    remainder: T;
+}
+
 /**
  * 環インターフェイス
  */
@@ -13,26 +18,30 @@ export interface Ring<T> {
      */
     multiply(b: T): T;
     /**
+     * ユークリッド的除算(商と余りを求める)
+     * @param b - 除算対象
+     */
+    euclideanDivision(b: T): DivisionResult<T>;
+    /**
      * 符号を反転する
      */
     negate(): T;
     /**
-     * 0を返却する
+     * 複製する
+     * @returns 複製したインスタンス
      */
-    zero(): T;
-    /**
-     * 1を返却する
-     */
-    unit(): T;
-    /**
-     * 整数に変換する
-     */
-    toNumeric(): number;
+    clone(): T;
     /**
      * 比較する
      * @param b - 比較対象
      */
     equals(b: T): boolean;
+    /**
+     * 整数値に変換する
+     * @returns 整数値
+     */
+    toNumericNumber(): number;
+    isZero(): boolean;
 }
 
 /**
@@ -40,18 +49,12 @@ export interface Ring<T> {
  */
 export interface Field<T> extends Ring<T> {
     /**
-     * 逆数を計算する
-     */
-    reciprocate(): T;
-}
-
-/**
- * 剰余計算可能な環インターフェイス
- */
-export interface RingWithRemainderProvider<T> extends Ring<T> {
-    /**
-     * 割り算した結果のあまりを返却する
+     * 除算する
      * @param b - 除算対象
      */
-    remainder(b: T): T;
+    divide(b: T): T;
+    /**
+     * 逆数を計算する
+     */
+    inverse(): T;
 }
