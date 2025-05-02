@@ -27,6 +27,14 @@ export interface Ring<T> {
      */
     negate(): T;
     /**
+     * 0を返却する
+     */
+    zero(): T;
+    /**
+     * 1を返却する
+     */
+    unit(): T;
+    /**
      * 複製する
      * @returns 複製したインスタンス
      */
