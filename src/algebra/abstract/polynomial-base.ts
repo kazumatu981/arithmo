@@ -1,7 +1,4 @@
-import {
-    type Field,
-    type RingWithRemainderProvider,
-} from './arithmetic-operations';
+import type { Field, Ring, EuclideanDivisionResult } from './algebra';
 
 /**
  * 多項式を表すクラス
@@ -9,20 +6,23 @@ import {
 export abstract class PolynomialBase<
     TThis extends PolynomialBase<TThis, TCoefficient>,
     TCoefficient extends Field<TCoefficient>,
-> implements RingWithRemainderProvider<TThis>
+> implements Ring<TThis>
 {
     protected abstract readonly _constructable: {
-        new (coefficients: TCoefficient[], variable: string): TThis;
+        new (coefficients: TCoefficient[], variable: string | undefined): TThis;
     };
     private _coefficients: TCoefficient[];
-    private readonly _variable: string;
+    private readonly _variable: string | undefined;
 
     /**
      * 多項式を表すクラス
      * @param coefficients - 多項式の係数の配列
      * @param variable - 多項式の変数
      */
-    constructor(coefficients: TCoefficient[], variable: string) {
+    constructor(
+        coefficients: TCoefficient[],
+        variable: string | undefined = undefined,
+    ) {
         this._variable = variable;
         this._coefficients = coefficients;
     }
@@ -38,7 +38,7 @@ export abstract class PolynomialBase<
      * 多項式の変数を取得します。
      * @returns 多項式の変数
      */
-    public get variable(): string {
+    public get variable(): string | undefined {
         return this._variable;
     }
     /**
@@ -58,7 +58,7 @@ export abstract class PolynomialBase<
         if (index < this._coefficients.length) {
             return this._coefficients[index];
         } else {
-            return this._coefficients[0].zero();
+            return this._coefficients[0].zero;
         }
     }
     /**
@@ -67,7 +67,7 @@ export abstract class PolynomialBase<
      * @returns 生成された行列
      */
     public elevate(order: number): TThis {
-        const zeros = new Array(order).fill(this._coefficients[0].zero());
+        const zeros = new Array(order).fill(this._coefficients[0].zero);
         return new this._constructable(
             [...zeros, ...this._coefficients],
             this._variable,
@@ -96,14 +96,17 @@ export abstract class PolynomialBase<
             other._coefficients.length,
         );
         const newCoefficients = new Array(newLength).fill(
-            this._coefficients[0].zero(),
+            this._coefficients[0].zero,
         );
         for (let index = 0; index < newLength; index++) {
             newCoefficients[index] = this.safeCoefficient(index).add(
                 other.safeCoefficient(index),
             );
         }
-        return new this._constructable(newCoefficients, this._variable)._trim();
+        return new this._constructable(
+            newCoefficients,
+            this._variable ?? other.variable,
+        )._trim();
     }
     /**
      * 2つの多項式を積み算します。
@@ -127,8 +130,28 @@ export abstract class PolynomialBase<
      * @returns 除算結果
      * @throws Error - 除算の実装がされていない場合
      */
-    public remainder(_b: TThis): TThis {
-        throw new Error('not implemented');
+    public euclideanDivide(other: TThis): EuclideanDivisionResult<TThis> {
+        let quotient = this.zero;
+        let remainder = this.clone();
+        while (remainder.degree >= other.degree && !remainder.isZero) {
+            const quotientCoefficient = remainder.coefficients[
+                remainder.degree
+            ].divide(other.coefficients[other.degree]);
+
+            quotient = quotient
+                .elevate(1)
+                .add(
+                    new this._constructable(
+                        [quotientCoefficient],
+                        this._variable,
+                    ),
+                );
+            remainder = remainder
+                .add(other.scalarMultiply(quotientCoefficient).negate())
+                ._trim();
+        }
+
+        return { quotient, remainder };
     }
     /**
      * 多項式を符号反転させる
@@ -142,9 +165,9 @@ export abstract class PolynomialBase<
      * ゼロの多項式を生成します
      * @returns ゼロの多項式
      */
-    public zero(): TThis {
+    public get zero(): TThis {
         return new this._constructable(
-            [this._coefficients[0].zero()],
+            [this._coefficients[0].zero],
             this._variable,
         );
     }
@@ -152,21 +175,32 @@ export abstract class PolynomialBase<
      * 単位多項式を生成します。
      * @returns 係数が1の単位多項式
      */
-    public unit(): TThis {
+    public get unit(): TThis {
         return new this._constructable(
-            [this._coefficients[0].unit()],
+            [this._coefficients[0].unit],
             this._variable,
         );
     }
+
     /**
      * 整数に変換します。
      * @returns 変換結果
      */
-    public toNumeric(): number {
+    public toNumber(): number {
         if (this._coefficients.length === 1) {
-            return this._coefficients[0].toNumeric();
+            return this._coefficients[0].toNumber();
         }
         throw new Error('整数に変換できません');
+    }
+    /**
+     * 複製します。
+     * @returns 複製したインスタンス
+     */
+    public clone(): TThis {
+        return new this._constructable(
+            this._coefficients.map((c) => c.clone()),
+            this._variable,
+        );
     }
     /**
      * 等しいかどうかを比較します
@@ -187,19 +221,25 @@ export abstract class PolynomialBase<
         }
         return true;
     }
+    public get isZero(): boolean {
+        return this._coefficients.every((c) => c.isZero);
+    }
 
+    public get isScalar(): boolean {
+        return this.degree === 0;
+    }
+    public get isUnit(): boolean {
+        return this.degree === 0 && this._coefficients[0].isUnit;
+    }
     private _assertSameVariable(other: TThis): void {
+        if (this.isScalar || other.isScalar) return;
         if (this._variable !== other._variable) {
             throw new Error('not same variable');
         }
     }
     private _trim(): this {
         while (this._coefficients.length > 1) {
-            if (
-                this._coefficients[this._coefficients.length - 1].equals(
-                    this._coefficients[0].zero(),
-                )
-            ) {
+            if (this._coefficients[this._coefficients.length - 1].isZero) {
                 this._coefficients.pop();
             } else {
                 break;

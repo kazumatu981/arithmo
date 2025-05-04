@@ -1,4 +1,5 @@
 import { stringToNum } from '../common/string-to-num';
+import { type TokenType } from '../tokenizer';
 import { ResolverBase } from './abstract/resolver-base';
 
 /**
@@ -19,7 +20,10 @@ export class NumberResolver extends ResolverBase<number> {
         '^': (a: number, b: number): number => Math.pow(a, b),
     };
 
-    protected _resolveValue(tokenValue: string): number {
+    protected _resolveValue(tokenType: TokenType, tokenValue: string): number {
+        if (tokenType !== 'number') {
+            throw new Error(`Invalid token type: ${tokenType}`);
+        }
         return stringToNum(tokenValue);
     }
 

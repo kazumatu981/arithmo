@@ -1,6 +1,8 @@
 import { describe, expect, test } from '@jest/globals';
-import { RationalCoefficientPolynomial } from '../../../../src/resolver/algebra/rational-coefficient-polynomial';
-import { RationalNumber } from '../../../../src/resolver/algebra/rational-number';
+import {
+    RationalNumber,
+    RationalCoefficientPolynomial,
+} from '../../../../src/algebra';
 
 describe('RationalCoefficientPolynomial', () => {
     test('constructor', () => {
@@ -32,7 +34,7 @@ describe('RationalCoefficientPolynomial', () => {
             [new RationalNumber(1, 2), new RationalNumber(3, 4)],
             'x',
         );
-        const zero = p.zero();
+        const zero = p.zero;
         expect(
             zero.coefficients[0].equals(new RationalNumber(0, 1)),
         ).toBeTruthy();
@@ -44,7 +46,7 @@ describe('RationalCoefficientPolynomial', () => {
             [new RationalNumber(1, 2), new RationalNumber(3, 4)],
             'x',
         );
-        const unit = p.unit();
+        const unit = p.unit;
         expect(
             unit.coefficients[0].equals(new RationalNumber(1, 1)),
         ).toBeTruthy();
@@ -275,7 +277,7 @@ describe('RationalCoefficientPolynomial', () => {
                 'x',
             );
             let p3 = p1.multiply(p2);
-            expect(p3.equals(p1.zero())).toBeTruthy();
+            expect(p3.equals(p1.zero)).toBeTruthy();
         });
         test('変数が異なる場合はエラー', () => {
             const p1 = new RationalCoefficientPolynomial(

@@ -3,7 +3,7 @@ import {
     type StringifyType,
     type ParseNodeInfo,
 } from './parse-tree-node';
-import { type Token } from '../../tokenizer';
+import { TokenType, type Token } from '../../tokenizer';
 import type { Rule } from '../../common/testable';
 import { ParserError } from '../parser-error';
 import { SignedNode } from './signed-node';
@@ -35,6 +35,14 @@ export class SingleNode extends SignedNode {
      */
     public get value(): string {
         return this.valueToken.value;
+    }
+
+    /**
+     * トークンのタイプを参照する
+     * @returns トークンのタイプ
+     */
+    public get tokenType(): TokenType {
+        return this.valueToken.type;
     }
 
     //#region overrides
@@ -69,7 +77,10 @@ export class SingleNode extends SignedNode {
         },
         (node): void => {
             const singleNode = node as SingleNode;
-            if (singleNode.tokens[0].type !== 'number') {
+            if (
+                singleNode.tokens[0].type !== 'number' &&
+                singleNode.tokens[0].type !== 'variable'
+            ) {
                 throw new ParserError('single-node-must-be-number-token', {
                     token: singleNode.tokens[0],
                 });

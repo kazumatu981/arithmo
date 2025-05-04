@@ -5,6 +5,7 @@ import {
     isParen,
     isWhiteSpace,
     isLeftParen,
+    isAlphabet,
 } from '../common/char-util';
 import { Token } from './token';
 
@@ -79,6 +80,9 @@ export class Tokenizer {
         } else if (isParen(this._expression, this._currentIndex)) {
             // 括弧を切り出す
             return this._readParenToken();
+        } else if (isAlphabet(this._expression, this._currentIndex)) {
+            // 変数を切り出す
+            return this._readVariableToken();
         } else {
             // 予期せぬ文字を検出した
             throw new TokenizerError('unknown-character', {
@@ -148,5 +152,24 @@ export class Tokenizer {
             parenCharacter,
             startIndex,
         );
+    }
+
+    /**
+     * 変数文字列としてTokenを切り出す。
+     * @returns 切り出した字句
+     */
+    private _readVariableToken(): Token {
+        const start = this._currentIndex;
+        let end = start;
+
+        // Read all consecutive alphabetical characters
+        while (isAlphabet(this._expression, end)) {
+            end++;
+        }
+
+        const value = this._expression.substring(start, end);
+        this._currentIndex = end;
+
+        return new Token('variable', value, start);
     }
 }

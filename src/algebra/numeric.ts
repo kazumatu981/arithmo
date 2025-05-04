@@ -1,4 +1,4 @@
-import { type RingWithRemainderProvider } from './arithmetic-operations';
+import { type EuclideanDivisionResult, type Ring } from './abstract';
 
 /**
  * 二つの整数の最大公約数を計算する
@@ -22,7 +22,7 @@ export function isNumeric(x: number): boolean {
 /**
  * 数値を表現するクラス
  */
-export class Numeric implements RingWithRemainderProvider<Numeric> {
+export class Numeric implements Ring<Numeric> {
     private _value: number = 0;
 
     /**
@@ -30,6 +30,7 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
      * @param value - 数値
      */
     constructor(value: number) {
+        if (!isNumeric(value)) throw new Error('数値を指定してください。');
         this._value = value;
     }
 
@@ -67,13 +68,12 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
         return new Numeric(this._value * b.value);
     }
 
-    /**
-     * 数値を除算する
-     * @param b - 除算する数値
-     * @returns 除算した数値
-     */
-    public remainder(b: Numeric): Numeric {
-        return new Numeric(this._value % b.value);
+    public euclideanDivide(b: Numeric): EuclideanDivisionResult<Numeric> {
+        const gcdValue = gcd(this._value, b.value);
+        return {
+            quotient: new Numeric(Math.trunc(this._value / gcdValue)),
+            remainder: new Numeric(b.value / gcdValue),
+        };
     }
 
     /**
@@ -88,11 +88,18 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
      * 整数に変換する
      * @returns 数値
      */
-    public toNumeric(): number {
+    public toNumber(): number {
         if (isNumeric(this._value)) {
             return this._value;
         }
         throw new Error('整数に変換できません。');
+    }
+    /**
+     * 複製する
+     * @returns 複製したインスタンス
+     */
+    public clone(): Numeric {
+        return new Numeric(this._value);
     }
     /**
      * 数値を比較する
@@ -106,12 +113,17 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
             return this._value === other.value;
         }
     }
-
+    public get isZero(): boolean {
+        return this.equals(this.zero);
+    }
+    public get isUnit(): boolean {
+        return this.equals(this.unit);
+    }
     /**
      * 0 を返却する
      * @returns 0
      */
-    public zero(): Numeric {
+    public get zero(): Numeric {
         return ZERO;
     }
 
@@ -119,7 +131,7 @@ export class Numeric implements RingWithRemainderProvider<Numeric> {
      * 1 を返却する
      * @returns 1
      */
-    public unit(): Numeric {
+    public get unit(): Numeric {
         return ONE;
     }
 }

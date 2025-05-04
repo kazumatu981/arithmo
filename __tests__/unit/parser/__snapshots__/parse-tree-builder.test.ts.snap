@@ -196,6 +196,60 @@ exports[`unittest-parse-tree-builder Can build tree from 1+1 1`] = `
 }
 `;
 
+exports[`unittest-parse-tree-builder Can build tree from 1+2*x+ x^2 1`] = `
+{
+  "left": {
+    "left": {
+      "type": "single",
+      "value": "1",
+    },
+    "right": {
+      "left": {
+        "type": "single",
+        "value": "2",
+      },
+      "right": {
+        "type": "single",
+        "value": "x",
+      },
+      "type": "binary",
+      "value": "*",
+    },
+    "type": "binary",
+    "value": "+",
+  },
+  "right": {
+    "left": {
+      "type": "single",
+      "value": "x",
+    },
+    "right": {
+      "type": "single",
+      "value": "2",
+    },
+    "type": "binary",
+    "value": "^",
+  },
+  "type": "binary",
+  "value": "+",
+}
+`;
+
+exports[`unittest-parse-tree-builder Can build tree from 1+x 1`] = `
+{
+  "left": {
+    "type": "single",
+    "value": "1",
+  },
+  "right": {
+    "type": "single",
+    "value": "x",
+  },
+  "type": "binary",
+  "value": "+",
+}
+`;
+
 exports[`unittest-parse-tree-builder Can build tree from 1-(-1+5) 1`] = `
 {
   "left": {

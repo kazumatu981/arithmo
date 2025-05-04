@@ -4,7 +4,9 @@ import { tokenize } from '../../../src/tokenizer';
 
 const normalTestCases: string[] = [
     '1+1',
+    '1+x',
     '1-1',
+    '1+2*x+ x^2',
     '1*12+1',
     '1*12+3*4',
     '(1+1)*2',
