@@ -1,7 +1,6 @@
-import { RingResolverBase } from './abstract/arithmetic-resolver-base';
-import { RationalCoefficientPolynomial } from './algebra/rational-coefficient-polynomial';
-import { RationalNumber } from './algebra/rational-number';
 import { type TokenType } from '../tokenizer';
+import { RingResolverBase } from './abstract/arithmetic-resolver-base';
+import { RationalNumber, RationalCoefficientPolynomial } from '../algebra';
 import { stringToNum } from '../common/string-to-num';
 
 /**

@@ -1,15 +1,12 @@
-import { Testable } from '../../common/testable';
-import type { Ring, Field, DivisionResult } from './arithmetic-operations';
+import type { Ring, Field } from './algebra';
 
 /**
  * 有理数(抽象貸したモデル)
  */
 export abstract class RationalBase<
-        TThis extends RationalBase<TThis, TBase>,
-        TBase extends Ring<TBase>,
-    >
-    extends Testable<TThis>
-    implements Field<TThis>
+    TThis extends RationalBase<TThis, TBase>,
+    TBase extends Ring<TBase>,
+> implements Field<TThis>
 {
     protected abstract _numerator: TBase;
     protected abstract _denominator: TBase;
@@ -30,7 +27,6 @@ export abstract class RationalBase<
      */
     public set numerator(value: TBase) {
         this._numerator = value;
-        this.test();
     }
     /**
      * 分母
@@ -43,8 +39,10 @@ export abstract class RationalBase<
      * 分母を設定する
      */
     public set denominator(value: TBase) {
+        if (value.isZero) {
+            throw new Error('分母は0にできません。');
+        }
         this._denominator = value;
-        this.test();
     }
     /**
      * 足し算
@@ -74,10 +72,6 @@ export abstract class RationalBase<
         return this.multiply(b.inverse());
     }
 
-    public euclideanDivision(_b: TThis): DivisionResult<TThis> {
-        throw new Error('Method not implemented.');
-    }
-
     /**
      * 符号を反転する
      * @returns 計算結果
@@ -101,9 +95,9 @@ export abstract class RationalBase<
      * 整数に変換する
      * @returns 変換結果
      */
-    public toNumericNumber(): number {
-        if (this.denominator.equals(this.denominator.unit())) {
-            return this.numerator.toNumericNumber();
+    public toNumber(): number {
+        if (this.denominator.isUnit) {
+            return this.numerator.toNumber();
         }
         throw new Error('整数に変換できません。');
     }
@@ -111,32 +105,36 @@ export abstract class RationalBase<
      * 零元
      * @returns 計算結果
      */
-    public zero(): TThis {
+    public get zero(): TThis {
         return new this._constructable(
-            this.numerator.zero(),
-            this.denominator.unit(),
+            this.numerator.zero,
+            this.denominator.unit,
         );
     }
     /**
      * 単位元
      * @returns 計算結果
      */
-    public unit(): TThis {
+    public get unit(): TThis {
         return new this._constructable(
-            this.numerator.unit(),
-            this.denominator.unit(),
+            this.numerator.unit,
+            this.denominator.unit,
         );
     }
 
+    public get isZero(): boolean {
+        return this.equals(this.zero);
+    }
+    public get isUnit(): boolean {
+        return this.equals(this.unit);
+    }
     public clone(): TThis {
         return new this._constructable(
             this.numerator.clone(),
             this.denominator.clone(),
         );
     }
-    isZero(): boolean {
-        return this.equals(this.zero());
-    }
+
     /**
      * 比較する
      * @param other 比較対象

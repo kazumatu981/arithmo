@@ -1,8 +1,4 @@
-import {
-    type Field,
-    type Ring,
-    type DivisionResult,
-} from './arithmetic-operations';
+import type { Field, Ring, EuclideanDivisionResult } from './algebra';
 
 /**
  * 多項式を表すクラス
@@ -62,7 +58,7 @@ export abstract class PolynomialBase<
         if (index < this._coefficients.length) {
             return this._coefficients[index];
         } else {
-            return this._coefficients[0].zero();
+            return this._coefficients[0].zero;
         }
     }
     /**
@@ -71,7 +67,7 @@ export abstract class PolynomialBase<
      * @returns 生成された行列
      */
     public elevate(order: number): TThis {
-        const zeros = new Array(order).fill(this._coefficients[0].zero());
+        const zeros = new Array(order).fill(this._coefficients[0].zero);
         return new this._constructable(
             [...zeros, ...this._coefficients],
             this._variable,
@@ -100,7 +96,7 @@ export abstract class PolynomialBase<
             other._coefficients.length,
         );
         const newCoefficients = new Array(newLength).fill(
-            this._coefficients[0].zero(),
+            this._coefficients[0].zero,
         );
         for (let index = 0; index < newLength; index++) {
             newCoefficients[index] = this.safeCoefficient(index).add(
@@ -134,10 +130,10 @@ export abstract class PolynomialBase<
      * @returns 除算結果
      * @throws Error - 除算の実装がされていない場合
      */
-    public euclideanDivision(other: TThis): DivisionResult<TThis> {
-        let quotient = this.zero();
+    public euclideanDivide(other: TThis): EuclideanDivisionResult<TThis> {
+        let quotient = this.zero;
         let remainder = this.clone();
-        while (remainder.degree >= other.degree && !remainder.isZero()) {
+        while (remainder.degree >= other.degree && !remainder.isZero) {
             const quotientCoefficient = remainder.coefficients[
                 remainder.degree
             ].divide(other.coefficients[other.degree]);
@@ -169,9 +165,9 @@ export abstract class PolynomialBase<
      * ゼロの多項式を生成します
      * @returns ゼロの多項式
      */
-    public zero(): TThis {
+    public get zero(): TThis {
         return new this._constructable(
-            [this._coefficients[0].zero()],
+            [this._coefficients[0].zero],
             this._variable,
         );
     }
@@ -179,9 +175,9 @@ export abstract class PolynomialBase<
      * 単位多項式を生成します。
      * @returns 係数が1の単位多項式
      */
-    public unit(): TThis {
+    public get unit(): TThis {
         return new this._constructable(
-            [this._coefficients[0].unit()],
+            [this._coefficients[0].unit],
             this._variable,
         );
     }
@@ -190,9 +186,9 @@ export abstract class PolynomialBase<
      * 整数に変換します。
      * @returns 変換結果
      */
-    public toNumericNumber(): number {
+    public toNumber(): number {
         if (this._coefficients.length === 1) {
-            return this._coefficients[0].toNumericNumber();
+            return this._coefficients[0].toNumber();
         }
         throw new Error('整数に変換できません');
     }
@@ -225,12 +221,15 @@ export abstract class PolynomialBase<
         }
         return true;
     }
-    public isZero(): boolean {
-        return this._coefficients.every((c) => c.isZero());
+    public get isZero(): boolean {
+        return this._coefficients.every((c) => c.isZero);
     }
 
     public get isScalar(): boolean {
         return this.degree === 0;
+    }
+    public get isUnit(): boolean {
+        return this.degree === 0 && this._coefficients[0].isUnit;
     }
     private _assertSameVariable(other: TThis): void {
         if (this.isScalar || other.isScalar) return;
@@ -240,11 +239,7 @@ export abstract class PolynomialBase<
     }
     private _trim(): this {
         while (this._coefficients.length > 1) {
-            if (
-                this._coefficients[this._coefficients.length - 1].equals(
-                    this._coefficients[0].zero(),
-                )
-            ) {
+            if (this._coefficients[this._coefficients.length - 1].isZero) {
                 this._coefficients.pop();
             } else {
                 break;

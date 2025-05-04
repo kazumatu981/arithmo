@@ -1,4 +1,4 @@
-import { PolynomialBase } from './polynomial-base';
+import { PolynomialBase } from './abstract';
 import { type RationalNumber } from './rational-number';
 
 /**

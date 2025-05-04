@@ -4,8 +4,8 @@ import { parse } from '../../../src/parser';
 import {
     RationalCoefficientPolynomialResolver,
     RationalCoefficientPolynomial,
-} from '../../../src/resolver/rational-coefficient-polynomial-resolver';
-import { RationalNumber } from '../../../src/resolver/algebra/rational-number';
+} from '../../../src/resolver';
+import { RationalNumber } from '../../../src/algebra';
 
 describe('RationalCoefficientPolynomialResolver', () => {
     test('1/2+1/3', () => {

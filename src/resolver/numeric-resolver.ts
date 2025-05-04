@@ -1,7 +1,7 @@
 import { RingResolverBase } from './abstract/arithmetic-resolver-base';
 import { stringToNum } from '../common/string-to-num';
-import { Numeric } from './algebra/numeric';
-import { TokenType } from '../tokenizer';
+import { Numeric } from '../algebra';
+import { type TokenType } from '../tokenizer';
 
 /**
  * 数値解析クラス

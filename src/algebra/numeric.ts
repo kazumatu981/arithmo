@@ -1,4 +1,4 @@
-import { DivisionResult, type Ring } from './arithmetic-operations';
+import { type EuclideanDivisionResult, type Ring } from './abstract';
 
 /**
  * 二つの整数の最大公約数を計算する
@@ -30,6 +30,7 @@ export class Numeric implements Ring<Numeric> {
      * @param value - 数値
      */
     constructor(value: number) {
+        if (!isNumeric(value)) throw new Error('数値を指定してください。');
         this._value = value;
     }
 
@@ -67,7 +68,7 @@ export class Numeric implements Ring<Numeric> {
         return new Numeric(this._value * b.value);
     }
 
-    public euclideanDivision(b: Numeric): DivisionResult<Numeric> {
+    public euclideanDivide(b: Numeric): EuclideanDivisionResult<Numeric> {
         const gcdValue = gcd(this._value, b.value);
         return {
             quotient: new Numeric(Math.trunc(this._value / gcdValue)),
@@ -87,7 +88,7 @@ export class Numeric implements Ring<Numeric> {
      * 整数に変換する
      * @returns 数値
      */
-    public toNumericNumber(): number {
+    public toNumber(): number {
         if (isNumeric(this._value)) {
             return this._value;
         }
@@ -112,15 +113,17 @@ export class Numeric implements Ring<Numeric> {
             return this._value === other.value;
         }
     }
-    public isZero(): boolean {
-        return this.equals(this.zero());
+    public get isZero(): boolean {
+        return this.equals(this.zero);
     }
-
+    public get isUnit(): boolean {
+        return this.equals(this.unit);
+    }
     /**
      * 0 を返却する
      * @returns 0
      */
-    public zero(): Numeric {
+    public get zero(): Numeric {
         return ZERO;
     }
 
@@ -128,7 +131,7 @@ export class Numeric implements Ring<Numeric> {
      * 1 を返却する
      * @returns 1
      */
-    public unit(): Numeric {
+    public get unit(): Numeric {
         return ONE;
     }
 }

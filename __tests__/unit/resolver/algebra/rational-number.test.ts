@@ -1,6 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { RationalNumber } from '../../../../src/resolver/algebra/rational-number';
-import { Numeric } from '../../../../src/resolver/algebra/numeric';
+import { Numeric, RationalNumber } from '../../../../src/algebra';
 
 describe('RationalNumber', () => {
     describe('constructor', () => {

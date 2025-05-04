@@ -1,6 +1,6 @@
 import { FieldResolverBase } from './abstract/arithmetic-resolver-base';
 import { stringToNum } from '../common/string-to-num';
-import { RationalNumber } from './algebra/rational-number';
+import { RationalNumber } from '../algebra';
 import { type TokenType } from '../tokenizer';
 
 /**
