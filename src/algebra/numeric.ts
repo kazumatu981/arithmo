@@ -35,16 +35,16 @@ export class Numeric implements Ring<Numeric> {
     }
 
     /**
-     * 数値を返却する
-     * @returns 数値
+     * 数値を取得します。
+     * @returns {number} 数値
      */
     public get value(): number {
         return this._value;
     }
 
     /**
-     * 数値を設定する
-     * @param value - 設定する数値
+     * 数値を設定します。
+     * @param {number} value 数値
      */
     public set value(value: number) {
         this._value = value;
@@ -68,6 +68,11 @@ export class Numeric implements Ring<Numeric> {
         return new Numeric(this._value * b.value);
     }
 
+    /**
+     * ユークリッド除算を行います。
+     * @param b - 除算する数値
+     * @returns ユークリッド除算の結果
+     */
     public euclideanDivide(b: Numeric): EuclideanDivisionResult<Numeric> {
         const gcdValue = gcd(this._value, b.value);
         return {
@@ -113,9 +118,19 @@ export class Numeric implements Ring<Numeric> {
             return this._value === other.value;
         }
     }
+
+    /**
+     * 数値がゼロかどうかを判定します。
+     * @returns ゼロの場合はtrue、それ以外はfalse
+     */
     public get isZero(): boolean {
         return this.equals(this.zero);
     }
+
+    /**
+     * 数値が単位元かどうかを判定します。
+     * @returns 単位元の場合はtrue、それ以外はfalse
+     */
     public get isUnit(): boolean {
         return this.equals(this.unit);
     }

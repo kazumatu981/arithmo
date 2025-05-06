@@ -126,7 +126,7 @@ export abstract class PolynomialBase<
 
     /**
      * 多項式を除算する
-     * @param _b - 除算する多項式
+     * @param other - 除算する多項式
      * @returns 除算結果
      * @throws Error - 除算の実装がされていない場合
      */
@@ -221,16 +221,31 @@ export abstract class PolynomialBase<
         }
         return true;
     }
+
+    /**
+     * 多項式がゼロかどうかを判定します。
+     * @returns ゼロの場合はtrue、それ以外はfalse
+     */
     public get isZero(): boolean {
         return this._coefficients.every((c) => c.isZero);
     }
 
+    /**
+     * 多項式がスカラーかどうかを判定します。
+     * @returns スカラーの場合はtrue、それ以外はfalse
+     */
     public get isScalar(): boolean {
         return this.degree === 0;
     }
+
+    /**
+     * 多項式が単位元かどうかを判定します。
+     * @returns 単位元の場合はtrue、それ以外はfalse
+     */
     public get isUnit(): boolean {
         return this.degree === 0 && this._coefficients[0].isUnit;
     }
+
     private _assertSameVariable(other: TThis): void {
         if (this.isScalar || other.isScalar) return;
         if (this._variable !== other._variable) {
@@ -246,5 +261,14 @@ export abstract class PolynomialBase<
             }
         }
         return this;
+    }
+
+    /**
+     * 未定義の関数にJSDocコメントを追加
+     */
+    public someUndefinedFunction(): void {
+        /**
+         *
+         */
     }
 }

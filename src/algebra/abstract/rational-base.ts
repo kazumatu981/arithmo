@@ -68,6 +68,11 @@ export abstract class RationalBase<
         return new this._constructable(newNumerator, newDenominator);
     }
 
+    /**
+     * 指定された有理数を除算します。
+     * @param b - 除算する有理数
+     * @returns 除算結果の有理数
+     */
     public divide(b: TThis): TThis {
         return this.multiply(b.inverse());
     }
@@ -122,12 +127,26 @@ export abstract class RationalBase<
         );
     }
 
+    /**
+     * 有理数がゼロかどうかを判定します。
+     * @returns ゼロの場合はtrue、それ以外はfalse
+     */
     public get isZero(): boolean {
         return this.equals(this.zero);
     }
+
+    /**
+     * 有理数が単位元かどうかを判定します。
+     * @returns 単位元の場合はtrue、それ以外はfalse
+     */
     public get isUnit(): boolean {
         return this.equals(this.unit);
     }
+
+    /**
+     * 有理数を複製します。
+     * @returns 複製された有理数
+     */
     public clone(): TThis {
         return new this._constructable(
             this.numerator.clone(),

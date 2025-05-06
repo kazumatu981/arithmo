@@ -26,4 +26,12 @@ export class RationalNumber extends RationalBase<RationalNumber, Numeric> {
                 ? new Numeric(denominator)
                 : denominator;
     }
+
+    /**
+     * 有理数を文字列形式で返します。
+     * @returns {string} 分子と分母をスラッシュで区切った文字列
+     */
+    public toString(): string {
+        return `${this.numerator}/${this.denominator}`;
+    }
 }

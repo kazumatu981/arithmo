@@ -3,7 +3,7 @@ import {
     type StringifyType,
     type ParseNodeInfo,
 } from './parse-tree-node';
-import { TokenType, type Token } from '../../tokenizer';
+import type { TokenType, Token } from '../../tokenizer';
 import type { Rule } from '../../common/testable';
 import { ParserError } from '../parser-error';
 import { SignedNode } from './signed-node';

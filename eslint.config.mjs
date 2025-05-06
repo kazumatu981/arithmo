@@ -4,6 +4,7 @@ import globals from 'globals';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import jsdoc from 'eslint-plugin-jsdoc';
+import path from 'path';
 
 const namingRules = [
     {
@@ -45,6 +46,9 @@ const namingRules = [
     },
 ];
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname).replace(/^\/([a-zA-Z]:)/, '$1');
+
+
 const srcConfig = tseslint.config({
     files: ['src/**/*.{ts,tsx}'],
     extends: [eslint.configs.recommended, tseslint.configs.strict],
@@ -56,7 +60,7 @@ const srcConfig = tseslint.config({
             ...globals.node,
         },
         parserOptions: {
-            project: './tsconfig.lint.json',
+            project: path.join(__dirname, 'tsconfig.lint.json'),
         },
     },
 

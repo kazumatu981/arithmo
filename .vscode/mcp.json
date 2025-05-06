@@ -1,0 +1,9 @@
+{
+    "servers": {
+        "eslint": {
+            "type": "stdio",
+            "command": "npx",
+            "args": ["eslint", "--nocache", "--mcp"]
+        }
+    }
+}
